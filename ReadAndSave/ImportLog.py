@@ -1,0 +1,199 @@
+﻿# ！/usr/bin/python3
+# coding:utf-8
+# sys
+from __init__ import *
+from Analyze.tram_speed import tram_speed_to_sql
+import sqlalchemy
+from DataBase.ConnectDB import conn_engine
+import functools
+import gc
+import re
+# analysis
+
+import pandas as pd
+from tqdm import tqdm
+# from tqdm.notebook import tqdm
+
+from sqlalchemy.types import VARCHAR
+from sqlalchemy.types import SMALLINT
+
+# customize file
+from DataBase.ConnectDB import intialization_sql
+from DataBase.ConnectDB import sql_engine
+from HkConfig import ImportIni
+from HkConfig.Config import HkConfig
+from ReadAndSave.VerSelect import get_version, get_wissel_type_nr
+
+
+def root_path():
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    current_dir = os.path.basename(current_path)
+    main_path = f'{current_path.replace(current_dir, "")}'
+    return main_path
+
+
+def read_log(log_file):
+    log_file_name = os.path.basename(log_file)
+    date = f'{log_file_name[:4]}-{log_file_name[4:6]}-{log_file_name[6:8]}'
+    wissel_data_dict = {}
+    with open(log_file, 'r', encoding='utf-8', errors='ignore') as (log):
+
+        for line in tqdm(log, desc=f'Reading log {log_file}'):
+            if "##" in line or "W657" in line or \
+                    "W666" in line or "W662" in line or \
+                    "W665" in line or "W668" in line or \
+                    "W540" in line or '_LSA_' in line or \
+                    'W260' in line:
+                pass
+            elif 'DATA:PZDA' in line and re.search(r'W\d\d\d', line) is not None:
+                # header_data = HkConfig(line)
+                wissel_nr = [re.search(r'W\d\d\d', line).group()]
+                wissel_nr = wissel_nr[0]
+                if wissel_nr in wissel_data_dict:
+                    wissel_data_dict[wissel_nr].append(line[: -1])
+
+                else:
+                    wissel_data_dict[wissel_nr] = [line[: -1]]
+    return wissel_data_dict, date
+
+
+def conver_data(bit, byte, value):
+    row_data = HkConfig(value, bit, byte)
+    row_data.line_to_hex()
+    row_data.list_to_str()
+    row_data.hex_to_bin()
+    wissel_nr = row_data.wissel_info.get('wissel nr')
+    row_data.wissel_version(get_version(wissel_nr))
+    converted_info = row_data.covert_data()
+
+    return converted_info
+
+
+def log_to_data(log_data):
+    all_data = {}
+    bit_config = ImportIni.bit_config()
+    byte_config = ImportIni.byte_config()
+    for key, values in log_data.items():
+        # Multy processing
+
+        conver_data_value = functools.partial(conver_data, bit_config, byte_config)
+        all_data[key] = list(tqdm(map(conver_data_value, values), desc=f'Conver data {key}'))
+
+    return all_data
+
+
+def mapping_df_types(df):
+    dtypedict = {}
+    for i in df.columns:
+        if "date-time" in i:
+            dtypedict.update({i: VARCHAR()})
+        elif "server time" in i:
+            dtypedict.update({i: VARCHAR()})
+        elif "wissel nr" in i:
+            dtypedict.update({i: VARCHAR()})
+        elif "time" in i:
+            dtypedict.update({i: VARCHAR()})
+        elif "status" in i:
+            dtypedict.update({i: VARCHAR()})
+        else:
+            dtypedict.update({i: SMALLINT()})
+    return dtypedict
+
+
+def log_to_sql(log_data, db_name):
+    bit_config = ImportIni.bit_config()
+    byte_config = ImportIni.byte_config()
+    drop_config = ImportIni.drop_config()
+    engine = sql_engine(db_name)
+    sqlite_connection = engine.connect()
+    for key, values in tqdm(log_data.items(), desc=f'Save {db_name} to SQL'):
+        # Multy processing
+        drop_list = drop_config.get(get_version(key))
+        conver_data_value = functools.partial(conver_data, bit_config, byte_config)
+        data = list(map(conver_data_value, values))
+        df_data_list = list(map(dataframe_str, data))
+        df_data = pd.concat(df_data_list, ignore_index=True)
+        add_list = [item for item in df_data.columns.values.tolist() if item not in set(drop_list)]
+
+        dtypedict = mapping_df_types(df_data)
+        df_data.set_index('date-time', drop=True, inplace=True)
+        df_data.to_sql(key, sqlite_connection, if_exists='replace', dtype=dtypedict)
+    del conver_data_value, data, df_data_list, df_data
+    gc.collect()
+    return None
+
+
+def dataframe_str(value):
+    df_single_data = pd.DataFrame(value, dtype='str')
+    return df_single_data
+
+
+def save_log_to_df(data_dict, db_name, chunk_size=100):
+    """
+    :param db_name: str
+    :param data_dict: dict
+    :param chunk_size: int
+    :return: None
+    """
+    engine = sql_engine(db_name)
+    sqlite_connection = engine.connect()
+    for key, value in data_dict.items():
+
+        intialization_sql(key, value, sqlite_connection)
+        data_size = len(value)
+
+        if data_size > chunk_size:
+
+            for i in tqdm(range((data_size // chunk_size) + 1), desc=f'{key} save to sql'):
+                df_data_list = list(map(dataframe_str, value[:chunk_size]))
+                df_data = pd.concat(df_data_list, ignore_index=True)
+                df_data.set_index('date-time', drop=True, inplace=True)
+                df_data.to_sql(key, sqlite_connection, if_exists='append')
+                del value[: chunk_size]
+                gc.collect()
+
+        else:
+            df_data_list = list(map(dataframe_str, value))
+            df_data = pd.concat(df_data_list, ignore_index=True)
+            df_data.set_index('date-time', drop=True, inplace=True)
+            df_data.to_sql(key, sqlite_connection, if_exists='append')
+    del df_data
+    gc.collect()
+    return None
+
+
+def set_steps_denbdb3c(db_file):
+    # 匹配 denDBD3C steps
+    table_name = sqlalchemy.inspect(conn_engine(db_file)).get_table_names()
+    table_name = [i for i in table_name if i in get_wissel_type_nr('denBDB3C')]
+    # get denDBD3C steps
+    steps = pd.read_sql_table('denBDB3C', conn_engine('steps', path='norm'))
+    for k in tqdm(table_name, desc='Set steps denBDB3C'):
+        wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
+        wissel_status.set_index('date-time', drop=True, inplace=True)
+        # df_data = df_data.set_index(['<aanmelden> wagen', '<aanmelden> categorie', '<aanmelden> service'],
+        # drop=False, inplace=False)
+        wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
+    del wissel_status
+    gc.collect()
+
+
+def process_log_sql(log_file):
+    log_path = os.path.join(root_path(), 'log', log_file)
+    wissel_log, date = read_log(log_path)
+    try:
+        log_to_sql(wissel_log, date)
+        set_steps_denbdb3c(date)
+        tram_speed_to_sql(date)
+
+    except AttributeError as ae:
+        print(ae)
+
+    except UnicodeDecodeError as ue:
+        print(ue)
+
+    except IndexError as ie:
+        print(ie)
+    except KeyboardInterrupt:
+        exit()
+
