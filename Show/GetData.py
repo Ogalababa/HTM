@@ -22,65 +22,6 @@ def get_data_name(path='db'):
 
 
 @st.cache
-def get_sql_wissel_nr(selected_db):
-    """
-    :param selected_db: str
-    :return: DataFrame
-    """
-    data_list = []
-    for i in selected_db:
-        insp = sqlalchemy.inspect(conn_engine(i))
-        all_wissels = insp.get_table_names()
-        for wissel_nr in all_wissels:
-            data_list.append(pd.read_sql_table(wissel_nr, conn_engine(i), columns=['wissel nr']))
-    all_data = pd.concat(data_list)
-
-    return all_data
-
-
-@st.cache
-def get_sql_wissel_time(selected_db):
-    """
-
-    :param selected_db: list
-    :return: DataFrame
-    """
-    data_list = []
-    for i in selected_db:
-        insp = sqlalchemy.inspect(conn_engine(i))
-        all_wissels = insp.get_table_names()
-        for wissel_nr in all_wissels:
-            data_list.append(pd.read_sql_table(wissel_nr, conn_engine(i),
-                                               columns=['date-time', 'time', 'server time', 'wissel nr']))
-    all_data = pd.concat(data_list)
-    try:
-        all_data['date-time'] = pd.to_datetime(all_data['date-time'])
-        all_data.set_index('date-time')
-    except ValueError:
-        pass
-
-    return all_data
-
-
-@st.cache
-def get_sql_data_with_nr(selected_db, wissel_nr, paths='db'):
-
-    """
-    :param paths: str
-    :param selected_db: list
-    :param wissel_nr: str
-    :return: DataFrame
-    """
-
-    data_list = []
-    for i in selected_db:
-        data_list.append(pd.read_sql_table(wissel_nr, conn_engine(i, path=paths)))
-    all_data = pd.concat(data_list)
-    all_data.reset_index(drop=True, inplace=True)
-    return all_data
-
-
-@st.cache
 def get_tram_speed(selected_db, path='snelheid'):
     """
 

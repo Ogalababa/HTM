@@ -83,26 +83,62 @@ systemctl status jupyter
   - tempfile
 
 ## 结构图
-flow
-st=>start: start
-op=>operation: your Operation
-cond=>condition: Yes or No?
-e=>end
-st->op->end
+  ```mermaid
+  graph LR
+
+  log[log file] --> rl[read_log]
+  rl --> conver_data
+  HkConfig --> conver_data
+  conver_data --Save to sql--> DataBase
+  DataBase --GetData.py--> Show
+  Show --streamlit-->brouwser[Show in brouwser]
+  
+  ```
+
+## 文件简介
+
+- HkConfig.Config.py
+  - line_to_hex: 读取log文件,分割hex代码到列表
+  - list_to_str: 拼接列表中hex代码
+  - hex_to_bin： hex代码转二进制代码
+  - convert_data: 根据转轨器配置文件将二进制代码转换为转轨器状态
+  - wissel_version: 根据转轨器编号导入配置文件
 
 
-流程图： 从服务器下载log文件=>翻译成自然语言数据=>存到数据库
+- HkConfig.ImportIni.py
+  - bit_config: 根据配置文件转换转轨器状态， 被convert_data引用
+  - byte_config：根据配置文件转换电车数据
+  
 
-从数据库查询表=>通过streamlib映射到浏览器
+- ReadAndSave.ImportLog.py
+  - read_log: 从log文件中读取数据
+  - conver_data: 引用HkConfig类转换数据
+  - mapping_df_types: 转换Dataframe数据类型
+  - log_to_sql: 将转换后的数据保存到sqlit3数据库
+  - set_steps_denbdb3c: 从数据库中读取denbdb3c类型转轨器,匹配状态
+  - process_log_sql: 封装转换步骤
 
-* [X]  配置ini文件，翻译log数据
-* [X]  以日期为分割保存到sqlite数据库
-* [X]  重写 import ini
-* [X]  查询sqlite3数据库
-* [X]  设置streamlit页面
-* [X]  streamlit 显示 总运行数量， 各个wissel占比 饼图
-* [X]  显示 Wissel 一天内高峰运行密度 条形图
-* [ ]  显示 Wissel 错误运行数量 个原因占比
-* [ ]  配置wissel W6XX系列
-* 
+- ReadAndSave.VerSelect.py
+  - get_version: 输入转轨器编号，返回转轨器类型
+  - get_wissel_type_nr: 输入转轨器类型，返回所有该类型转轨器编号
+  
+- DataBase.ConnectDB.py
+  - conn_engine: 连接sqlite3数据库，读取或保存数据库
 
+- Analyze.tram_speed.py
+  - wagen_lent: 电车长度数据
+  - tram_speed_to_sql: 计算电车速度并保存到数据库
+
+- Run
+  - RunText.py: Run程序，针对测试环境封装
+  - RunVM.py: Run程序， 针对生成环境封装
+  
+- Show.Get_data.py
+  - get_tram_speed: 从数据库读取电车速度
+  - create_download_link: 针对stramlit创建下载链接
+
+- Show.index.py
+  - streamlit启动文件，展示stramlit网页
+
+- Show.pages.py
+  - stramlit网页配置

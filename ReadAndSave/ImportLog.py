@@ -18,7 +18,6 @@ from sqlalchemy.types import VARCHAR
 from sqlalchemy.types import SMALLINT
 
 # customize file
-from DataBase.ConnectDB import intialization_sql
 from DataBase.ConnectDB import sql_engine
 from HkConfig import ImportIni
 from HkConfig.Config import HkConfig
@@ -69,19 +68,6 @@ def conver_data(bit, byte, value):
     return converted_info
 
 
-def log_to_data(log_data):
-    all_data = {}
-    bit_config = ImportIni.bit_config()
-    byte_config = ImportIni.byte_config()
-    for key, values in log_data.items():
-        # Multy processing
-
-        conver_data_value = functools.partial(conver_data, bit_config, byte_config)
-        all_data[key] = list(tqdm(map(conver_data_value, values), desc=f'Conver data {key}'))
-
-    return all_data
-
-
 def mapping_df_types(df):
     dtypedict = {}
     for i in df.columns:
@@ -91,10 +77,10 @@ def mapping_df_types(df):
             dtypedict.update({i: VARCHAR()})
         elif "wissel nr" in i:
             dtypedict.update({i: VARCHAR()})
-        elif "time" in i:
-            dtypedict.update({i: VARCHAR()})
-        elif "status" in i:
-            dtypedict.update({i: VARCHAR()})
+        # elif "time" in i:
+        #     dtypedict.update({i: VARCHAR()})
+        # elif "status" in i:
+        #     dtypedict.update({i: VARCHAR()})
         else:
             dtypedict.update({i: SMALLINT()})
     return dtypedict
@@ -113,6 +99,7 @@ def log_to_sql(log_data, db_name):
         data = list(map(conver_data_value, values))
         df_data_list = list(map(dataframe_str, data))
         df_data = pd.concat(df_data_list, ignore_index=True)
+
         add_list = [item for item in df_data.columns.values.tolist() if item not in set(drop_list)]
 
         dtypedict = mapping_df_types(df_data)
@@ -126,40 +113,6 @@ def log_to_sql(log_data, db_name):
 def dataframe_str(value):
     df_single_data = pd.DataFrame(value, dtype='str')
     return df_single_data
-
-
-def save_log_to_df(data_dict, db_name, chunk_size=100):
-    """
-    :param db_name: str
-    :param data_dict: dict
-    :param chunk_size: int
-    :return: None
-    """
-    engine = sql_engine(db_name)
-    sqlite_connection = engine.connect()
-    for key, value in data_dict.items():
-
-        intialization_sql(key, value, sqlite_connection)
-        data_size = len(value)
-
-        if data_size > chunk_size:
-
-            for i in tqdm(range((data_size // chunk_size) + 1), desc=f'{key} save to sql'):
-                df_data_list = list(map(dataframe_str, value[:chunk_size]))
-                df_data = pd.concat(df_data_list, ignore_index=True)
-                df_data.set_index('date-time', drop=True, inplace=True)
-                df_data.to_sql(key, sqlite_connection, if_exists='append')
-                del value[: chunk_size]
-                gc.collect()
-
-        else:
-            df_data_list = list(map(dataframe_str, value))
-            df_data = pd.concat(df_data_list, ignore_index=True)
-            df_data.set_index('date-time', drop=True, inplace=True)
-            df_data.to_sql(key, sqlite_connection, if_exists='append')
-    del df_data
-    gc.collect()
-    return None
 
 
 def set_steps_denbdb3c(db_file):
