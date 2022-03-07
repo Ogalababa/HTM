@@ -1,5 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [程序简介](#%E7%A8%8B%E5%BA%8F%E7%AE%80%E4%BB%8B)
+  - [环境配置](#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE)
+    - [服务器配置](#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE)
+    - [依赖库](#%E4%BE%9D%E8%B5%96%E5%BA%93)
+  - [结构图](#%E7%BB%93%E6%9E%84%E5%9B%BE)
+  - [文件简介](#%E6%96%87%E4%BB%B6%E7%AE%80%E4%BB%8B)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ﻿# 程序简介
 HTM 内部程序，主要通过转轨器日志分析转轨器状态的程序
+
 [toc]
 ## 环境配置
 ### 服务器配置
