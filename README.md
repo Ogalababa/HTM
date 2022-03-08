@@ -29,10 +29,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-﻿# 程序简介
+# 程序简介
 HTM 内部程序，主要通过转轨器日志分析转轨器状态的程序
 
-[toc]
 ## 环境配置
 ### 服务器配置
 #### install software
