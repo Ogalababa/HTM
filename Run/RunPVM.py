@@ -11,7 +11,7 @@ if __name__ == '__main__':
     pw = os.listdir('.pw')[0]
 
     while True:
-        log_file_list = os.listdir('log')
+        log_file_list = os.listdir(os.path.join(rootPath, 'log'))
         if len(log_file_list) == 0:
             # extern dir not mount
             # mount extern dir
@@ -22,12 +22,12 @@ if __name__ == '__main__':
                               '+r3/oFA==*KjnJ29ScC4u1coCFWdECcg==', pw
                               ))
 
-            log_file_list = os.listdir('log')
+            log_file_list = os.listdir(os.path.join(rootPath, 'log'))
         else:
             log_file_list = [x for x in log_file_list if 'log' in x]
             log_file_list.sort()
             log_file_list = log_file_list[:-1]
-            db_file_list = os.listdir(os.path.join('DataBase', 'db'))
+            db_file_list = os.listdir(os.path.join(rootPath, 'DataBase', 'db'))
             db_file_date = [f'{i[:4]}{i[5:7]}{i[8:10]}.log' for i in db_file_list]
             conver_list = [x for x in log_file_list if x not in db_file_date]
 
