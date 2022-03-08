@@ -7,7 +7,6 @@ from ReadAndSave.ImportLog import process_log_sql
 from cryptocode import decrypt
 
 if __name__ == '__main__':
-    from multiprocessing import Pool
 
     pw = os.listdir('.pw')[0]
 
