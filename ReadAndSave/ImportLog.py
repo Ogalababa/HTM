@@ -87,26 +87,30 @@ def mapping_df_types(df):
 
 
 def log_to_sql(log_data, db_name):
-    bit_config = ImportIni.bit_config()
-    byte_config = ImportIni.byte_config()
-    drop_config = ImportIni.drop_config()
-    engine = sql_engine(db_name)
-    sqlite_connection = engine.connect()
-    for key, values in tqdm(log_data.items(), desc=f'Save {db_name} to SQL'):
-        # Multy processing
-        drop_list = drop_config.get(get_version(key))
-        conver_data_value = functools.partial(conver_data, bit_config, byte_config)
-        data = list(map(conver_data_value, values))
-        df_data_list = list(map(dataframe_str, data))
-        df_data = pd.concat(df_data_list, ignore_index=True)
+    try:
+        bit_config = ImportIni.bit_config()
+        byte_config = ImportIni.byte_config()
+        drop_config = ImportIni.drop_config()
+        engine = sql_engine(db_name)
+        sqlite_connection = engine.connect()
 
-        add_list = [item for item in df_data.columns.values.tolist() if item not in set(drop_list)]
+        for key, values in tqdm(log_data.items(), desc=f'Save {db_name} to SQL'):
+            # Multy processing
+            drop_list = drop_config.get(get_version(key))
+            conver_data_value = functools.partial(conver_data, bit_config, byte_config)
+            data = list(map(conver_data_value, values))
+            df_data_list = list(map(dataframe_str, data))
+            df_data = pd.concat(df_data_list, ignore_index=True)
 
-        dtypedict = mapping_df_types(df_data)
-        df_data.set_index('date-time', drop=True, inplace=True)
-        df_data.to_sql(key, sqlite_connection, if_exists='replace', dtype=dtypedict)
-    del conver_data_value, data, df_data_list, df_data
-    gc.collect()
+            add_list = [item for item in df_data.columns.values.tolist() if item not in set(drop_list)]
+
+            dtypedict = mapping_df_types(df_data)
+            df_data.set_index('date-time', drop=True, inplace=True)
+            df_data.to_sql(key, sqlite_connection, if_exists='replace', dtype=dtypedict)
+        del conver_data_value, data, df_data_list, df_data
+        gc.collect()
+    except KeyboardInterrupt:
+        exit()
     return None
 
 
@@ -116,19 +120,22 @@ def dataframe_str(value):
 
 
 def set_steps_denbdb3c(db_file):
-    # 匹配 denDBD3C steps
-    table_name = sqlalchemy.inspect(conn_engine(db_file)).get_table_names()
-    table_name = [i for i in table_name if i in get_wissel_type_nr('denBDB3C')]
-    # get denDBD3C steps
-    steps = pd.read_sql_table('denBDB3C', conn_engine('steps', path='norm'))
-    for k in tqdm(table_name, desc='Set steps denBDB3C'):
-        wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
-        wissel_status.set_index('date-time', drop=True, inplace=True)
-        # df_data = df_data.set_index(['<aanmelden> wagen', '<aanmelden> categorie', '<aanmelden> service'],
-        # drop=False, inplace=False)
-        wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
-    del wissel_status
-    gc.collect()
+    try:
+        # 匹配 denDBD3C steps
+        table_name = sqlalchemy.inspect(conn_engine(db_file)).get_table_names()
+        table_name = [i for i in table_name if i in get_wissel_type_nr('denBDB3C')]
+        # get denDBD3C steps
+        steps = pd.read_sql_table('denBDB3C', conn_engine('steps', path='norm'))
+        for k in tqdm(table_name, desc='Set steps denBDB3C'):
+            wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
+            wissel_status.set_index('date-time', drop=True, inplace=True)
+            # df_data = df_data.set_index(['<aanmelden> wagen', '<aanmelden> categorie', '<aanmelden> service'],
+            # drop=False, inplace=False)
+            wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
+        del wissel_status
+        gc.collect()
+    except KeyboardInterrupt:
+        exit()
 
 
 def process_log_sql(log_file):

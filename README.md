@@ -2,12 +2,30 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [程序简介](#%E7%A8%8B%E5%BA%8F%E7%AE%80%E4%BB%8B)
-  - [环境配置](#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE)
-    - [服务器配置](#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE)
-    - [依赖库](#%E4%BE%9D%E8%B5%96%E5%BA%93)
-  - [结构图](#%E7%BB%93%E6%9E%84%E5%9B%BE)
-  - [文件简介](#%E6%96%87%E4%BB%B6%E7%AE%80%E4%BB%8B)
+- [环境配置](#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE)
+  - [服务器配置](#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE)
+    - [install software](#install-software)
+    - [set jupyter auto start](#set-jupyter-auto-start)
+  - [依赖库](#%E4%BE%9D%E8%B5%96%E5%BA%93)
+    - [Run](#run)
+    - [Show](#show)
+- [结构图](#%E7%BB%93%E6%9E%84%E5%9B%BE)
+- [文件简介](#%E6%96%87%E4%BB%B6%E7%AE%80%E4%BB%8B)
+  - [HkConfig](#hkconfig)
+    - [Config.py](#configpy)
+    - [ImportIni.py](#importinipy)
+  - [ReadAndSave](#readandsave)
+    - [ImportLog.py](#importlogpy)
+    - [VerSelect.py](#verselectpy)
+  - [DataBase](#database)
+    - [ConnectDB.py](#connectdbpy)
+  - [Analyze](#analyze)
+    - [tram_speed.py](#tram_speedpy)
+  - [Run](#run-1)
+  - [Show](#show-1)
+    - [Get_data.py](#get_datapy)
+    - [index.py](#indexpy)
+    - [pages.py](#pagespy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -17,7 +35,7 @@ HTM 内部程序，主要通过转轨器日志分析转轨器状态的程序
 [toc]
 ## 环境配置
 ### 服务器配置
-- install software
+#### install software
 ```bash
 sudo apt update
 
@@ -49,7 +67,7 @@ source ~/.bashrc
 # install streamlit
 conda install -c conda-forge streamlit
 ```
-- set jupyter auto start
+#### set jupyter auto start
 ```bash
 cd /
 vim /etc/systemd/system/jupyter-lab.service 
@@ -81,7 +99,7 @@ systemctl status jupyter
 ```
 
 ### 依赖库
-- Run
+#### Run
   - sqlalchemy
   - tqdm
   - pandas
@@ -90,7 +108,7 @@ systemctl status jupyter
   - configparser
   - re
 
-- Show
+#### Show
   - streamlit
   - plotly
   - fpdf
@@ -110,8 +128,8 @@ systemctl status jupyter
   ```
 
 ## 文件简介
-
-- HkConfig.Config.py
+### HkConfig
+#### Config.py
   - line_to_hex: 读取log文件,分割hex代码到列表
   - list_to_str: 拼接列表中hex代码
   - hex_to_bin： hex代码转二进制代码
@@ -119,12 +137,12 @@ systemctl status jupyter
   - wissel_version: 根据转轨器编号导入配置文件
 
 
-- HkConfig.ImportIni.py
+#### ImportIni.py
   - bit_config: 根据配置文件转换转轨器状态， 被convert_data引用
   - byte_config：根据配置文件转换电车数据
   
-
-- ReadAndSave.ImportLog.py
+### ReadAndSave
+#### ImportLog.py
   - read_log: 从log文件中读取数据
   - conver_data: 引用HkConfig类转换数据
   - mapping_df_types: 转换Dataframe数据类型
@@ -132,27 +150,30 @@ systemctl status jupyter
   - set_steps_denbdb3c: 从数据库中读取denbdb3c类型转轨器,匹配状态
   - process_log_sql: 封装转换步骤
 
-- ReadAndSave.VerSelect.py
+#### VerSelect.py
   - get_version: 输入转轨器编号，返回转轨器类型
   - get_wissel_type_nr: 输入转轨器类型，返回所有该类型转轨器编号
-  
-- DataBase.ConnectDB.py
+
+### DataBase  
+#### ConnectDB.py
   - conn_engine: 连接sqlite3数据库，读取或保存数据库
 
-- Analyze.tram_speed.py
+### Analyze
+#### tram_speed.py
   - wagen_lent: 电车长度数据
   - tram_speed_to_sql: 计算电车速度并保存到数据库
 
-- Run
+### Run
   - RunText.py: Run程序，针对测试环境封装
   - RunVM.py: Run程序， 针对生成环境封装
   
-- Show.Get_data.py
+### Show  
+#### Get_data.py
   - get_tram_speed: 从数据库读取电车速度
   - create_download_link: 针对stramlit创建下载链接
 
-- Show.index.py
+#### index.py
   - streamlit启动文件，展示stramlit网页
 
-- Show.pages.py
+#### pages.py
   - stramlit网页配置

@@ -8,7 +8,6 @@ from cryptocode import decrypt
 if __name__ == '__main__':
     from multiprocessing import Pool
 
-    remove_list = ['.ipynb_checkpoints']
     pw = os.listdir('.pw')[0]
 
     while True:
@@ -31,25 +30,26 @@ if __name__ == '__main__':
             db_file_list = os.listdir(os.path.join('DataBase', 'db'))
             db_file_date = [f'{i[:4]}{i[5:7]}{i[8:10]}.log' for i in db_file_list]
             conver_list = [x for x in log_file_list if x not in db_file_date]
-            conver_step = [f'{x[:4]}-{x[4:6]}-{x[6:7]}' for x in conver_list]
+            
+            if len(conver_list) <= 0:
+                exit()
 
-            log_file_list.sort()
+            conver_list.sort()
             try:
                 p = Pool(4)
                 p.imap(process_log_sql, conver_list[:4])
                 # process_log_sql(conver_list[0])
                 p.close()
                 p.join()
-            except PermissionError:
+            except (
+                PermissionError, 
+                IndexError,
+                AttributeError,
+                UnicodeDecodeError
+                KeyboardInterrupt
+                ) as err:
+
+                print(err)
                 pass
-            except IndexError:
-                pass
-            except AttributeError as ate:
-                print(ate)
-                pass
-            except UnicodeDecodeError as une:
-                print(une)
-                pass
-            except KeyboardInterrupt:
-                exit()
+            
         continue

@@ -87,10 +87,10 @@ def tram_speed_to_sql(log_db):
                         pass
                 else:
                     pass
-        except ValueError:
+        except (ValueError, TypeError, KeyError) as err:
+            print(err)
             pass
-        except TypeError:
-            pass
+        
 
     for key in tqdm(data_dict.keys(), desc=f'Save to database {log_db}'):
         try:
@@ -99,7 +99,6 @@ def tram_speed_to_sql(log_db):
                                                   path='snelheid'),
                                       index=False,
                                       if_exists='replace')
-        except ValueError:
+        except (ValueError, TypeError, KeyError):
             pass
-        except TypeError:
-            pass
+        
