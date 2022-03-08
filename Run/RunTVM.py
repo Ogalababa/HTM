@@ -12,8 +12,6 @@ if __name__ == '__main__':
     while True:
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
         conver_list = [x for x in log_file_list if x not in remove_list]
-        conver_step = [f'{x[:4]}-{x[4:6]}-{x[6:7]}' for x in conver_list]
-
         conver_list.sort()
         try:
             if len(conver_list) <= 0:
