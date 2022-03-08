@@ -24,7 +24,7 @@ if __name__ == '__main__':
             # process_log_sql(conver_list[0])
             p.close()
             p.join()
-            for i in conver_list:
+            for i in conver_list[:4]:
                 os.remove(os.path.join(rootPath, 'log', i))
                 print(f'Removed {i}')
         except PermissionError:
