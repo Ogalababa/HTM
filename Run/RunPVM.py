@@ -5,6 +5,7 @@ from __init__ import *
 from multiprocessing import Pool
 from ReadAndSave.ImportLog import process_log_sql
 from cryptocode import decrypt
+
 if __name__ == '__main__':
     from multiprocessing import Pool
 
@@ -30,7 +31,7 @@ if __name__ == '__main__':
             db_file_list = os.listdir(os.path.join('DataBase', 'db'))
             db_file_date = [f'{i[:4]}{i[5:7]}{i[8:10]}.log' for i in db_file_list]
             conver_list = [x for x in log_file_list if x not in db_file_date]
-            
+
             if len(conver_list) <= 0:
                 exit()
 
@@ -42,14 +43,13 @@ if __name__ == '__main__':
                 p.close()
                 p.join()
             except (
-                PermissionError, 
-                IndexError,
-                AttributeError,
-                UnicodeDecodeError
-                KeyboardInterrupt
-                ) as err:
-
-                print(err)
+                    PermissionError,
+                    IndexError,
+                    AttributeError,
+                    UnicodeDecodeError,
+            ) as err:
                 pass
-            
+            except KeyboardInterrupt:
+                exit()
+
         continue
