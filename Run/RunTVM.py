@@ -27,14 +27,12 @@ if __name__ == '__main__':
             for i in conver_list[:4]:
                 os.remove(os.path.join(rootPath, 'log', i))
                 print(f'Removed {i}')
-        except (
-                PermissionError,
+        except (PermissionError,
                 IndexError,
                 AttributeError,
-                UnicodeDecodeError,
-        ) as err:
+                UnicodeDecodeError
+                ):
             pass
         except KeyboardInterrupt:
             exit()
-
         continue

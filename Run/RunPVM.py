@@ -46,10 +46,9 @@ if __name__ == '__main__':
                     PermissionError,
                     IndexError,
                     AttributeError,
-                    UnicodeDecodeError,
+                    UnicodeDecodeError
             ) as err:
                 pass
             except KeyboardInterrupt:
                 exit()
-
         continue
