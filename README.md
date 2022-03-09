@@ -179,3 +179,4 @@ systemctl status jupyter
 
 ### Doc
   - https://hands1ml.apachecn.org/#
+  - https://github.com/ageron/handson-ml.git
