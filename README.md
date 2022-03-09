@@ -176,3 +176,7 @@ systemctl status jupyter
 
 #### pages.py
   - stramlit网页配置
+
+### Doc
+  - https://github.com/fengdu78/deeplearning_ai_books.git
+  - https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes.git
