@@ -178,5 +178,4 @@ systemctl status jupyter
   - stramlit网页配置
 
 ### Doc
-  - https://github.com/fengdu78/deeplearning_ai_books.git
-  - https://github.com/fengdu78/Coursera-ML-AndrewNg-Notes.git
+  - https://hands1ml.apachecn.org/#
