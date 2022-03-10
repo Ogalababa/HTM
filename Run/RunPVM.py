@@ -10,8 +10,9 @@ if __name__ == '__main__':
 
     pw = os.listdir('.pw')[0]
     with open(os.path.join(rootPath, '.pw', pw), 'r') as readfile:
-        mount = readfile.readline()
-        umount = readfile.readline()
+        comm = readfile.readline()
+        mount = comm[0][:-1]
+        umount = comm[1][:-1]
 
     while True:
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
@@ -32,11 +33,7 @@ if __name__ == '__main__':
 
             if len(conver_list) <= 0:
                 print('All data up to date')
-                os.system(decrypt('FB1C7kXLE5fBB9n1nKRLrY0GnlORrEpDcJZhsj6N'
-                                  'f2TIcdmg9Yw1eBuePtzhBwE4dcgmHXQ0GULQb9hrO'
-                                  'g==*ukw9PHtZ1mpsjumv4+jx6A==*n4PS0kCYxRXuz'
-                                  'omRslCKjg==*amyEApFgjbaqbA4XmHBnqA==', pw
-                                  ))
+                os.system(decrypt(umount, pw))
                 exit()
 
             conver_list.sort()
