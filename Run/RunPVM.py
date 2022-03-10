@@ -9,6 +9,9 @@ from cryptocode import decrypt
 if __name__ == '__main__':
 
     pw = os.listdir('.pw')[0]
+    with open(os.path.join(rootPath, '.pw', pw), 'r') as readfile:
+        mount = readfile.readline()
+        umount = readfile.readline()
 
     while True:
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
@@ -16,11 +19,7 @@ if __name__ == '__main__':
             # extern dir not mount
             # mount extern dir
             # os comment, dont edit
-            os.system(decrypt('iZneoZnZ2DcRebTkooCj0749LrzPb9usuvVkjwYBEzh6veL5dsenV6FpNgLYRTUA4bqq'
-                              '/D3PI3VQ0WmiOyuLxdr0tXHlU01NvojeJDSG47H9iGVpMMgumImx4j0HjmNCIrVm'
-                              '+dxMjjr7MNjExfqFdQvn+nBOm0jkRRMN*QoK7Z0MArBBcsuRHTAi2tQ==*UBQ4XABEs3F5QMP'
-                              '+r3/oFA==*KjnJ29ScC4u1coCFWdECcg==', pw
-                              ))
+            os.system(decrypt(mount, pw))
 
             log_file_list = os.listdir(os.path.join(rootPath, 'log'))
         else:
