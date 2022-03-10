@@ -8,7 +8,7 @@ from cryptocode import decrypt
 
 if __name__ == '__main__':
 
-    pw = os.listdir('.pw')[0]
+    pw = os.listdir(os.path.join(rootPath, '.pw'))[0]
     with open(os.path.join(rootPath, '.pw', pw), 'r') as readfile:
         comm = readfile.readline()
         mount = comm[0][:-1]
