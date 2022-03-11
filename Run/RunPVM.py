@@ -4,15 +4,9 @@
 from __init__ import *
 from multiprocessing import Pool
 from ReadAndSave.ImportLog import process_log_sql
-from cryptocode import decrypt
+from ReadAndSave.MountDir import mount_log, umount_log
 
 if __name__ == '__main__':
-
-    pw = os.listdir(os.path.join(rootPath, '.pw'))[0]
-    with open(os.path.join(rootPath, '.pw', pw), 'r') as readfile:
-        comm = readfile.readline()
-        mount = comm[0][:-1]
-        umount = comm[1][:-1]
 
     while True:
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
@@ -20,9 +14,9 @@ if __name__ == '__main__':
             # extern dir not mount
             # mount extern dir
             # os comment, dont edit
-            os.system(decrypt(mount, pw))
-
+            mount_log()
             log_file_list = os.listdir(os.path.join(rootPath, 'log'))
+
         else:
             log_file_list = [x for x in log_file_list if 'log' in x]
             log_file_list.sort()
@@ -33,7 +27,7 @@ if __name__ == '__main__':
 
             if len(conver_list) <= 0:
                 print('All data up to date')
-                os.system(decrypt(umount, pw))
+                umount_log()
                 exit()
 
             conver_list.sort()
