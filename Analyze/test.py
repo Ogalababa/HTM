@@ -1,5 +1,5 @@
 from __init__ import *
-from tram_speed import tram_speed_to_sql
+from import_db import get_all_wissel_data
 
 if __name__ == '__main__':
-	tram_speed_to_sql('2021-10-01')
+	print(get_all_wissel_data('2021-10-01'))

@@ -12,7 +12,6 @@ from DataBase.ConnectDB import conn_engine
 
 def wagen_lent(wagen_nr):
     """
-
     :param wagen_nr: int
     :return: int
     """
@@ -90,7 +89,6 @@ def tram_speed_to_sql(log_db):
         except (ValueError, TypeError, KeyError) as err:
             print(err)
             pass
-        
 
     for key in tqdm(data_dict.keys(), desc=f'Save to database {log_db}'):
         try:
