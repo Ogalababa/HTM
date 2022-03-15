@@ -15,7 +15,7 @@ def get_data_name(path='db'):
     """
     :return: list
     """
-    all_db_file = os.listdir(os.path.join(rootPath, 'HTM', '../DataBase', path))
+    all_db_file = os.listdir(os.path.join(rootPath, 'DataBase', path))
     all_db_name = [i[:-3] for i in all_db_file if i[-3:] == '.db']
 
     return all_db_name
