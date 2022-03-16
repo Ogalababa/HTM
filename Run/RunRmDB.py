@@ -11,14 +11,14 @@ if __name__ == '__main__':
     log_db = os.listdir(log_path)
     snelheid_db = os.listdir(snelheid_path)
     while len(log_db) > 365:
-        os.remove(os.path.join(log_path, log_db.sort()[0]))
+        os.remove(os.path.join(log_path, min(log_db)))
         log_db = os.listdir(log_path)
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        print(f'{now}\tRemoved log database {log_db[0]}')
+        print(f'{now}\tRemoved log database {min(log_db)}')
 
     while len(snelheid_db) > 365:
 
-        os.remove(os.path.join(snelheid_path, snelheid_db.sort()[0]))
+        os.remove(os.path.join(snelheid_path, min(snelheid_db)))
         snelheid_db = os.listdir(snelheid_path)
         now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        print(f'{now}\tRemoved snelheid database {log_db[0]}')
+        print(f'{now}\tRemoved snelheid database {min(snelheid_db)}')
