@@ -15,8 +15,8 @@ if __name__ == '__main__':
 
     else:
         log_file_list = [x for x in log_file_list if 'log' in x]
-        log_file_list.sort()
-        log_file = log_file_list[-1]
+
+        log_file = max(log_file_list)
         try:
             process_log_sql(log_file)
             umount_log()
