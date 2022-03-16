@@ -2,6 +2,7 @@
 # coding:utf-8
 # sys
 from __init__ import *
+from datetime import datetime
 
 
 if __name__ == '__main__':
@@ -13,8 +14,12 @@ if __name__ == '__main__':
         log_db.sort()
         os.remove(os.path.join(log_path, log_db[0]))
         log_db = os.listdir(log_path)
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        print(f'{now}\tRemoved database {log_db[0]}')
 
     while len(snelheid_db) > 365:
         snelheid_db.sort()
         os.remove(os.path.join(snelheid_path, snelheid_db[0]))
         snelheid_db = os.listdir(snelheid_path)
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        print(f'{now}\tRemoved database {log_db[0]}')
