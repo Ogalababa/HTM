@@ -1,4 +1,22 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+import os.path
+
 from __init__ import *
+
+
+if __name__ == '__main__':
+    log_path = os.path.join(rootPath, 'DataBase', 'db')
+    snelheid_path = os.path.join(rootPath, 'DataBase', 'snelheid')
+    log_db = os.listdir(log_path)
+    snelheid_db = os.listdir(snelheid_path)
+    while len(log_db) > 365:
+        log_db.sort()
+        os.remove(os.path.join(log_path, log_db[0]))
+        log_db = os.listdir(log_path)
+
+    while len(snelheid_db) > 365:
+        snelheid_db.sort()
+        os.remove(os.path.join(snelheid_path, snelheid_db[0]))
+        snelheid_db = os.listdir(snelheid_path)
