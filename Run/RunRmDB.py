@@ -1,8 +1,6 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
-import os.path
-
 from __init__ import *
 
 
