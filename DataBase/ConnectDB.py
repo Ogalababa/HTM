@@ -1,10 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 from __init__ import *
-
-import pandas as pd
 from sqlalchemy import create_engine
-from tqdm import tqdm
 
 
 def root_path():

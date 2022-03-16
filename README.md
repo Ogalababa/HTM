@@ -112,7 +112,6 @@ systemctl status jupyter
 #### Run
 
 - sqlalchemy
-- tqdm
 - pandas
 - multiprocessing
 - cryptocode

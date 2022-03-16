@@ -2,9 +2,7 @@
 # coding:utf-8
 
 from __init__ import *
-
 import sqlalchemy
-from tqdm import tqdm
 from ReadAndSave.VerSelect import get_wissel_type_nr
 import pandas as pd
 from DataBase.ConnectDB import conn_engine
@@ -38,7 +36,7 @@ def tram_speed_to_sql(log_db):
     all_wissels = insp.get_table_names()
     all_wissels = [i for i in all_wissels if i in get_wissel_type_nr('denBDB3C')]
     data_dict = {}
-    for wissel_nr in tqdm(all_wissels, desc=f'Calculation tram speed {log_db}'):
+    for wissel_nr in all_wissels:
         try:
             all_data = pd.read_sql_table(wissel_nr, conn_engine(log_db))
             all_data['date-time'] = pd.to_datetime(all_data['date-time'])
@@ -90,7 +88,7 @@ def tram_speed_to_sql(log_db):
             print(err)
             pass
 
-    for key in tqdm(data_dict.keys(), desc=f'Save to database {log_db}'):
+    for key in data_dict.keys():
         try:
             data_dict.get(key).to_sql(key,
                                       conn_engine(log_db,

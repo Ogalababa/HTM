@@ -11,9 +11,6 @@ import re
 # analysis
 
 import pandas as pd
-from tqdm import tqdm
-# from tqdm.notebook import tqdm
-
 from sqlalchemy.types import VARCHAR
 from sqlalchemy.types import SMALLINT
 
@@ -37,7 +34,7 @@ def read_log(log_file):
     wissel_data_dict = {}
     with open(log_file, 'r', encoding='utf-8', errors='ignore') as (log):
 
-        for line in tqdm(log, desc=f'Reading log {log_file}'):
+        for line in log:
             if "##" in line or "W657" in line or \
                     "W666" in line or "W662" in line or \
                     "W665" in line or "W668" in line or \
@@ -94,7 +91,7 @@ def log_to_sql(log_data, db_name):
         engine = sql_engine(db_name)
         sqlite_connection = engine.connect()
 
-        for key, values in tqdm(log_data.items(), desc=f'Save {db_name} to SQL'):
+        for key, values in log_data.items():
             # Multy processing
             drop_list = drop_config.get(get_version(key))
             conver_data_value = functools.partial(conver_data, bit_config, byte_config)
@@ -126,7 +123,7 @@ def set_steps_denbdb3c(db_file):
         table_name = [i for i in table_name if i in get_wissel_type_nr('denBDB3C')]
         # get denDBD3C steps
         steps = pd.read_sql_table('denBDB3C', conn_engine('steps', path='norm'))
-        for k in tqdm(table_name, desc='Set steps denBDB3C'):
+        for k in table_name:
             wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
             wissel_status.set_index('date-time', drop=True, inplace=True)
             # df_data = df_data.set_index(['<aanmelden> wagen', '<aanmelden> categorie', '<aanmelden> service'],
