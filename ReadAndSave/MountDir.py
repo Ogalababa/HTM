@@ -10,7 +10,7 @@ def bash_comm():
     with open(os.path.join(rootPath, '.pw', key), 'r') as readfile:
         comm = readfile.readlines()
         mount_comm = comm[0][:-1]
-        umount_comm = comm[0][:-1]
+        umount_comm = comm[1][:-1]
     return key, mount_comm, umount_comm
 
 
