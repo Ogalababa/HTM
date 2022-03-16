@@ -23,7 +23,7 @@ if __name__ == '__main__':
             now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             with open(os.path.join(
                 rootPath,'DataBase','database_update.log'), 'a') as u_log:
-                u_log.write(f'{now}\t Database {log_file} updated ')
+                u_log.write(f'{now}\t Database {log_file} updated\n')
                 
         except (
                 PermissionError,
