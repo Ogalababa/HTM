@@ -43,7 +43,6 @@ def tram_speed_to_sql(log_db):
             afmeld = 0
             lijn_nr = ''
             hfk_in = 0
-            hfk_out = 0
             hfk = False
             for i in range(len(all_data)):
                 row = all_data.iloc[i]
