@@ -1,11 +1,10 @@
 # ！/usr/bin/python3
 # coding:utf-8
 
-from __init__ import *
 import sqlalchemy
-from ReadAndSave.VerSelect import get_wissel_type_nr
+from Run.core.ConvertData.VerSelect import get_wissel_type_nr
 import pandas as pd
-from DataBase.ConnectDB import conn_engine
+from Run.core.ConvertData.ConnectDB import conn_engine
 
 
 def wagen_lent(wagen_nr):

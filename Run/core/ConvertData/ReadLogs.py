@@ -2,9 +2,9 @@
 # coding:utf-8
 # sys
 from __init__ import *
-from Analyze.tram_speed import tram_speed_to_sql
+from Run.core.Analyze.tram_speed import tram_speed_to_sql
 import sqlalchemy
-from DataBase.ConnectDB import conn_engine
+from Run.core.ConvertData.ConnectDB import conn_engine
 import functools
 import gc
 import re
@@ -15,17 +15,10 @@ from sqlalchemy.types import VARCHAR
 from sqlalchemy.types import SMALLINT
 
 # customize file
-from DataBase.ConnectDB import sql_engine
-from HkConfig import ImportIni
-from HkConfig.Config import HkConfig
-from ReadAndSave.VerSelect import get_version, get_wissel_type_nr
-
-
-def root_path():
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    current_dir = os.path.basename(current_path)
-    main_path = f'{current_path.replace(current_dir, "")}'
-    return main_path
+from Run.core.ConvertData.ConnectDB import sql_engine
+from Run.core.ConvertData.ImportConf import bit_config, byte_config, drop_config
+from Run.core.ConvertData.Config import WisselData
+from Run.core.ConvertData.VerSelect import get_version, get_wissel_type_nr
 
 
 def read_log(log_file):
@@ -42,7 +35,7 @@ def read_log(log_file):
                     'W260' in line:
                 pass
             elif 'DATA:PZDA' in line and re.search(r'W\d\d\d', line) is not None:
-                # header_data = HkConfig(line)
+                # header_data = ConvertData(line)
                 wissel_nr = [re.search(r'W\d\d\d', line).group()]
                 wissel_nr = wissel_nr[0]
                 if wissel_nr in wissel_data_dict:
@@ -54,7 +47,7 @@ def read_log(log_file):
 
 
 def conver_data(bit, byte, value):
-    row_data = HkConfig(value, bit, byte)
+    row_data = WisselData(value, bit, byte)
     row_data.line_to_hex()
     row_data.list_to_str()
     row_data.hex_to_bin()
@@ -83,18 +76,21 @@ def mapping_df_types(df):
     return dtypedict
 
 
+
+
+
 def log_to_sql(log_data, db_name):
     try:
-        bit_config = ImportIni.bit_config()
-        byte_config = ImportIni.byte_config()
-        drop_config = ImportIni.drop_config()
+        bit_configs = bit_config()
+        byte_configs = byte_config()
+        drop_configs = drop_config()
         engine = sql_engine(db_name)
         sqlite_connection = engine.connect()
 
         for key, values in log_data.items():
             # Multy processing
-            drop_list = drop_config.get(get_version(key))
-            conver_data_value = functools.partial(conver_data, bit_config, byte_config)
+            drop_list = drop_configs.get(get_version(key))
+            conver_data_value = functools.partial(conver_data, bit_configs, byte_configs)
             data = list(map(conver_data_value, values))
             df_data_list = list(map(dataframe_str, data))
             df_data = pd.concat(df_data_list, ignore_index=True)
@@ -133,7 +129,7 @@ def set_steps_denbdb3c(db_file):
 
 
 def process_log_sql(log_file):
-    log_path = os.path.join(root_path(), 'log', log_file)
+    log_path = os.path.join(rootPath, 'log', log_file)
     wissel_log, date = read_log(log_path)
     try:
         log_to_sql(wissel_log, date)

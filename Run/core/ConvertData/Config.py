@@ -6,7 +6,7 @@ import re
 
 
 # noinspection PyTypeChecker
-class HkConfig:
+class WisselData:
 
     def __init__(self, hex_data, bit_config, byte_config):
         """

@@ -2,8 +2,6 @@
 
 
 
-
-# @st.cache
 def get_version(values):
     wissel_version = {
         'denAHA4C': ['W425'],
@@ -94,7 +92,7 @@ def get_wissel_type_nr(values):
 '''
 def ver_select(data_line):
     # import ini config
-    header_data = HkConfig(data_line)
+    header_data = ConvertData(data_line)
     wissel_nr = header_data.wissel_info.get('Wissel Nr')
     wissel_version = get_version(wissel_nr)
     return wissel_version'''

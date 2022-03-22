@@ -4,7 +4,7 @@
 
 from __init__ import *
 from multiprocessing import Pool
-from ReadAndSave.ImportLog import process_log_sql
+from Run.core.ConvertData.ReadLogs import process_log_sql
 
 if __name__ == '__main__':
 

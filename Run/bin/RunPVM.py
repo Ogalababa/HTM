@@ -3,8 +3,8 @@
 # sys
 from __init__ import *
 from multiprocessing import Pool
-from ReadAndSave.ImportLog import process_log_sql
-from ReadAndSave.MountDir import mount_log, umount_log
+from Run.core.ConvertData.ReadLogs import process_log_sql
+from Run.core.LogFilter.MountDir import mount_log, umount_log
 
 if __name__ == '__main__':
 

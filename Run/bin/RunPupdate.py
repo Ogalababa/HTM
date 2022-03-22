@@ -2,8 +2,8 @@
 # coding:utf-8
 # sys
 from __init__ import *
-from ReadAndSave.ImportLog import process_log_sql
-from ReadAndSave.MountDir import mount_log, umount_log
+from Run.core.ConvertData.ReadLogs import process_log_sql
+from Run.core.LogFilter.MountDir import mount_log, umount_log
 from datetime import datetime
 
 if __name__ == '__main__':

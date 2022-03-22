@@ -1,9 +1,8 @@
 # ！/usr/bin/python3
 # coding:utf-8
-from __init__ import *
 import pandas as pd
 import sqlalchemy
-from DataBase.ConnectDB import conn_engine
+from Run.core.ConvertData.ConnectDB import conn_engine
 
 
 def get_all_wissel_data(log_db):
