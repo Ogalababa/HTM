@@ -14,7 +14,7 @@ def update_db():
         mount_log()  # mount extern dir
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
 
-    if len(log_file_list) > 0:
+    if len(log_file_list) > 1:
         log_file_list = [x for x in log_file_list if 'log' in x]
 
         log_file = max(log_file_list)
