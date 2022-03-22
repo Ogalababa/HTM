@@ -1,6 +1,5 @@
 # ！/usr/bin/python3
 # coding:utf-8
-from __init__ import *
 
 import pandas as pd
 import plotly.express as px
@@ -8,7 +7,7 @@ import plotly.io as pio
 
 # streamlit
 import streamlit as st
-from Show import GetData
+from Show.core import GetData
 
 from fpdf import FPDF
 from tempfile import NamedTemporaryFile

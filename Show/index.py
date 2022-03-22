@@ -6,8 +6,7 @@ import streamlit as st
 from streamlit.logger import get_logger
 from collections import OrderedDict
 
-
-import GetData
+from Show.core import GetData
 import pages
 
 # set page size
