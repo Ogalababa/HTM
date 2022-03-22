@@ -22,6 +22,7 @@ from Run.core.Analyze.tram_speed import tram_speed_to_sql
 
 
 def read_log(log_file):
+    """Read log data from wissel log file"""
     log_file_name = os.path.basename(log_file)
     date = f'{log_file_name[:4]}-{log_file_name[4:6]}-{log_file_name[6:8]}'
     wissel_data_dict = {}
@@ -48,6 +49,7 @@ def read_log(log_file):
 
 
 def conver_data(bit, byte, value):
+    """Convert wissel log data to wissel satus"""
     row_data = WisselData(value, bit, byte)
     row_data.line_to_hex()
     row_data.list_to_str()
@@ -81,6 +83,7 @@ def mapping_df_types(df):
 
 
 def log_to_sql(log_data, db_name):
+    """Convert log file to database"""
     try:
         bit_configs = bit_config()
         byte_configs = byte_config()
@@ -111,6 +114,7 @@ def dataframe_str(value):
 
 
 def set_steps_denbdb3c(db_file):
+    """Set cycle steps for wissel type denbdb3c"""
     try:
         # 匹配 denDBD3C steps
         table_name = sqlalchemy.inspect(conn_engine(db_file)).get_table_names()

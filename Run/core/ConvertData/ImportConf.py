@@ -7,6 +7,7 @@ from __init__ import *
 
 
 def bit_config():
+    """Get bit config from wissel type config file"""
     ini_list = os.listdir(os.path.join(runPath, 'conf'))
     remove_list = ['.ipynb_checkpoints']
     ini_list = [i for i in ini_list if i not in remove_list]
@@ -24,6 +25,7 @@ def bit_config():
 
 
 def byte_config():
+    """Get byte config from wissel type config file"""
     start = 'byte start'
     end = 'byte end'
     ini_list = os.listdir(os.path.join(runPath, 'conf'))

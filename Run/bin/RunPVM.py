@@ -6,8 +6,9 @@ from multiprocessing import Pool
 from Run.core.ConvertData.ReadLogs import process_log_sql
 from Run.core.LogFilter.MountDir import mount_log, umount_log
 
-if __name__ == '__main__':
 
+def recover_db():
+    """Recover all database from wissel log files"""
     while True:
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
         if len(log_file_list) == 0:
@@ -47,3 +48,8 @@ if __name__ == '__main__':
             except KeyboardInterrupt:
                 exit()
         continue
+
+
+if __name__ == '__main__':
+
+    recover_db()

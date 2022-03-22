@@ -9,6 +9,9 @@ import re
 
 # noinspection PyTypeChecker
 class WisselData:
+    """
+    Convert wissel data from log file
+    """
 
     def __init__(self, hex_data, bit_config, byte_config):
         """
@@ -58,15 +61,8 @@ class WisselData:
         except ValueError:
             pass
 
-    @staticmethod
-    def main_dir():
-        curentpath = os.path.dirname(os.path.realpath(__file__))
-        curentdir = os.path.basename(curentpath)
-        maindir = f'{curentpath.replace(curentdir, "")}'
-        return maindir
-
     def line_to_hex(self):
-
+        """detect hex data from log file"""
         single_hex = ''
         hex_start = False
         hex_end = False
@@ -97,13 +93,14 @@ class WisselData:
         return self.hex_str_list
 
     def list_to_str(self):
-
+        """Convert hex data to string"""
         self.hex_str_list.reverse()
         for single_hex in self.hex_str_list:
             self.hex_str += single_hex
         return self.hex_str
 
     def hex_to_bin(self):
+        """Convert hex string to binary string"""
         try:
             interger = int(self.hex_str, 16)
             bits = len(self.hex_str * 4)
@@ -113,6 +110,7 @@ class WisselData:
         return self.bin_data
 
     def covert_data(self):
+        """Convert binary data to wissel status data"""
         # Record date - time
         record_date = self.bin_data[self.LOC_DATE_START:self.LOC_DATE_END]
         record_time = self.bin_data[self.LOC_TIME_START: self.LOC_TIME_END]
@@ -157,7 +155,7 @@ class WisselData:
         return self.wissel_info
 
     def wissel_version(self, version):
-
+        """Get wissel version from wissel nr"""
         if version is None:
             pass
         else:

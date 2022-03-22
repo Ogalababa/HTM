@@ -4,6 +4,7 @@
 
 
 def get_version(values):
+    """Get wissel type from wissel nr"""
     wissel_version = {
         'denAHA4C': ['W425'],
         'denAJB1C': ['W050'],
@@ -50,6 +51,7 @@ def get_version(values):
 
 
 def get_wissel_type_nr(values):
+    """Get wissel nr from wissel type"""
     wissel_version = {
         'denAHA4C': ['W425'],
         'denAJB1C': ['W050'],
@@ -88,12 +90,3 @@ def get_wissel_type_nr(values):
     }
     return wissel_version.get(values)
 
-
-# @st.cache
-'''
-def ver_select(data_line):
-    # import ini config
-    header_data = ConvertData(data_line)
-    wissel_nr = header_data.wissel_info.get('Wissel Nr')
-    wissel_version = get_version(wissel_nr)
-    return wissel_version'''

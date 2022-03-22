@@ -6,8 +6,9 @@ from Run.core.ConvertData.ReadLogs import process_log_sql
 from Run.core.LogFilter.MountDir import mount_log, umount_log
 from datetime import datetime
 
-if __name__ == '__main__':
 
+def update_db():
+    """Update database from last log file"""
     log_file_list = os.listdir(os.path.join(rootPath, 'log'))
     if len(log_file_list) == 0:
         mount_log()  # mount extern dir
@@ -34,3 +35,8 @@ if __name__ == '__main__':
             pass
         except KeyboardInterrupt:
             exit()
+
+
+if __name__ == '__main__':
+    update_db()
+

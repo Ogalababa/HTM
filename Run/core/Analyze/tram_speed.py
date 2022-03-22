@@ -10,6 +10,7 @@ from Run.core.ConvertData.ConnectDB import conn_engine
 
 def wagen_lent(wagen_nr):
     """
+    default wagen lent
     :param wagen_nr: int
     :return: int
     """
@@ -27,7 +28,7 @@ def wagen_lent(wagen_nr):
 def tram_speed_to_sql(log_db):
     # 从log db中提取tram通过wissel的速度
     """
-
+    Calculate tram speed over the wissel from database
     :param log_db: str
     :return: none
     """
