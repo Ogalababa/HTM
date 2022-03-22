@@ -1,3 +1,6 @@
+# ！/usr/bin/python3
+# coding:utf-8
+# sys
 # convert data with H & k Config
 import configparser
 from __init__ import *

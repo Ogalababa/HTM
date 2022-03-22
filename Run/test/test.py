@@ -1,3 +1,6 @@
+# ！/usr/bin/python3
+# coding:utf-8
+# sys
 from __init__ import *
 from import_db import get_all_wissel_data
 

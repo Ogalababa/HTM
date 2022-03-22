@@ -1,5 +1,6 @@
+# ！/usr/bin/python3
 # coding:utf-8
-
+# sys
 
 
 def get_version(values):

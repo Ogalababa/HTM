@@ -2,9 +2,7 @@
 # coding:utf-8
 # sys
 from __init__ import *
-from Run.core.Analyze.tram_speed import tram_speed_to_sql
 import sqlalchemy
-from Run.core.ConvertData.ConnectDB import conn_engine
 import functools
 import gc
 import re
@@ -19,6 +17,8 @@ from Run.core.ConvertData.ConnectDB import sql_engine
 from Run.core.ConvertData.ImportConf import bit_config, byte_config, drop_config
 from Run.core.ConvertData.Config import WisselData
 from Run.core.ConvertData.VerSelect import get_version, get_wissel_type_nr
+from Run.core.ConvertData.ConnectDB import conn_engine
+from Run.core.Analyze.tram_speed import tram_speed_to_sql
 
 
 def read_log(log_file):
