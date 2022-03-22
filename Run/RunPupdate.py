@@ -13,7 +13,7 @@ if __name__ == '__main__':
         mount_log()  # mount extern dir
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
 
-    else:
+    if len(log_file_list) > 0:
         log_file_list = [x for x in log_file_list if 'log' in x]
 
         log_file = max(log_file_list)
