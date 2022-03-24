@@ -1,14 +1,13 @@
 # ！/usr/bin/python3
 # coding:utf-8
-
+# sys
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 
 # streamlit
 import streamlit as st
-from Show.core import GetData
-
+from Show.core.GetData import get_tram_speed, create_download_link
 from fpdf import FPDF
 from tempfile import NamedTemporaryFile
 
@@ -18,7 +17,7 @@ def tram_speed(select_data):
     figs = []
 
     if len(select_data) > 0:
-        df_all_data = GetData.get_tram_speed(select_data)
+        df_all_data = get_tram_speed(select_data)
         mode = st.sidebar.radio(
             'Grafiek mode：',
             ('Max waarde', 'Grafiek per wissel', 'Grafiek per wagen')
@@ -228,21 +227,21 @@ def tram_speed(select_data):
                     pio.write_image(fig, tmpfile.name, height=500)
                     pdf.image(tmpfile.name, 10, 10)
             if len(select_data) >= 2:
-                html = GetData.create_download_link(pdf.output(dest="S").encode("latin-1"),
+                html = create_download_link(pdf.output(dest="S").encode("latin-1"),
                                                     f'{mode}_{select_data[-1]}_{select_data[0]}')
             else:
-                html = GetData.create_download_link(pdf.output(dest="S").encode("latin-1"),
+                html = create_download_link(pdf.output(dest="S").encode("latin-1"),
                                                     f'{mode}-{select_data[0]}')
             st.sidebar.markdown(html, unsafe_allow_html=True)
         if export_as_csv:
             csv = df_all_data[[
                 'Lijn', 'Wagen Nr', 'Categorie',
                 'Service', 'Wissel Nr', 'Tijd',
-                'snelheid km/h']].to_csv().encode()
+                'snelheid km/h', 'Richting']].to_csv().encode()
             if len(select_data) >= 2:
-                href = GetData.create_download_link(csv, f'{select_data[-1]}_{select_data[0]}', 'csv')
+                href = create_download_link(csv, f'{select_data[-1]}_{select_data[0]}', 'csv')
             else:
-                href = GetData.create_download_link(csv, select_data[0], 'csv')
+                href = create_download_link(csv, select_data[0], 'csv')
             st.sidebar.markdown(href, unsafe_allow_html=True)
 
     else:

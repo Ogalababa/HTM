@@ -21,7 +21,6 @@ def get_data_name(path='db'):
     return all_db_name
 
 
-@st.cache
 def get_tram_speed(selected_db, path='snelheid'):
     """
 

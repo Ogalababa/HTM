@@ -35,7 +35,7 @@ def tram_speed_to_sql(log_db):
 
     insp = sqlalchemy.inspect(conn_engine(log_db))
     all_wissels = insp.get_table_names()
-    all_wissels = [i for i in all_wissels if i in get_wissel_type_nr('denBDB3C')]
+    # all_wissels = [i for i in all_wissels if i in get_wissel_type_nr('denBDB3C')]
     data_dict = {}
     for wissel_nr in all_wissels:
         try:
@@ -44,9 +44,17 @@ def tram_speed_to_sql(log_db):
             afmeld = 0
             lijn_nr = ''
             hfk_in = 0
+            richting = '0'
             hfk = False
             for i in range(len(all_data)):
                 row = all_data.iloc[i]
+                if row['<input> naar gerade'] == 1:
+                    richting = 'Recht door'
+                elif row['<input> naar rechts'] == 1:
+                    richting = 'Rechts af'
+                elif row['<input> naar links'] == 1:
+                    richting = 'links af'
+
                 if row['<hfk> schakelcriterium bezet'] == 1 and \
                         row['<hfp> schakelcriterium bezet'] == 1 and \
                         row['<afmelden> wagen'] != 0 and \
@@ -67,6 +75,7 @@ def tram_speed_to_sql(log_db):
                                           '<aanmelden> categorie',
                                           '<aanmelden> service',
                                           'wissel nr']]
+                        tram_speed['Richting'] = richting
                         tram_speed['hfk_in'] = hfk_in
                         tram_speed['hfk_uit'] = hfk_out
                         tram_speed['snelheid km/h'] = round(wagen_lent(row['<afmelden> wagen']) /

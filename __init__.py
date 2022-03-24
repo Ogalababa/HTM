@@ -1,11 +1,11 @@
 import sys
 import os
-curPath = os.path.abspath(os.path.dirname(__file__))
-rootPath = os.path.split(curPath)[0]
+rootPath = os.path.abspath(os.path.dirname(__file__))
 runPath = os.path.join(rootPath, 'Run')
 binPath = os.path.join(runPath, 'bin')
 confPath = os.path.join(runPath, 'conf')
 corePath = os.path.join(runPath, 'core')
+dataPath = os.path.join(rootPath, 'DataBase')
 
 sys.path.append(rootPath)
 sys.path.append(runPath)
