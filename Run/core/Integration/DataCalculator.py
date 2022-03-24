@@ -91,4 +91,3 @@ class Calculator:
                 print(err)
                 pass
         save_to_sql(self.db_name, data_dict, 'snelheid')
-

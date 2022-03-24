@@ -7,7 +7,6 @@ from Run.core.ConvertData.ConnectDB import conn_engine
 
 
 def get_all_wissel_data(log_db):
-
     """
     :param log_db: str
     :return dict

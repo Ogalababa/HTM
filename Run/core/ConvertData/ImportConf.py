@@ -54,5 +54,3 @@ def drop_config():
         drop_list = config.options('drop')
         drop[ini_name[:-4]] = drop_list
     return drop
-
-

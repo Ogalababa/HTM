@@ -106,4 +106,3 @@ def tram_speed_to_sql(log_db):
                                       if_exists='replace')
         except (ValueError, TypeError, KeyError):
             pass
-        

@@ -89,4 +89,3 @@ def get_wissel_type_nr(values):
         'denCFA2C': ['W661']
     }
     return wissel_version.get(values)
-

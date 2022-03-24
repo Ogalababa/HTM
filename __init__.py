@@ -1,5 +1,6 @@
 import sys
 import os
+
 rootPath = os.path.abspath(os.path.dirname(__file__))
 runPath = os.path.join(rootPath, 'Run')
 binPath = os.path.join(runPath, 'bin')

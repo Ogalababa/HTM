@@ -50,5 +50,4 @@ def recover_db():
 
 
 if __name__ == '__main__':
-
     recover_db()

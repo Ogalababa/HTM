@@ -148,4 +148,3 @@ def process_log_sql(log_file):
         print(ie)
     except KeyboardInterrupt:
         exit()
-
