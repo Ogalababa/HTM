@@ -4,7 +4,9 @@
 from __init__ import *
 import pandas as pd
 import sqlalchemy
+
 from Run.core.ConvertData.ConnectDB import conn_engine
+from Run.core.Integration.DataInitialization import get_alldata_from_db
 
 # streamlit
 import streamlit as st
@@ -50,3 +52,20 @@ def create_download_link(val, filename, pdf='pdf'):
     b64 = base64.b64encode(val)
     return f'<a href="data:application/octet-stream;base64,' \
            f'{b64.decode()}" download="{filename}.{pdf}">Download {pdf.upper()}</a>'
+
+
+@st.cache
+def get_all_data(selected_db, path='db'):
+    """
+    Read all data from log db
+    :param selected_db: list
+    :param path: database dir
+    :return: {wissel nr: Dataframe}
+    """
+    data_list = []
+    wissel_list = []
+    for i in selected_db:
+        data_dict = get_alldata_from_db(i, path='db')
+        wissel_list.extend(data_dict.keys())
+        data_list.append(data_dict)
+    return data_list, list(set(wissel_list))

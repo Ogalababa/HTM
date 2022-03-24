@@ -211,7 +211,7 @@ def tram_speed(select_data):
                 speed_counts['Tijd'] = speed_counts['Tijd'].astype(str)
                 fig_counts_2 = px.sunburst(speed_counts,
                                            title='Snelheid overzicht',
-                                           path=['Wagen Nr', 'snelheid km/h', 'Richting','Wissel Nr', 'Tijd'],
+                                           path=['Wagen Nr', 'snelheid km/h', 'Richting', 'Wissel Nr', 'Tijd'],
                                            values='hoeveelheid',
                                            color='snelheid km/h',
                                            color_continuous_scale=px.colors.sequential.RdBu,

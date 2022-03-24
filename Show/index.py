@@ -26,14 +26,7 @@ PAGES = OrderedDict(
           None
           )
          ),
-        # ('Wissel gebruiks',
-        #  (
-        #      pages.wissel_gebruiks,
-        #      '''
-        #         Deze pagina toont de druk van elke wissel per dag
-        #         ''',
-        #  ),
-        #
+
         ('Tram snelheid', (
             pages.tram_speed,
             '''
@@ -41,6 +34,14 @@ PAGES = OrderedDict(
             ''',
         ),
          ),
+
+        ('All data', (
+                    pages.all_data,
+                    '''
+                    Deze pagina toont alle data van wissel status
+                    ''',
+                ),
+                 ),
     ]
 )
 
@@ -66,14 +67,8 @@ def run():
         all_table_name.sort(reverse=True)
         default_table = all_table_name[:1]
         select_data = st.sidebar.multiselect('Selecteer gegevens om te analyseren', all_table_name, default_table)
-        # 选项滑动条
-        # start_date, end_date = st.sidebar.select_slider(
-        #     'Selecteer gegevens om te analyseren',
-        #     options=all_table_name,
-        #     value=all_table_name[-2:])
-        # select_data = all_table_name[all_table_name.index(start_date):all_table_name.index(end_date)]
         page(select_data)
-        # page()
+
 
     else:
         st.markdown('# %s' % page_name)
