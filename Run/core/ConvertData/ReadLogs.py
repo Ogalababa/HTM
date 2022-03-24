@@ -79,9 +79,6 @@ def mapping_df_types(df):
     return dtypedict
 
 
-
-
-
 def log_to_sql(log_data, db_name):
     """Convert log file to database"""
     try:
