@@ -6,7 +6,7 @@ import streamlit as st
 from streamlit.logger import get_logger
 from collections import OrderedDict
 
-from Show.core import GetData
+from core import GetData
 import pages
 
 # set page size
@@ -34,6 +34,14 @@ PAGES = OrderedDict(
             ''',
         ),
          ),
+
+        ('Wissel schakelen', (
+                    pages.st_wissel_schakel,
+                    '''
+                    Deze pagina toont de aantal schakelen van wissels
+                    ''',
+            ),
+             ),
 
         ('All data', (
                     pages.all_data,

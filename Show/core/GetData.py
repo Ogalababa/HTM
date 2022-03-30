@@ -65,7 +65,7 @@ def get_all_data(selected_db, path='db'):
     data_list = []
     wissel_list = []
     for i in selected_db:
-        data_dict = get_alldata_from_db(i, path='db')
+        data_dict = get_alldata_from_db(i, path=path)
         wissel_list.extend(data_dict.keys())
         data_list.append(data_dict)
     return data_list, list(set(wissel_list))
