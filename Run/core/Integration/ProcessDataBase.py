@@ -21,7 +21,7 @@ def process_db(log_file):
         set_steps_denbdb3c(date)
         data_exp = Calculator(date)
         data_exp.C_tram_speed()
-
+        data_exp.C_wissel_schakel()
     except (AttributeError, UnicodeDecodeError, IndexError) as err:
         print(err)
 

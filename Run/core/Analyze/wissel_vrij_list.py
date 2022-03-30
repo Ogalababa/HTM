@@ -1,0 +1,22 @@
+# ！/usr/bin/python3
+# coding:utf-8
+# sys
+import pandas as pd
+
+
+def wissel_cycle_list(df):
+    """
+    Calculate wissel status cycles, return index nr when wissel is free
+    :param df: wissel status dataframe
+    :return: list with dataframe index nr
+    """
+    index_list = df[df['<wissel> op slot'] == 0].index.values
+    index_nr = 0
+    drop_list = []
+    for i in range(1, len(index_list) - 1):
+        if index_list[i] - index_nr < 5:
+            index_nr = index_list[i]
+            drop_list.append(index_list[i])
+        else:
+            index_nr = index_list[i]
+    return [i for i in index_list if i not in drop_list]

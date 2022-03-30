@@ -3,9 +3,6 @@
 # sys
 
 import pandas as pd
-
-from Run.core.Analyze.wissel_schakel import wissel_schakel
-from Run.core.Analyze.wissel_vrij_list import wissel_cycle_list
 from Run.core.Integration.DataInitialization import get_alldata_from_db
 from Run.core.Integration.DataInitialization import save_to_sql
 from Run.core.Tools.VaribleTool import wagen_length
@@ -28,7 +25,7 @@ class Calculator:
     def C_tram_speed(self):
         """
         Calculate tram speed while tram passing the wissel
-        :return: save to sqlite3 file
+        :return: dict
         """
         data_dict = {}
         for key, value in self.db_dict.items():
@@ -94,22 +91,3 @@ class Calculator:
                 print(err)
                 pass
         save_to_sql(self.db_name, data_dict, 'snelheid')
-
-    def C_wissel_schakel(self):
-        """
-        Calculate wissel switch from database
-        :return: save to sqlite3 file
-        """
-        data_dict = {}
-        for key, values in self.db_dict.items():
-            try:
-                status_list = []
-                index_list = wissel_cycle_list(values)
-                for i in range(len(index_list) - 1):
-                    cycle_df = values[index_list[i]:index_list[i+1]]
-                    status_list.append(wissel_schakel(cycle_df))
-                data_dict[key] = pd.concat(status_list)
-            except(KeyError, IndexError, ValueError):
-                pass
-
-        save_to_sql(self.db_name, data_dict, 'schakelen')
