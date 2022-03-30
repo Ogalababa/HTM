@@ -32,7 +32,7 @@ def wissel_schakel(df):
 
             if position_before is None:
                 if row_dict.get("<wissel> links") == 1:
-                    position_before = "links"
+                    position_before = "Links"
                 elif row_dict.get("<wissel> rechts") == 1:
                     position_before = "Rechts"
             elif position_request is None:
@@ -55,9 +55,9 @@ def wissel_schakel(df):
             else:
                 wissel_omloop = -2
 
-            if position_before != position_after and position_after is not None:
+            if position_before != position_after:
                 wissel_omloop = 1
-            elif position_before == position_after and position_after is not None:
+            elif position_before == position_after:
                 wissel_omloop = 0
             if not all([position_before, position_request, position_after]):
                 wissel_omloop = -1
