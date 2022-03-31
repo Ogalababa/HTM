@@ -12,15 +12,15 @@ def wissel_schakel(df):
     :return: wissel switch status dataframe
     """
     beweging = {}
+    tijd = df.iloc[1]['date-time']
+    wissel_nr = df.iloc[1]['wissel nr']
+    position_before = None
+    position_after = None
+    position_request = None
+    # position_action = None
+    wagen_nr = 0
+    wissel_omloop = -2 # default Error
     try:
-        tijd = df.iloc[1]['date-time']
-        wissel_nr = df.iloc[1]['wissel nr']
-        position_before = None
-        position_after = None
-        position_request = None
-        # position_action = None
-        wagen_nr = 0
-        wissel_omloop = -1 # default Error
 
         for i in range(len(df) - 1):
             row = df.iloc[i]
@@ -47,7 +47,7 @@ def wissel_schakel(df):
             #         position_action = "Links"
             #     elif row_dict.get("<wissel> naar rechts") == 1:
             #         position_action = "Rechts"
-            elif position_after is not None:
+            elif  position_request is not None:
                 if row_dict.get("<wissel> links") == 1:
                     position_after = "Links"
                 elif row_dict.get("<wissel> rechts") == 1:
@@ -74,4 +74,7 @@ def wissel_schakel(df):
         print(err)
         pass
 
-    return pd.DataFrame(beweging)
+    if wissel_omloop < 0:
+        return [pd.DataFrame(beweging), df]
+    else:
+        return [pd.DataFrame(beweging)]

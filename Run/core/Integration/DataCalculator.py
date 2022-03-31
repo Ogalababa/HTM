@@ -1,7 +1,6 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
-
 import pandas as pd
 
 from Run.core.Analyze.wissel_schakel import wissel_schakel
@@ -28,7 +27,7 @@ class Calculator:
     def C_tram_speed(self):
         """
         Calculate tram speed while tram passing the wissel
-        :return: save to sqlite3 file
+        :return: dict
         """
         data_dict = {}
         for key, value in self.db_dict.items():
@@ -107,9 +106,10 @@ class Calculator:
                 index_list = wissel_cycle_list(values)
                 for i in range(len(index_list) - 1):
                     cycle_df = values[index_list[i]:index_list[i+1]]
-                    status_list.append(wissel_schakel(cycle_df))
+                    schakel_status = wissel_schakel(cycle_df)
+                    status_list.append(schakel_status[0])
                 data_dict[key] = pd.concat(status_list)
-            except(KeyError, IndexError, ValueError):
+            except(KeyError, IndexError, ValueError, TypeError):
                 pass
 
         save_to_sql(self.db_name, data_dict, 'schakelen')
