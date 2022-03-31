@@ -61,14 +61,16 @@ def wissel_schakel(df):
                 wissel_omloop = 0
             if not all([position_before, position_request, position_after]):
                 wissel_omloop = -1
-        beweging['tijd'] = [tijd]
-        beweging['wissel nr'] = [wissel_nr]
-        beweging['wagen nr'] = [wagen_nr]
-        beweging['voor'] = [position_before]
+            if wagen_nr == 0:
+                wissel_omloop = -1
+        beweging['Tijd'] = [tijd]
+        beweging['Wissel Nr'] = [wissel_nr]
+        beweging['Wagen Nr'] = [wagen_nr]
+        beweging['Voor'] = [position_before]
         beweging['aanvragen'] = [position_request]
-        beweging['na'] = [position_after]
-        beweging['omloop'] = [wissel_omloop]
-        beweging['steps'] = [len(df)]
+        beweging['Na'] = [position_after]
+        beweging['Schakelen'] = [wissel_omloop]
+        beweging['Steps'] = [len(df)]
 
     except (ValueError, TypeError, KeyError) as err:
         print(err)

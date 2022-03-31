@@ -23,6 +23,7 @@ class Calculator:
         """
         self.db_name = db_name
         self.db_dict = get_alldata_from_db(db_name, path='db')
+        self.error_list = []
 
     def C_tram_speed(self):
         """
@@ -100,15 +101,18 @@ class Calculator:
         :return: save to sqlite3 file
         """
         data_dict = {}
+
         for key, values in self.db_dict.items():
             try:
                 status_list = []
                 index_list = wissel_cycle_list(values)
                 for i in range(len(index_list) - 1):
-                    cycle_df = values[index_list[i]:index_list[i+1]]
+                    cycle_df = values[index_list[i]:index_list[i + 1]]
                     schakel_status = wissel_schakel(cycle_df)
                     status_list.append(schakel_status[0])
                 data_dict[key] = pd.concat(status_list)
+                if len(schakel_status) > 1:
+                    self.error_list.append(schakel_status[1])
             except(KeyError, IndexError, ValueError, TypeError):
                 pass
 
