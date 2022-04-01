@@ -110,9 +110,10 @@ class Calculator:
                     cycle_df = values[index_list[i]:index_list[i + 1]]
                     schakel_status = wissel_schakel(cycle_df)
                     status_list.append(schakel_status[0])
+                    if len(schakel_status) > 1:
+                        self.error_list.append(schakel_status[1])
                 data_dict[key] = pd.concat(status_list)
-                if len(schakel_status) > 1:
-                    self.error_list.append(schakel_status[1])
+
             except(KeyError, IndexError, ValueError, TypeError):
                 pass
 
