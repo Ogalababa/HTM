@@ -33,7 +33,6 @@ def st_wissel_schakel(select_data):
         for i in data_dict_list:
             dataframe_list.append(pd.concat(i.values()))
         all_data_df = pd.concat(dataframe_list)
-        # all_data_df['Tijd'] = pd.to_datetime(all_data_df['Tijd'])
 
         wissel_list = list(set(all_data_df['Wissel Nr']))
         wissel_list.sort()

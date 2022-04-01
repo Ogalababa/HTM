@@ -118,3 +118,11 @@ class Calculator:
                 pass
 
         save_to_sql(self.db_name, data_dict, 'schakelen')
+
+    def C_storingen(self):
+        storingen = {}
+        x = 0
+        for i in self.error_list:
+            storingen[str(x)] = i
+            x += 1
+        save_to_sql(self.db_name, storingen, 'storing')
