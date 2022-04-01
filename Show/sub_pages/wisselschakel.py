@@ -41,17 +41,11 @@ def st_wissel_schakel(select_data):
         schakel_data = all_data_df[all_data_df['Wissel Nr'] == selected_wissel]
 
         with col2:
-            fig_schakelen_1 = px.line(schakel_data,
-                                      x='Tijd', y='Na',
-                                      title='Wissel schakelen overzicht',
-                                      hover_data=['Wagen Nr',
-                                                  'Voor',
-                                                  'aanvragen',
-                                                  'Na',
-                                                  'Steps'],
-                                      height=layout_height,
-                                      markers=True
-                                      )
+            fig_schakelen_1 = px.line(
+                schakel_data, x='Tijd', y='Na', title='Wissel schakelen overzicht',
+                hover_data=['Wagen Nr', 'Voor', 'aanvragen', 'Na', 'Steps'], height=layout_height,
+                markers=True
+            )
             st.plotly_chart(fig_schakelen_1, use_container_width=True)
             figs.append(fig_schakelen_1)
 
