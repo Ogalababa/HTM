@@ -33,7 +33,7 @@ def st_wissel_schakel(select_data):
         for i in data_dict_list:
             dataframe_list.append(pd.concat(i.values()))
         all_data_df = pd.concat(dataframe_list)
-        all_data_df['Tijd'] = pd.to_datetime(all_data_df['Tijd'])
+        # all_data_df['Tijd'] = pd.to_datetime(all_data_df['Tijd'])
 
         wissel_list = list(set(all_data_df['Wissel Nr']))
         wissel_list.sort()
@@ -43,9 +43,8 @@ def st_wissel_schakel(select_data):
         with col2:
             fig_schakelen_1 = px.line(
                 schakel_data, x='Tijd', y='Na', title='Wissel schakelen overzicht',
-                hover_data=['Wagen Nr', 'Voor', 'aanvragen', 'Na', 'Steps'], height=layout_height,
-                markers=True
-            )
+                hover_data=['Wagen Nr','Voor','aanvragen','Na','Steps'], height=layout_height, markers=True
+                )
             st.plotly_chart(fig_schakelen_1, use_container_width=True)
             figs.append(fig_schakelen_1)
 
@@ -64,7 +63,7 @@ def st_wissel_schakel(select_data):
             st.markdown('#')
             st.markdown('#')
             st.markdown('#')
-            col3.metric("Aanvraag ", len(schakel_data))
+            col3.metric("Aanvraag ", len(schakel_data), )
             col3.metric("Overschakelen", aantalen, f'{schakel_delta} %')
             col3.metric("Storing", storing, f'{-storing_delta} %')
 
