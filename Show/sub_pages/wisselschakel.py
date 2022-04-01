@@ -64,7 +64,7 @@ def st_wissel_schakel(select_data):
             st.markdown('#')
             st.markdown('#')
             st.markdown('#')
-            col3.metric("Aanvraag ", len(schakel_data), )
+            col3.metric("Aanvraag ", len(schakel_data))
             col3.metric("Overschakelen", aantalen, f'{schakel_delta} %')
             col3.metric("Storing", storing, f'{-storing_delta} %')
 
