@@ -54,7 +54,7 @@ def create_download_link(val, filename, pdf='pdf'):
            f'{b64.decode()}" download="{filename}.{pdf}">Download {pdf.upper()}</a>'
 
 
-@st.cache
+
 def get_all_data(selected_db, path='db'):
     """
     Read all data from log db

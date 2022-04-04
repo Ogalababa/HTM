@@ -245,11 +245,13 @@ def tram_speed(select_data):
                     pio.write_image(fig, tmpfile.name, height=500)
                     pdf.image(tmpfile.name, 10, 10)
             if len(select_data) >= 2:
-                html = create_download_link(pdf.output(dest="S").encode("latin-1"),
-                                            f'{mode}_{select_data[-1]}_{select_data[0]}')
+                html = create_download_link(
+                    pdf.output(dest="S").encode("latin-1"), f'{mode}_{select_data[-1]}_{select_data[0]}'
+                )
             else:
-                html = create_download_link(pdf.output(dest="S").encode("latin-1"),
-                                            f'{mode}-{select_data[0]}')
+                html = create_download_link(
+                    pdf.output(dest="S").encode("latin-1"), f'{mode}-{select_data[0]}'
+                )
             st.sidebar.markdown(html, unsafe_allow_html=True)
         if export_as_csv:
             csv = df_all_data[[
