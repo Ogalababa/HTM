@@ -122,22 +122,24 @@ class Calculator:
 
     def C_storingen(self):
         storingen_dict = {}
+        loc_list = []
         for i in self.error_list:
             error = wissel_storing(i)
-            if error is int:
+            if isinstance(error, int):
                 pass
             else:
-                self.error_list.remove(i)
                 wissel_nr = error.iloc[0]['Wissel nr']
                 if wissel_nr in storingen_dict.keys():
-                    storingen_dict[wissel_nr] = storingen_dict.get(wissel_nr).append(error)
+                    storingen_dict[wissel_nr] = pd.concat(storingen_dict.get(wissel_nr),error)
                 else:
                     storingen_dict[wissel_nr] = error
+        for i in loc_list:
+            self.error_list.pop(i)
         save_to_sql(self.db_name, storingen_dict, 'storing')
 
         un_storingen = {}
         x = 0
         for i in self.error_list:
-            un_storingen[str(x)] = i
+            un_storingen[str(x).zfill(3)] = i
             x += 1
         save_to_sql(self.db_name, un_storingen, 'unknow_storing')
