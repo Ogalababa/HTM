@@ -4,7 +4,6 @@
 import pandas as pd
 
 from Run.core.Analyze.wissel_schakel import wissel_schakel
-from Run.core.Analyze.wissel_storing import wissel_storing
 from Run.core.Analyze.wissel_vrij_list import wissel_cycle_list
 from Run.core.Integration.DataInitialization import get_alldata_from_db
 from Run.core.Integration.DataInitialization import save_to_sql
@@ -121,25 +120,9 @@ class Calculator:
         save_to_sql(self.db_name, data_dict, 'schakelen')
 
     def C_storingen(self):
-        storingen_dict = {}
-        loc_list = []
-        for i in self.error_list:
-            error = wissel_storing(i)
-            if isinstance(error, int):
-                pass
-            else:
-                wissel_nr = error.iloc[0]['Wissel nr']
-                if wissel_nr in storingen_dict.keys():
-                    storingen_dict[wissel_nr] = pd.concat(storingen_dict.get(wissel_nr),error)
-                else:
-                    storingen_dict[wissel_nr] = error
-        for i in loc_list:
-            self.error_list.pop(i)
-        save_to_sql(self.db_name, storingen_dict, 'storing')
-
-        un_storingen = {}
+        storingen = {}
         x = 0
         for i in self.error_list:
-            un_storingen[str(x).zfill(3)] = i
+            storingen[str(x).zfill(3)] = i
             x += 1
-        save_to_sql(self.db_name, un_storingen, 'unknow_storing')
+        save_to_sql(self.db_name, storingen, 'storing')

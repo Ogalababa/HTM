@@ -7,7 +7,7 @@ import plotly.io as pio
 
 # streamlit
 import streamlit as st
-from Show.core.GetData import get_tram_speed, create_download_link
+from core.GetData import get_tram_speed, create_download_link
 from fpdf import FPDF
 from tempfile import NamedTemporaryFile
 
@@ -85,29 +85,35 @@ def tram_speed(select_data):
             df_all_data = df_all_data.set_index('Wissel Nr', drop=False, )
 
             with col2:
-                fig_wissel_4 = px.bar(
-                    df_all_data.loc[selected_wissel].sort_values(by='snelheid km/h'),
-                    title='Wagen/snelheid overzicht',
-                    x='Wagen Nr', y='snelheid km/h',
-                    color='snelheid km/h',
-                    height=layout_height,
-                    hover_data=['Lijn', 'Wagen Nr', 'Categorie', 'Service', 'Tijd', 'Richting'],
-                    color_continuous_scale=px.colors.sequential.Sunsetdark
-                )
+                fig_wissel_4 = px.bar(df_all_data.loc[selected_wissel].sort_values(by='snelheid km/h'),
+                                      title='Wagen/snelheid overzicht',
+                                      x='Wagen Nr', y='snelheid km/h',
+                                      color='snelheid km/h',
+                                      height=layout_height,
+                                      hover_data=['Lijn',
+                                                  'Wagen Nr',
+                                                  'Categorie',
+                                                  'Service',
+                                                  'Tijd',
+                                                  'Richting'],
+                                      color_continuous_scale=px.colors.sequential.Sunsetdark)
                 st.plotly_chart(fig_wissel_4, use_container_width=True)
                 figs.append(fig_wissel_4)
 
             with col3:
-                fig_wissel_1 = px.scatter(
-                    df_all_data.loc[selected_wissel],
-                    x='Tijd', y='snelheid km/h',
-                    title='Snelheid/tijd overzicht',
-                    hover_data=['Lijn', 'Wagen Nr', 'Categorie', 'Service', 'Richting'],
-                    color='Wagen Nr',
-                    color_continuous_scale=px.colors.sequential.Sunsetdark,
-                    size='snelheid km/h',
-                    height=layout_height,
-                )
+                fig_wissel_1 = px.scatter(df_all_data.loc[selected_wissel],
+                                          x='Tijd', y='snelheid km/h',
+                                          title='Snelheid/tijd overzicht',
+                                          hover_data=['Lijn',
+                                                      'Wagen Nr',
+                                                      'Categorie',
+                                                      'Service',
+                                                      'Richting'],
+                                          color='Wagen Nr',
+                                          color_continuous_scale=px.colors.sequential.Sunsetdark,
+                                          size='snelheid km/h',
+                                          height=layout_height,
+                                          )
                 st.plotly_chart(fig_wissel_1, use_container_width=True)
                 figs.append(fig_wissel_1)
 
@@ -115,43 +121,44 @@ def tram_speed(select_data):
                 speed_counts_wissel = df_all_data.loc[selected_wissel].copy()
                 speed_counts_wissel['hoeveelheid'] = 1
                 speed_counts_wissel['Tijd'] = speed_counts_wissel['Tijd'].astype(str)
-                fig_counts = px.sunburst(
-                    speed_counts_wissel,
-                    title='Snelheid overzicht',
-                    path=['Wissel Nr', 'snelheid km/h', 'Richting', 'Wagen Nr', 'Tijd'],
-                    values='hoeveelheid',
-                    color='snelheid km/h',
-                    color_continuous_scale=px.colors.sequential.RdBu,
-                    height=layout_height,
-                    hover_data=['Categorie', 'Service', 'Tijd', 'Richting']
-                )
+                fig_counts = px.sunburst(speed_counts_wissel,
+                                         title='Snelheid overzicht',
+                                         path=['Wissel Nr', 'snelheid km/h', 'Richting', 'Wagen Nr', 'Tijd'],
+                                         values='hoeveelheid',
+                                         color='snelheid km/h',
+                                         color_continuous_scale=px.colors.sequential.RdBu,
+                                         height=layout_height,
+                                         hover_data=[
+                                             'Categorie',
+                                             'Service',
+                                             'Tijd',
+                                             'Richting'
+                                         ])
                 st.plotly_chart(fig_counts, use_container_width=True)
                 figs.append(fig_counts)
 
             with col5:
-                fig_wissel_2 = px.pie(
-                    speed_counts_wissel,
-                    values='hoeveelheid',
-                    names='snelheid km/h',
-                    title='Snelheid percentage',
-                    color_discrete_sequence=px.colors.sequential.RdBu,
-                    height=layout_height,
-                    hole=.25,
-                )
+                fig_wissel_2 = px.pie(speed_counts_wissel,
+                                      values='hoeveelheid',
+                                      names='snelheid km/h',
+                                      title='Snelheid percentage',
+                                      color_discrete_sequence=px.colors.sequential.RdBu,
+                                      height=layout_height,
+                                      hole=.25,
+                                      )
                 fig_wissel_2.update_traces(textinfo='percent+label')
                 st.plotly_chart(fig_wissel_2, use_container_width=True)
                 figs.append(fig_wissel_2)
 
             with col6:
-                fig_wissel_4 = px.pie(
-                    speed_counts_wissel,
-                    values='hoeveelheid',
-                    names='Richting',
-                    title='Richting percentage',
-                    color_discrete_sequence=px.colors.sequential.RdBu,
-                    height=layout_height,
-                    hole=.25,
-                )
+                fig_wissel_4 = px.pie(speed_counts_wissel,
+                                      values='hoeveelheid',
+                                      names='Richting',
+                                      title='Richting percentage',
+                                      color_discrete_sequence=px.colors.sequential.RdBu,
+                                      height=layout_height,
+                                      hole=.25,
+                                      )
                 fig_wissel_4.update_traces(textinfo='percent+label')
                 st.plotly_chart(fig_wissel_4, use_container_width=True)
                 figs.append(fig_wissel_4)
@@ -166,28 +173,35 @@ def tram_speed(select_data):
             df_all_data = df_all_data.set_index('Wagen Nr', drop=False)
 
             with col2:
-                fig_wagen_2 = px.bar(
-                    df_all_data.loc[selected_wagen].sort_values(by='snelheid km/h'),
-                    title='Wissel/snelheid overzicht',
-                    x='Wissel Nr', y='snelheid km/h',
-                    color='snelheid km/h',
-                    height=layout_height,
-                    hover_data=['Lijn', 'Wissel Nr', 'Categorie', 'Service', 'Tijd', 'Richting'],
-                    color_continuous_scale=px.colors.sequential.Sunsetdark)
+                fig_wagen_2 = px.bar(df_all_data.loc[selected_wagen].sort_values(by='snelheid km/h'),
+                                     title='Wissel/snelheid overzicht',
+                                     x='Wissel Nr', y='snelheid km/h',
+                                     color='snelheid km/h',
+                                     height=layout_height,
+                                     hover_data=['Lijn',
+                                                 'Wissel Nr',
+                                                 'Categorie',
+                                                 'Service',
+                                                 'Tijd',
+                                                 'Richting'],
+                                     color_continuous_scale=px.colors.sequential.Sunsetdark)
                 st.plotly_chart(fig_wagen_2, use_container_width=True)
                 figs.append(fig_wagen_2)
 
             with col3:
-                fig_wagen = px.scatter(
-                    df_all_data.loc[selected_wagen],
-                    x='Tijd', y='snelheid km/h',
-                    title='Wissel snelheid/tijd grafiek',
-                    hover_data=['Lijn', 'Wissel Nr', 'Categorie', 'Service', 'Richting'],
-                    color='Wissel Nr',
-                    color_continuous_scale=px.colors.sequential.Sunsetdark,
-                    size='snelheid km/h',
-                    height=layout_height,
-                )
+                fig_wagen = px.scatter(df_all_data.loc[selected_wagen],
+                                       x='Tijd', y='snelheid km/h',
+                                       title='Wissel snelheid/tijd grafiek',
+                                       hover_data=['Lijn',
+                                                   'Wissel Nr',
+                                                   'Categorie',
+                                                   'Service',
+                                                   'Richting'],
+                                       color='Wissel Nr',
+                                       color_continuous_scale=px.colors.sequential.Sunsetdark,
+                                       size='snelheid km/h',
+                                       height=layout_height,
+                                       )
                 st.plotly_chart(fig_wagen, use_container_width=True)
                 figs.append(fig_wagen)
 
@@ -195,42 +209,43 @@ def tram_speed(select_data):
                 speed_counts = df_all_data.loc[selected_wagen].copy()
                 speed_counts['hoeveelheid'] = 1
                 speed_counts['Tijd'] = speed_counts['Tijd'].astype(str)
-                fig_counts_2 = px.sunburst(
-                    speed_counts,
-                    title='Snelheid overzicht',
-                    path=['Wagen Nr', 'snelheid km/h', 'Richting', 'Wissel Nr', 'Tijd'],
-                    values='hoeveelheid',
-                    color='snelheid km/h',
-                    color_continuous_scale=px.colors.sequential.RdBu,
-                    height=layout_height,
-                    hover_data=['Categorie', 'Service', 'Tijd'])
+                fig_counts_2 = px.sunburst(speed_counts,
+                                           title='Snelheid overzicht',
+                                           path=['Wagen Nr', 'snelheid km/h', 'Richting', 'Wissel Nr', 'Tijd'],
+                                           values='hoeveelheid',
+                                           color='snelheid km/h',
+                                           color_continuous_scale=px.colors.sequential.RdBu,
+                                           height=layout_height,
+                                           hover_data=[
+                                               'Categorie',
+                                               'Service',
+                                               'Tijd'
+                                           ])
                 st.plotly_chart(fig_counts_2, use_container_width=True)
                 figs.append(fig_counts_2)
 
             with col5:
-                fig_wissel_3 = px.pie(
-                    speed_counts,
-                    values='hoeveelheid',
-                    names='snelheid km/h',
-                    title='Snelheid percentage',
-                    color_discrete_sequence=px.colors.sequential.RdBu,
-                    height=layout_height,
-                    hole=.25,
-                )
+                fig_wissel_3 = px.pie(speed_counts,
+                                      values='hoeveelheid',
+                                      names='snelheid km/h',
+                                      title='Snelheid percentage',
+                                      color_discrete_sequence=px.colors.sequential.RdBu,
+                                      height=layout_height,
+                                      hole=.25,
+                                      )
                 fig_wissel_3.update_traces(textinfo='percent+label')
                 st.plotly_chart(fig_wissel_3, use_container_width=True)
                 figs.append(fig_wissel_3)
 
             with col6:
-                fig_wissel_5 = px.pie(
-                    speed_counts,
-                    values='hoeveelheid',
-                    names='Richting',
-                    title='Richting percentage',
-                    color_discrete_sequence=px.colors.sequential.RdBu,
-                    height=layout_height,
-                    hole=.25,
-                )
+                fig_wissel_5 = px.pie(speed_counts,
+                                      values='hoeveelheid',
+                                      names='Richting',
+                                      title='Richting percentage',
+                                      color_discrete_sequence=px.colors.sequential.RdBu,
+                                      height=layout_height,
+                                      hole=.25,
+                                      )
                 fig_wissel_5.update_traces(textinfo='percent+label')
                 st.plotly_chart(fig_wissel_5, use_container_width=True)
                 figs.append(fig_wissel_5)
@@ -245,13 +260,11 @@ def tram_speed(select_data):
                     pio.write_image(fig, tmpfile.name, height=500)
                     pdf.image(tmpfile.name, 10, 10)
             if len(select_data) >= 2:
-                html = create_download_link(
-                    pdf.output(dest="S").encode("latin-1"), f'{mode}_{select_data[-1]}_{select_data[0]}'
-                )
+                html = create_download_link(pdf.output(dest="S").encode("latin-1"),
+                                            f'{mode}_{select_data[-1]}_{select_data[0]}')
             else:
-                html = create_download_link(
-                    pdf.output(dest="S").encode("latin-1"), f'{mode}-{select_data[0]}'
-                )
+                html = create_download_link(pdf.output(dest="S").encode("latin-1"),
+                                            f'{mode}-{select_data[0]}')
             st.sidebar.markdown(html, unsafe_allow_html=True)
         if export_as_csv:
             csv = df_all_data[[

@@ -4,7 +4,6 @@
 from __init__ import *
 import pandas as pd
 import sqlalchemy
-
 from Run.core.ConvertData.ConnectDB import conn_engine
 from Run.core.Integration.DataInitialization import get_alldata_from_db
 
@@ -54,7 +53,7 @@ def create_download_link(val, filename, pdf='pdf'):
            f'{b64.decode()}" download="{filename}.{pdf}">Download {pdf.upper()}</a>'
 
 
-
+# @st.cache(allow_output_mutation=True)
 def get_all_data(selected_db, path='db'):
     """
     Read all data from log db

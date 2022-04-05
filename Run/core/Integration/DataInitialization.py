@@ -23,10 +23,10 @@ def get_alldata_from_db(db_name, path='db'):
     :return: dict
     """
     data_dict = {}
-    insp = sqlalchemy.inspect(conn_engine(db_name, path=path))
+    insp = sqlalchemy.inspect(conn_engine(db_name, path))
     tables = insp.get_table_names()
     for name in tables:
-        data_dict[name] = pd.read_sql_table(name, conn_engine(db_name, path=path))
+        data_dict[name] = pd.read_sql_table(name, conn_engine(db_name, path))
 
     return data_dict
 
