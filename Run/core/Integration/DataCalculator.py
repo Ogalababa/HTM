@@ -3,8 +3,10 @@
 # sys
 import pandas as pd
 
+from Run.core.Analyze.check_storing_df import check_storing_df
 from Run.core.Analyze.wissel_schakel import wissel_schakel
 from Run.core.Analyze.wissel_vrij_list import wissel_cycle_list
+from Run.core.Analyze.wissel_storing import wissel_storing
 from Run.core.Integration.DataInitialization import get_alldata_from_db
 from Run.core.Integration.DataInitialization import save_to_sql
 from Run.core.Tools.VaribleTool import wagen_length
@@ -108,10 +110,13 @@ class Calculator:
                 index_list = wissel_cycle_list(values)
                 for i in range(len(index_list) - 1):
                     cycle_df = values[index_list[i]:index_list[i + 1]]
-                    schakel_status = wissel_schakel(cycle_df)
-                    status_list.append(schakel_status[0])
-                    if len(schakel_status) > 1:
-                        self.error_list.append(schakel_status[1])
+                    if check_storing_df(cycle_df):
+                        self.error_list.append(cycle_df)
+                    else:
+                        schakel_status = wissel_schakel(cycle_df)
+                        status_list.append(schakel_status[0])
+                        if len(schakel_status) > 1:
+                            self.error_list.append(schakel_status[1])
                 data_dict[key] = pd.concat(status_list)
 
             except(KeyError, IndexError, ValueError, TypeError):
@@ -121,8 +126,12 @@ class Calculator:
 
     def C_storingen(self):
         storingen = {}
+        unknow_storingen_list = []
         x = 0
         for i in self.error_list:
-            storingen[str(x).zfill(3)] = i
-            x += 1
+            if len(set(i['<wissel> op slot'])) <= 1:
+                pass
+            else:
+                status = wissel_storing(i)
+
         save_to_sql(self.db_name, storingen, 'storing')
