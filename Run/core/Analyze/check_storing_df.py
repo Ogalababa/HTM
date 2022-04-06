@@ -16,8 +16,18 @@ def check_storing_df(df):
         len(set(df["<vecom> com. fout ifc"])) > 1,
         len(set(df["<vecom> lus zonder richting"])) > 1,
         len(set(df["<aanmelden> wagen"])) > 2,
+        len(set(df["<wissel> op slot"])) < 2
     ]
     if any(check_error_list):
         return True
     else:
         return False
+
+
+def define_storing(df):
+    """
+    Define storing from DataFrame
+    :param df: DataFrame
+    :return: DataFrame
+    """
+    prev_wagen = df.iloc[0]['<aanmelden> wagen']
