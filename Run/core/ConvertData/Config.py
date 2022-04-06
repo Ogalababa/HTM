@@ -116,15 +116,18 @@ class WisselData:
         record_time = self.bin_data[self.LOC_TIME_START: self.LOC_TIME_END]
 
         # data count
+        data_count = self.bin_data[-self.DATA_HEADER:]
+        self.wissel_info['Count'] = [int(data_count, 2)]
         try:
-
-            self.wissel_info['date-time'] = [f'20{int(record_date[9:], 2)}-'
-                                             f'{int(record_date[5:9], 2)}-'
-                                             f'{int(record_date[:5], 2)} '
-                                             f'{str(int(record_time[:5], 2)).zfill(2)}:'
-                                             f'{str(int(record_time[5:11], 2)).zfill(2)}:'
-                                             f'{str(int(record_time[11:17], 2)).zfill(2)}.'
-                                             f'{str(int(record_time[17:], 2)).zfill(2)}']
+            self.wissel_info['date-time'] = [
+                f'20{int(record_date[9:], 2)}-'
+                f'{int(record_date[5:9], 2)}-'
+                f'{int(record_date[:5], 2)} '
+                f'{str(int(record_time[:5], 2)).zfill(2)}:'
+                f'{str(int(record_time[5:11], 2)).zfill(2)}:'
+                f'{str(int(record_time[11:17], 2)).zfill(2)}.'
+                f'{str(int(record_time[17:], 2)).zfill(2)}'
+            ]
             for key, value in self.multi_bits.items():
                 bit_data = self.bin_data[-(self.DATA_HEADER + int(value[1])): -(self.DATA_HEADER + int(value[0]) - 1)]
 
