@@ -22,6 +22,7 @@ def process_db(log_file):
         data_exp = Calculator(date)
         data_exp.C_tram_speed()
         data_exp.C_wissel_schakel()
+        data_exp.C_storingen()
     except (AttributeError, UnicodeDecodeError, IndexError) as err:
         print(err)
 

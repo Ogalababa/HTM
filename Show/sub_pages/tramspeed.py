@@ -1,6 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+from __init__ import *
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
@@ -162,6 +163,9 @@ def tram_speed(select_data):
                 fig_wissel_4.update_traces(textinfo='percent+label')
                 st.plotly_chart(fig_wissel_4, use_container_width=True)
                 figs.append(fig_wissel_4)
+            with col7:
+                loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
+                st.map(loc_df[loc_df['Wissel Nr'] == selected_wissel], zoom=10)
 
         else:
             col2, space2, col3 = st.columns((10, 1, 10))
@@ -249,6 +253,12 @@ def tram_speed(select_data):
                 fig_wissel_5.update_traces(textinfo='percent+label')
                 st.plotly_chart(fig_wissel_5, use_container_width=True)
                 figs.append(fig_wissel_5)
+                
+            with col7:
+                loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
+                wagen_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
+                st.map(wagen_loc, zoom=10)
+            
 
         export_as_pdf = st.sidebar.button("Download Rapport")
         export_as_csv = st.sidebar.button("Download Details")

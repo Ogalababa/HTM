@@ -94,7 +94,7 @@ def tram_speed_to_sql(log_db):
                 else:
                     pass
         except (ValueError, TypeError, KeyError) as err:
-            print(err)
+            print(f'{wissel_nr}:{err}')
             pass
 
     for key in data_dict.keys():

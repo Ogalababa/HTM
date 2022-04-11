@@ -115,7 +115,12 @@ def set_steps_denbdb3c(db_file):
     try:
         # 匹配 denDBD3C steps
         table_name = sqlalchemy.inspect(conn_engine(db_file)).get_table_names()
-        table_name = [i for i in table_name if i in get_wissel_type_nr('denBDB3C')]
+        fit_wissel_type = [
+            *get_wissel_type_nr('denAJB1C'), *get_wissel_type_nr('denBDB3C'), *get_wissel_type_nr('denBDC1C'),
+            *get_wissel_type_nr('denBYA1C'), *get_wissel_type_nr('denBXB2C')
+        ]
+        table_name = [i for i in table_name if i in fit_wissel_type]
+        table_name.sort()
         # get denDBD3C steps
         steps = pd.read_sql_table('denBDB3C', conn_engine('steps', path='norm'))
         for k in table_name:

@@ -22,7 +22,7 @@ def get_all_wissel_data(log_db):
             data_dict[wissel_nr] = wissel_data
 
         except (ValueError, TypeError, KeyError) as err:
-            print(err)
+            print(f'{wissel_nr}:{err}')
             pass
 
     return data_dict

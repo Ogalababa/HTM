@@ -3,7 +3,7 @@
 # sys
 import pandas as pd
 
-from Run.core.Analyze.check_storing_df import check_storing_df
+from Run.core.Analyze.check_storing_df import check_storing_df, recheck_storing
 from Run.core.Analyze.wissel_schakel import wissel_schakel
 from Run.core.Analyze.wissel_vrij_list import wissel_cycle_list
 from Run.core.Analyze.wissel_storing import wissel_storing
@@ -93,7 +93,7 @@ class Calculator:
                     else:
                         pass
             except (ValueError, TypeError, KeyError) as err:
-                print(err)
+                print(f'{key}:{err}')
                 pass
         save_to_sql(self.db_name, data_dict, 'snelheid')
 
@@ -127,11 +127,11 @@ class Calculator:
     def C_storingen(self):
         storingen = {}
         unknow_storingen_list = []
+        self.error_list = [i for i in self.error_list if len(set(i['<wissel> op slot'])) == 2]
+        self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
         x = 0
         for i in self.error_list:
-            if len(set(i['<wissel> op slot'])) <= 1:
-                pass
-            else:
-                status = wissel_storing(i)
+            storingen[str(x).zfill(3)] = i
+            x += 1
 
         save_to_sql(self.db_name, storingen, 'storing')

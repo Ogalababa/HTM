@@ -1,7 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
-
+from __init__ import *
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
@@ -80,6 +80,9 @@ def st_wissel_schakel(select_data):
             col3.metric("Storing", storing, f'{-storing_delta} %')
             if storing_delta > 50:
                 st.error('Incorrecte data')
+        with col4:
+            loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
+            st.map(loc_df[loc_df['Wissel Nr'] == selected_wissel], zoom=10)
 
     else:
         st.title('Kies een gegeven om te analyseren')
