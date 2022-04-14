@@ -18,3 +18,10 @@ def wagen_length(wagen_nr):
     else:
         length = 0
     return length
+
+
+def match_list(small_list, big_list):
+    compare_result = []
+    for i in range(len(big_list)):
+        compare_result.append(small_list == big_list[i:i+len(small_list)])
+    return any(compare_result)

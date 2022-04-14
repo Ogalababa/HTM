@@ -27,7 +27,8 @@ def read_log(log_file):
     date = f'{log_file_name[:4]}-{log_file_name[4:6]}-{log_file_name[6:8]}'
     wissel_data_dict = {}
     with open(log_file, 'r', encoding='utf-8', errors='ignore') as (log):
-        exclude_list = ['##', 'W657', 'W666', 'W662', 'W665', 'W668', 'W540', '_LSA_', 'W260']
+        # exclude_list = ['##', 'W657', 'W666', 'W662', 'W665', 'W668', 'W540', '_LSA_', 'W260']
+        exclude_list = ['##', 'W665', 'W668', '_LSA_']
         for line in log:
             # if "##" in line or "W657" in line or \
             #         "W666" in line or "W662" in line or \

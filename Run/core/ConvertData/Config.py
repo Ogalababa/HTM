@@ -120,14 +120,17 @@ class WisselData:
         self.wissel_info['Count'] = [int(data_count, 2)]
         try:
             self.wissel_info['date-time'] = [
-                f'20{int(record_date[9:], 2)}-'
-                f'{int(record_date[5:9], 2)}-'
-                f'{int(record_date[:5], 2)} '
+                f'20{str(int(record_date[9:], 2)).zfill(2)}-'
+                f'{str(int(record_date[5:9], 2)).zfill(2)}-'
+                f'{str(int(record_date[:5], 2)).zfill(2)} '
                 f'{str(int(record_time[:5], 2)).zfill(2)}:'
                 f'{str(int(record_time[5:11], 2)).zfill(2)}:'
                 f'{str(int(record_time[11:17], 2)).zfill(2)}.'
                 f'{str(int(record_time[17:], 2)).zfill(2)}'
             ]
+            # if self.wissel_info.get('date-time')[:10] != self.wissel_info.get('server time')[:10]:
+            #     self.wissel_info['date-time'] = self.wissel_info.get('server time')
+
             for key, value in self.multi_bits.items():
                 bit_data = self.bin_data[-(self.DATA_HEADER + int(value[1])): -(self.DATA_HEADER + int(value[0]) - 1)]
 

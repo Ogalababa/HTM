@@ -1,5 +1,6 @@
 #!/usr/bin/ python3
 # coding: utf-8
+from Run.core.Tools.VaribleTool import match_list
 from __init__ import *
 
 
@@ -20,8 +21,10 @@ def check_storing_df(df):
     return any(check_error_list)
 
 
-def recheck_storing(df):
+def recheck_storing(dataset):
     try:
+        # cleaning dataset
+        df = dataset[(dataset['<wissel> op slot'] != 0) & (dataset['<wissel> ijzer'] != 0)]
         step_revert = 0
         step_list = df['step']
         step_list = [i for i in step_list if i is not None]
@@ -30,7 +33,12 @@ def recheck_storing(df):
             if step_list[i+1] < step_list[i]:
                 step_revert += 1
 
-        return any([step_revert > 3, 0 in df['<wissel> ijzer'].to_list()])
+        return any([step_revert > 3,
+                    0 in df['<wissel> ijzer'].to_list(),
+                    match_list([1, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
+                    match_list([1, 0, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
+                    match_list([1, 0, 0, 1], df['<hfk> schakelcriterium bezet'].to_list()),
+                    match_list([1, 0, 1], df['<hfk> schakelcriterium bezet'].to_list())])
     except:
         return True
 
