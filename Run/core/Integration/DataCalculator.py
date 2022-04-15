@@ -3,7 +3,7 @@
 # sys
 import pandas as pd
 
-from Run.core.Analyze.check_storing_df import check_storing_df, recheck_storing
+from Run.core.Analyze.check_storing_df import check_storing_df, recheck_storing, define_storing
 from Run.core.Analyze.wissel_schakel import wissel_schakel
 from Run.core.Analyze.wissel_vrij_list import wissel_cycle_list
 from Run.core.Analyze.wissel_storing import wissel_storing
@@ -125,13 +125,28 @@ class Calculator:
         save_to_sql(self.db_name, data_dict, 'schakelen')
 
     def C_storingen(self):
-        storingen = {}
-        unknow_storingen_list = []
+        storing_list = []
+        storingen_dict = {}
+        unknow_storing_list = []
+        unknow_storing_dict = {}
         self.error_list = [i for i in self.error_list if len(set(i['<wissel> op slot'])) == 2]
         self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
-        x = 0
         for i in self.error_list:
-            storingen[str(x).zfill(3)] = i
+            unknown_state, storing = define_storing(i)
+
+            if unknown_state == 'noterror':
+                pass
+            elif unknown_state == 'ontbekend':
+                unknow_storing_list.append(i)
+            else:
+                storing_list.append(storing)
+
+        storingen_dict['all storingen'] = pd.concat(storing_list)
+
+        x = 0
+        for i in unknow_storing_list:
+            unknow_storing_dict[str(x).zfill(3)] = i
             x += 1
 
-        save_to_sql(self.db_name, storingen, 'storing')
+        save_to_sql(self.db_name, storingen_dict, 'storing')
+        save_to_sql(self.db_name, unknow_storing_dict, 'unknow_storing')

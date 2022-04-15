@@ -42,7 +42,7 @@ def get_tram_speed(selected_db, path='snelheid'):
                              '<aanmelden> service': 'Service',
                              'wissel nr': 'Wissel Nr',
                              'hfk_in': 'Tijd'}, inplace=True)
-    all_data = all_data.drop(all_data[all_data['snelheid km/h'] > 60].index)
+    all_data = all_data.drop(all_data[all_data['snelheid km/h'] > 50].index)
     all_data['Wagen Nr'] = all_data['Wagen Nr'].astype(str)
     return all_data
 
