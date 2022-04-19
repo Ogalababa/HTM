@@ -132,12 +132,12 @@ class Calculator:
         self.error_list = [i for i in self.error_list if len(set(i['<wissel> op slot'])) == 2]
         self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
         for i in self.error_list:
-            unknown_state, storing = define_storing(i)
+            unknow_state, storing = define_storing(i)
 
-            if unknown_state == 'noterror':
-                pass
-            elif unknown_state == 'ontbekend':
+            if unknow_state == 'ontbekend':
                 unknow_storing_list.append(i)
+            elif unknow_state == 'noerror':
+                pass
             else:
                 storing_list.append(storing)
 

@@ -1,10 +1,10 @@
 #!/usr/bin/ python3
 # coding: utf-8
-
+from Run.core.Analyze.analyze_tool import match_list, check_bad_contact, check_fout_state
 from __init__ import *
 
 import pandas as pd
-from Run.core.Tools.VaribleTool import match_list
+
 
 
 def check_storing_df(df):
@@ -47,22 +47,36 @@ def recheck_storing(df):
 
 
 def define_storing(dataset):
+    """
+    define storing type.
+    :param dataset: pd.DataFrame
+    :return: str, pd.DataFrame
+    """
     storing_type = {
         'begin tijd': [dataset.iloc[1]['date-time']],
         'eind tijd': [dataset.iloc[-1]['date-time']],
         'wissel nr': [dataset.iloc[1]['wissel nr']],
+        'lijn nr': [dataset.iloc[2]['<aanmelden> lijn']],
+        'service': [dataset.iloc[2]['<aanmelden> service']],
+        'categorie': [dataset.iloc[2]['<aanmelden> categorie']]
                     }
     storing = ['ontbekend']
     afdelling = ['ontbekend']
-    if any([match_list([1, 0, 1], dataset['<hfp> schakelcriterium bezet'].to_list()),
-           match_list([1, 0, 0, 1], dataset['<hfp> schakelcriterium bezet'].to_list())]):
-        storing = ['HFP slect contact']
+    if check_bad_contact(dataset, '<hfp> schakelcriterium bezet'):
+        storing = ['HFP slecht contact']
         afdelling = ['infra']
-    if any([match_list([1, 0, 1], dataset['<hfk> schakelcriterium bezet'].to_list()),
-           match_list([1, 0, 0, 1], dataset['<hfk> schakelcriterium bezet'].to_list())]):
-        storing = ['HFK slect contact']
+    if check_bad_contact(dataset, '<hfk> schakelcriterium bezet'):
+        storing = ['HFK slecht contact']
         afdelling = ['infra']
-
+    if check_fout_state(dataset, '<vecom> track zonder vergrendeling'):
+        storing = [f'wissel kan lijn nr {storing_type.get("lijn nr")} niet handelen']
+        afdelling = ['wagen']
+    if check_fout_state(dataset, '<vecom> com. fout ifc'):
+        storing = ['VECOM error']
+        afdelling = ['infra']
+    if check_fout_state(dataset, '<vecom> lus zonder richting'):
+        storing = [f'lijn nr {storing_type.get("lijn nr")} niet in de handel lijst']
+        afdelling = ['wagen']
     storing_type['storing'] = storing
     storing_type['afdelling'] = afdelling
 

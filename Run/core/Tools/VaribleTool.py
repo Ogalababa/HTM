@@ -3,7 +3,7 @@
 # sys
 
 
-def wagen_length(wagen_nr):
+def wagen_length(wagen_nr: int) -> int:
     """
     default wagen lent
     :param wagen_nr: int
@@ -20,8 +20,4 @@ def wagen_length(wagen_nr):
     return length
 
 
-def match_list(small_list, big_list):
-    compare_result = []
-    for i in range(len(big_list)):
-        compare_result.append(small_list == big_list[i:i+len(small_list)])
-    return any(compare_result)
+
