@@ -34,3 +34,12 @@ def check_fout_state(dataframe, col_name: str) -> bool:
     :return: bool
     """
     return 1 in dataframe[col_name].to_list()
+
+def check_input_end_state(dataframe) -> bool:
+    """
+    check if end state is same as request
+    :param dataframe: pd.DataFrame
+    :return: bool
+    """
+
+    total_wagen = set(dataframe['<aanmelden> wagen'].to_list())

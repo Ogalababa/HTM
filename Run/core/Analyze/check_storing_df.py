@@ -6,7 +6,6 @@ from __init__ import *
 import pandas as pd
 
 
-
 def check_storing_df(df):
     """
     Check dataframe is correct data, if not return False
@@ -32,8 +31,8 @@ def recheck_storing(df):
         step_list = df['step']
         step_list = [i for i in step_list if i is not None]
         # is_storing = False
-        for i in range(len(step_list)-1):
-            if step_list[i+1] < step_list[i]:
+        for i in range(len(step_list) - 1):
+            if step_list[i + 1] < step_list[i]:
                 step_revert += 1
 
         return any([step_revert > 3,
@@ -59,26 +58,23 @@ def define_storing(dataset):
         'lijn nr': [dataset.iloc[2]['<aanmelden> lijn']],
         'service': [dataset.iloc[2]['<aanmelden> service']],
         'categorie': [dataset.iloc[2]['<aanmelden> categorie']]
-                    }
+    }
     storing = ['ontbekend']
     afdelling = ['ontbekend']
-    if check_bad_contact(dataset, '<hfp> schakelcriterium bezet'):
-        storing = ['HFP slecht contact']
-        afdelling = ['infra']
-    if check_bad_contact(dataset, '<hfk> schakelcriterium bezet'):
-        storing = ['HFK slecht contact']
-        afdelling = ['infra']
-    if check_fout_state(dataset, '<vecom> track zonder vergrendeling'):
-        storing = [f'wissel kan lijn nr {storing_type.get("lijn nr")} niet handelen']
-        afdelling = ['wagen']
-    if check_fout_state(dataset, '<vecom> com. fout ifc'):
-        storing = ['VECOM error']
-        afdelling = ['infra']
-    if check_fout_state(dataset, '<vecom> lus zonder richting'):
-        storing = [f'lijn nr {storing_type.get("lijn nr")} niet in de handel lijst']
-        afdelling = ['wagen']
+    func_dict = {
+        check_bad_contact(dataset, '<hfp> schakelcriterium bezet'): [['HFP slecht contact'], ['infra']],
+        check_bad_contact(dataset, '<hfk> schakelcriterium bezet'): [['HFK slecht contact'], ['infra']],
+        check_fout_state(dataset, '<vecom> track zonder vergrendeling'): [
+            [f'wissel kan lijn nr {storing_type.get("lijn nr")} niet handelen'], ['wagen']],
+        check_fout_state(dataset, '<vecom> com. fout ifc'): [['VECOM error'], ['infra']],
+        check_fout_state(dataset, '<vecom> lus zonder richting'): [
+            [f'lijn nr {storing_type.get("lijn nr")} niet in de handel lijst'], ['wagen']]
+    }
+    for i in func_dict.keys():
+        if i:
+            storing = func_dict.get(i)[0]
+            afdelling = func_dict.get(i)[1]
     storing_type['storing'] = storing
     storing_type['afdelling'] = afdelling
 
     return storing[0], pd.DataFrame(storing_type)
-
