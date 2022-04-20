@@ -8,7 +8,7 @@ import plotly.io as pio
 
 # streamlit
 import streamlit as st
-from core.GetData import get_tram_speed, create_download_link
+from Show.core.GetData import get_tram_speed, create_download_link
 from fpdf import FPDF
 from tempfile import NamedTemporaryFile
 

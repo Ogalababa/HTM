@@ -61,19 +61,20 @@ def define_storing(dataset):
     }
     storing = ['ontbekend']
     afdelling = ['ontbekend']
+    count = [1]
     func_dict = {
         check_bad_contact(dataset, '<hfp> schakelcriterium bezet'): [['HFP slecht contact'], ['infra']],
         check_bad_contact(dataset, '<hfk> schakelcriterium bezet'): [['HFK slecht contact'], ['infra']],
         check_fout_state(dataset, '<vecom> track zonder vergrendeling'): [
-            [f'wissel kan lijn nr {storing_type.get("lijn nr")} niet handelen'], ['wagen']],
+            ['wissel kan lijn nr niet handelen'], ['wagen']],
         check_fout_state(dataset, '<vecom> com. fout ifc'): [['VECOM error'], ['infra']],
         check_fout_state(dataset, '<vecom> lus zonder richting'): [
-            [f'lijn nr {storing_type.get("lijn nr")} niet in de handel lijst'], ['wagen']]
+            ['lijn nr niet in de handel lijst'], ['wagen']]
     }
     for i in func_dict.keys():
         if i:
-            storing = func_dict.get(i)[0]
-            afdelling = func_dict.get(i)[1]
+            storing, afdelling = func_dict.get(i)
+            break
     storing_type['storing'] = storing
     storing_type['afdelling'] = afdelling
 
