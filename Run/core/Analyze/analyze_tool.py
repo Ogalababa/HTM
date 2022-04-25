@@ -87,3 +87,20 @@ def check_verkeerd_code(dataframe) -> bool:
             return any(verkeerd_code)
         except KeyError:
             return False
+
+
+def miss_out_meld(dataframe) -> bool:
+
+    wagen_nr_list = list(set(dataframe['<aanmelden> wagen'].tolist()))
+    out_lus_list = []
+    for i in wagen_nr_list:
+        try:
+            sub_cycle = dataframe[dataframe['<aanmelden> wagen'] == i]
+            hfk_dataset = sub_cycle[sub_cycle['<hfk> schakelcriterium bezet'] == 1]
+            if 1 in hfk_dataset['<vecom> aftellen'].tolist():
+                out_lus_list.append(True)
+            else:
+                out_lus_list.append(False)
+        except KeyError:
+            return False
+    return any(out_lus_list)
