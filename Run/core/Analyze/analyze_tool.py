@@ -1,6 +1,8 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+from Run.core.Tools.VaribleTool import wissel_gerade
+
 
 def match_list(small_list: list, big_list: list) -> bool:
     """
@@ -51,3 +53,37 @@ def check_werk_wagen(dataframe) -> bool:
         return werk_wagen[0] not in afmelden_list
     else:
         return False
+
+
+def check_verkeerd_code(dataframe) -> bool:
+    """
+    check if the trame with wrong code
+    :param dataframe: pd.DataFrame
+    :return: bool
+    """
+    wissel_nr = dataframe['wissel nr'].tolist()[0]
+    gerade = wissel_gerade(wissel_nr)
+    wissel_ijzer_index = dataframe[dataframe['<wissel> ijzer'] == 0].index.to_list()
+    verkeerd_code = []
+    if len(wissel_ijzer_index) == 0:
+        return False
+    else:
+        try:
+            for i in wissel_ijzer_index:
+                sub_cycle = dataframe[dataframe['<aanmelden> wagen'] == dataframe.loc[i]['<aanmelden> wagen']]
+                request_direction = None
+                if 1 in sub_cycle['<input> naar gerade'].tolist() and request_direction is None:
+                    request_direction = gerade
+                elif 1 in sub_cycle['<input> naar links'].tolist() and request_direction is None:
+                    request_direction = '<wissel> links'
+                elif 1 in sub_cycle['<input> naar rechts'].tolist() and request_direction is None:
+                    request_direction = '<wissel> rechts'
+                sub_wissel_ijzer_index = sub_cycle[sub_cycle['<wissel> ijzer'] == 0].index.to_list()[0]
+                wissel_state = sub_cycle.loc[sub_wissel_ijzer_index - 1][request_direction]
+                if wissel_state == 1 and wissel_state != sub_cycle.iloc[-1][request_direction]:
+                    verkeerd_code.append(True)
+                else:
+                    verkeerd_code.append(False)
+            return any(verkeerd_code)
+        except KeyError:
+            return False

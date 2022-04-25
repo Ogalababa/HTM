@@ -2,7 +2,7 @@
 # coding: utf-8
 from __init__ import *
 
-from Run.core.Analyze.analyze_tool import match_list, check_bad_contact, check_fout_state
+from Run.core.Analyze.analyze_tool import match_list, check_bad_contact, check_fout_state, check_verkeerd_code
 import pandas as pd
 
 
@@ -71,7 +71,8 @@ def define_storing(dataset):
             ['wissel kan lijn nr niet handelen'], ['wagen']],
         check_fout_state(dataset, '<vecom> com. fout ifc'): [['VECOM error'], ['infra']],
         check_fout_state(dataset, '<vecom> lus zonder richting'): [
-            ['lijn nr niet in de handel lijst'], ['wagen']]
+            ['lijn nr niet in de handel lijst'], ['wagen']],
+        check_verkeerd_code(dataset): [['verkeerde code'], ['bestuurder']]
     }
     for i in func_dict.keys():
         if i:

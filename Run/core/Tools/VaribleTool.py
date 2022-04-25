@@ -20,7 +20,7 @@ def wagen_length(wagen_nr):
     return length
 
 
-def wissel_garde(wissel_nr: str) -> str:
+def wissel_gerade(wissel_nr: str) -> str:
     """
     define direction of input garde
     :param wissel_nr: str
@@ -36,6 +36,7 @@ def wissel_garde(wissel_nr: str) -> str:
         'W662', 'W665', 'W668', 'W689'
     ]
     if wissel_nr in rechts_wissel:
-        return 'rechts'
+        return '<wissel> rechts'
     else:
-        return 'links'
+        return '<wissel> links'
+
