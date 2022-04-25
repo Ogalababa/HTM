@@ -28,7 +28,7 @@ def recover_db():
             conver_list = [x for x in log_file_list if x not in db_file_date]
             if len(conver_list) <= 0:
                 print('All data up to date')
-                exit()
+                os._exit(0)
 
             conver_list.sort()
             try:

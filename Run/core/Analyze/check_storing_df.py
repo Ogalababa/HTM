@@ -1,17 +1,19 @@
 #!/usr/bin/ python3
 # coding: utf-8
-from Run.core.Analyze.analyze_tool import match_list, check_bad_contact, check_fout_state
 from __init__ import *
 
+from Run.core.Analyze.analyze_tool import match_list, check_bad_contact, check_fout_state
 import pandas as pd
 
 
-def check_storing_df(df):
+def check_storing_df(dataset):
     """
     Check dataframe is correct data, if not return False
     :param df: DataFrame
     :return: boolean
     """
+    # filter data from reniging
+    df = dataset[(dataset['<wissel> op slot'] != 0) | (dataset['<wissel> ijzer'] != 0)]
     check_error_list = [
         len(set(df["<vecom> track zonder vergrendeling"])) > 1,
         len(set(df["<wissel> ijzer"])) > 1,
@@ -31,8 +33,8 @@ def recheck_storing(df):
         step_list = df['step']
         step_list = [i for i in step_list if i is not None]
         # is_storing = False
-        for i in range(len(step_list) - 1):
-            if step_list[i + 1] < step_list[i]:
+        for i in range(len(step_list)-1):
+            if step_list[i+1] < step_list[i]:
                 step_revert += 1
 
         return any([step_revert > 3,
@@ -54,14 +56,14 @@ def define_storing(dataset):
     storing_type = {
         'begin tijd': [dataset.iloc[1]['date-time']],
         'eind tijd': [dataset.iloc[-1]['date-time']],
-        'wissel nr': [dataset.iloc[1]['wissel nr']],
+        'Wissel Nr': [dataset.iloc[1]['wissel nr']],
         'lijn nr': [dataset.iloc[2]['<aanmelden> lijn']],
         'service': [dataset.iloc[2]['<aanmelden> service']],
         'categorie': [dataset.iloc[2]['<aanmelden> categorie']]
     }
     storing = ['ontbekend']
     afdelling = ['ontbekend']
-    count = [1]
+
     func_dict = {
         check_bad_contact(dataset, '<hfp> schakelcriterium bezet'): [['HFP slecht contact'], ['infra']],
         check_bad_contact(dataset, '<hfk> schakelcriterium bezet'): [['HFK slecht contact'], ['infra']],
@@ -77,5 +79,6 @@ def define_storing(dataset):
             break
     storing_type['storing'] = storing
     storing_type['afdelling'] = afdelling
-
+    storing_type['count'] = [1]
     return storing[0], pd.DataFrame(storing_type)
+

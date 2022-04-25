@@ -3,7 +3,7 @@
 # sys
 
 
-def wagen_length(wagen_nr: int) -> int:
+def wagen_length(wagen_nr):
     """
     default wagen lent
     :param wagen_nr: int
@@ -20,19 +20,22 @@ def wagen_length(wagen_nr: int) -> int:
     return length
 
 
-def wissel_gerade_state(wissel_nr: str) -> str:
+def wissel_garde(wissel_nr: str) -> str:
     """
-    get wissel state for <input> naar gerade
+    define direction of input garde
     :param wissel_nr: str
-    :return: str
+    :return: Links/Recht
     """
-    LINKS = 'links'
-    RECHTS = 'rechts'
-    gerade_state = {
-        'W001': RECHTS, 'W002': LINKS, 'W003': RECHTS, 'W004': RECHTS, 'W005': LINKS, 'W006': LINKS, 'W012': LINKS,
-        'W013': RECHTS, 'W014': RECHTS, 'W015': RECHTS, 'W016': LINKS, 'W017': RECHTS, 'W018': RECHTS, 'W019': RECHTS,
-        'W020': LINKS, 'W021': RECHTS, 'W022': RECHTS,  'W023': LINKS, 'W024': LINKS, 'W025': RECHTS, 'W026': RECHTS,
-        'W027': RECHTS, 'W028': RECHTS, 'W029': RECHTS, 'W030': LINKS, 'W031': RECHTS, 'W032': LINKS, 'W033': LINKS,
-        'W034': LINKS, 'W035': LINKS,
-    }
-    return gerade_state.get(wissel_nr)
+    rechts_wissel = [
+        'W001', 'W003', 'W013', 'W014', 'W018', 'W022', 'W027', 'W028', 'W031', 'W038', 'W046', 'W056', 'W057',
+        'W067', 'W081', 'W084', 'W094', 'W104', 'W113', 'W118', 'W121', 'W127', 'W133', 'W135', 'W151', 'W153',
+        'W156', 'W161', 'W164', 'W166', 'W169', 'W171', 'W180', 'W184', 'W189', 'W194', 'W200', 'W202', 'W223',
+        'W228', 'W232', 'W235', 'W257', 'W268', 'W271', 'W275', 'W291', 'W287', 'W307', 'W383', 'W385', 'W391',
+        'W399', 'W425', 'W500', 'W520', 'W523', 'W542', 'W550', 'W560', 'W564', 'W573', 'W583', 'W584', 'W601',
+        'W607', 'W619', 'W628', 'W632', 'W636', 'W640', 'W644', 'W646', 'W649', 'W656', 'W657', 'W658', 'W660',
+        'W662', 'W665', 'W668', 'W689'
+    ]
+    if wissel_nr in rechts_wissel:
+        return 'rechts'
+    else:
+        return 'links'

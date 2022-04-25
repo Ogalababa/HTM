@@ -92,7 +92,7 @@ class Calculator:
                             pass
                     else:
                         pass
-            except (ValueError, TypeError, KeyError) as err:
+            except (ValueError, TypeError, KeyError, ZeroDivisionError) as err:
                 print(f'{key}:{err}')
                 pass
         save_to_sql(self.db_name, data_dict, 'snelheid')
@@ -119,7 +119,7 @@ class Calculator:
                             self.error_list.append(schakel_status[1])
                 data_dict[key] = pd.concat(status_list)
 
-            except(KeyError, IndexError, ValueError, TypeError):
+            except(KeyError, IndexError, ValueError, TypeError, ZeroDivisionError):
                 pass
 
         save_to_sql(self.db_name, data_dict, 'schakelen')
@@ -133,16 +133,16 @@ class Calculator:
         self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
         for i in self.error_list:
             unknow_state, storing = define_storing(i)
-
             if unknow_state == 'ontbekend':
                 unknow_storing_list.append(i)
             elif unknow_state == 'noerror':
                 pass
             else:
                 storing_list.append(storing)
-
+          
         storingen_dict['all storingen'] = pd.concat(storing_list)
-
+       
+        
         x = 0
         for i in unknow_storing_list:
             unknow_storing_dict[str(x).zfill(3)] = i

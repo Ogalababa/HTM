@@ -35,11 +35,19 @@ def check_fout_state(dataframe, col_name: str) -> bool:
     """
     return 1 in dataframe[col_name].to_list()
 
-def check_input_end_state(dataframe) -> bool:
+
+def check_werk_wagen(dataframe) -> bool:
     """
-    check if end state is same as request
+    check if storing from werk wagen
     :param dataframe: pd.DataFrame
     :return: bool
     """
-
-    total_wagen = set(dataframe['<aanmelden> wagen'].to_list())
+    aanmelden_list = list(set(dataframe['<aanmelden> wagen'].tolist()))
+    afmelden_list = list(set(dataframe['<afmelden> wagen'].tolist()))
+    aktuell_list = list(set(dataframe['<aktuell> wagen'].tolist()))
+    werk_wagen = None
+    werk_wagen = [i for i in aanmelden_list if i < 3000]
+    if len(werk_wagen) > 0 and werk_wagen[0] in aanmelden_list:
+        return werk_wagen[0] not in afmelden_list
+    else:
+        return False
