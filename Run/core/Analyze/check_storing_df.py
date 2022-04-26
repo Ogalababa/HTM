@@ -2,8 +2,10 @@
 # coding: utf-8
 from __init__ import *
 
-from Run.core.Analyze.analyze_tool import match_list, check_bad_contact, check_fout_state, check_verkeerd_code
+
+from Run.core.Analyze.analyze_tool import *
 import pandas as pd
+from collections import OrderedDict
 
 
 def check_storing_df(dataset):
@@ -25,10 +27,10 @@ def check_storing_df(dataset):
     return any(check_error_list)
 
 
-def recheck_storing(df):
+def recheck_storing(dataset):
     try:
         # cleaning dataset
-        # df = dataset[(dataset['<wissel> op slot'] != 0) & (dataset['<wissel> ijzer'] != 0)]
+        df = dataset[(dataset['<wissel> op slot'] != 0) | (dataset['<wissel> ijzer'] != 0)]
         step_revert = 0
         step_list = df['step']
         step_list = [i for i in step_list if i is not None]
@@ -37,7 +39,7 @@ def recheck_storing(df):
             if step_list[i+1] < step_list[i]:
                 step_revert += 1
 
-        return any([step_revert > 3,
+        return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> wagen']))) * 2,
                     0 in df['<wissel> ijzer'].to_list(),
                     match_list([1, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
                     match_list([1, 0, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
@@ -59,21 +61,23 @@ def define_storing(dataset):
         'Wissel Nr': [dataset.iloc[1]['wissel nr']],
         'lijn nr': [dataset.iloc[2]['<aanmelden> lijn']],
         'service': [dataset.iloc[2]['<aanmelden> service']],
-        'categorie': [dataset.iloc[2]['<aanmelden> categorie']]
+        'categorie': [dataset.iloc[2]['<aanmelden> categorie']],
+        # 'wagen nr': [ i for i in list(set(dataset['<aktuell> wagen'].tolist())) if i != 0]
     }
     storing = ['ontbekend']
     afdelling = ['ontbekend']
 
-    func_dict = {
-        check_bad_contact(dataset, '<hfp> schakelcriterium bezet'): [['HFP slecht contact'], ['infra']],
-        check_bad_contact(dataset, '<hfk> schakelcriterium bezet'): [['HFK slecht contact'], ['infra']],
-        check_fout_state(dataset, '<vecom> track zonder vergrendeling'): [
-            ['wissel kan lijn nr niet handelen'], ['wagen']],
-        check_fout_state(dataset, '<vecom> com. fout ifc'): [['VECOM error'], ['infra']],
-        check_fout_state(dataset, '<vecom> lus zonder richting'): [
-            ['lijn nr niet in de handel lijst'], ['wagen']],
-        check_verkeerd_code(dataset): [['verkeerde code'], ['bestuurder']]
-    }
+    func_dict = OrderedDict([
+        (check_bad_contact(dataset, '<hfp> schakelcriterium bezet'), [['HFP slecht contact'], ['infra']]),
+        (check_bad_contact(dataset, '<hfk> schakelcriterium bezet'), [['HFK slecht contact'], ['infra']]),
+        (check_fout_state(dataset, '<vecom> track zonder vergrendeling'), [['wissel kan lijn nr niet handelen'], ['wagen']]),
+        (check_fout_state(dataset, '<vecom> com. fout ifc'), [['VECOM error'], ['infra']]),
+        (check_fout_state(dataset, '<vecom> lus zonder richting'), [['lijn nr niet in de handel lijst'], ['wagen']]),
+        (check_werk_wagen(dataset), [['wissel kan werk de wagen niet afmeden'], ['werk wagen']]),
+        (miss_out_meld(dataset), [['miss out meld lus'], ['vecom']]),
+        (check_wagen_vecom(dataset), [['vecom in wagen slect contitie'], ['wagen']]),
+        (check_verkeerd_code(dataset), [['verkeerde code'], ['bestuurder']])
+    ])
     for i in func_dict.keys():
         if i:
             storing, afdelling = func_dict.get(i)

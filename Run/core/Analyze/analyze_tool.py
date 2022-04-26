@@ -90,7 +90,11 @@ def check_verkeerd_code(dataframe) -> bool:
 
 
 def miss_out_meld(dataframe) -> bool:
-
+    """
+    check if vecom afmelden error
+    :param dataframe: pd.DataFrame
+    :return: Bool
+    """
     wagen_nr_list = list(set(dataframe['<aanmelden> wagen'].tolist()))
     out_lus_list = []
     for i in wagen_nr_list:
@@ -104,3 +108,19 @@ def miss_out_meld(dataframe) -> bool:
         except KeyError:
             return False
     return any(out_lus_list)
+
+
+def check_wagen_vecom(dataframe) -> bool:
+    """
+    check the condition of the vecom in tram
+    :param dataframe: pd.DataFrame
+    :return: Bool
+    """
+    aanmelden_list = dataframe['<aanmelden> wagen'].tolist()
+    fifo_wagen = None
+    handel_list = []
+    for i in aanmelden_list:
+        if i != fifo_wagen:
+            handel_list.append(i)
+            fifo_wagen = i
+    return len(handel_list) != len(set(handel_list))
