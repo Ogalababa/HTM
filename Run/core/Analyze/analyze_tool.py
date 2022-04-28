@@ -25,7 +25,8 @@ def check_bad_contact(dataframe, col_name: str) -> bool:
     :return: bool
     """
     return any([match_list([1, 0, 1], dataframe[col_name].to_list()),
-                match_list([1, 0, 0, 1], dataframe[col_name].to_list())])
+                match_list([1, 0, 0, 1], dataframe[col_name].to_list()),
+                len(dataframe[dataframe[col_name] == 1]) / len(dataframe) > 0.5])
 
 
 def check_fout_state(dataframe, col_name: str) -> bool:
@@ -124,3 +125,25 @@ def check_wagen_vecom(dataframe) -> bool:
             handel_list.append(i)
             fifo_wagen = i
     return len(handel_list) != len(set(handel_list))
+
+
+def wissel_buiten_dinst(dataframe) -> bool:
+    """
+    check if the wissel out of order
+    :param dataframe: pd.DataFrame
+    :return: Bool
+    """
+    return all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0])
+
+
+def wissel_eind_stand(dataframe) -> bool:
+    """
+    check if the wissel do not have end state
+    :param dataframe: pd.DataFrame
+    :return: Bool
+    """
+    eind_stand = dataframe[(dataframe['<wissel> links'] == 0) & (dataframe['<wissel> rechts'] == 0)]
+    
+    return len(eind_stand) / len(dataframe) >= 0.3 and len(eind_stand) / len(dataframe) != 1
+
+

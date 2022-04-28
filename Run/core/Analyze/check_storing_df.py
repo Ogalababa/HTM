@@ -68,14 +68,16 @@ def define_storing(dataset):
     afdelling = ['ontbekend']
 
     func_dict = OrderedDict([
+        (wissel_buiten_dinst(dataset), [['wissel buiten dienst'], ['infra']]),
+        (wissel_eind_stand(dataset), [['wissel heeft geen eind stand'], ['infra']]),
         (check_bad_contact(dataset, '<hfp> schakelcriterium bezet'), [['HFP slecht contact'], ['infra']]),
         (check_bad_contact(dataset, '<hfk> schakelcriterium bezet'), [['HFK slecht contact'], ['infra']]),
         (check_fout_state(dataset, '<vecom> track zonder vergrendeling'), [['wissel kan lijn nr niet handelen'], ['wagen']]),
         (check_fout_state(dataset, '<vecom> com. fout ifc'), [['VECOM error'], ['infra']]),
         (check_fout_state(dataset, '<vecom> lus zonder richting'), [['lijn nr niet in de handel lijst'], ['wagen']]),
         (check_werk_wagen(dataset), [['wissel kan werk de wagen niet afmeden'], ['werk wagen']]),
-        (miss_out_meld(dataset), [['miss out meld lus'], ['vecom']]),
         (check_wagen_vecom(dataset), [['vecom in wagen slect contitie'], ['wagen']]),
+        # (miss_out_meld(dataset), [['miss out meld lus'], ['vecom']]),
         (check_verkeerd_code(dataset), [['verkeerde code'], ['bestuurder']])
     ])
     for i in func_dict.keys():

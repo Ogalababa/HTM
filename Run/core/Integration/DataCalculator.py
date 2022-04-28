@@ -142,11 +142,11 @@ class Calculator:
           
         storingen_dict['all storingen'] = pd.concat(storing_list)
        
-        
-        x = 0
-        for i in unknow_storing_list:
-            unknow_storing_dict[str(x).zfill(3)] = i
-            x += 1
+        if len(unknow_storing_list) > 0:
+            x = 0
+            for i in unknow_storing_list:
+                unknow_storing_dict[str(x).zfill(3)] = i
+                x += 1
 
-        save_to_sql(self.db_name, storingen_dict, 'storing')
-        save_to_sql(self.db_name, unknow_storing_dict, 'unknow_storing')
+            save_to_sql(self.db_name, storingen_dict, 'storing')
+            save_to_sql(self.db_name, unknow_storing_dict, 'unknow_storing')

@@ -1,6 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+
 from __init__ import *
 import pandas as pd
 import streamlit as st
@@ -17,52 +18,42 @@ def st_storingdata(select_data):
         wissel_list.sort()
         select_wissel = st.sidebar.selectbox('Kies een wissel', wissel_list)
         for i in all_data_list:
+            fig_data = i.get(select_wissel)[i.get(select_wissel)['storing'] != 'wissel buiten dienst']
+            st.dataframe(fig_data)
             with col2:
-                fig_storing_1 = px.sunburst(i.get(select_wissel),
+                fig_storing_1 = px.sunburst(fig_data,
                                             title='Storing overzicht',
-                                            path=['storing', 'wissel nr', 'afdelling', 'begin tijd'],
+                                            path=['storing', 'Wissel Nr', 'afdelling', 'begin tijd'],
                                             values='count',
                                             color='storing',
                                             color_continuous_scale=px.colors.sequential.RdBu,
-                                            hover_data=['begin tijd', 'eind tijd'],
+                                            hover_data=['begin tijd', 'eind tijd', 'lijn nr', 'categorie', 'service'],
                                             height=layout_height)
                 st.plotly_chart(fig_storing_1, use_container_width=True)
             with col3:
-                fig_storing_1 = px.sunburst(i.get(select_wissel),
-                                            title='Storing overzicht',
-                                            path=['wissel nr', 'afdelling', 'storing', 'begin tijd'],
+                fig_storing_1 = px.sunburst(fig_data,
+                                            title='Wissel overzicht',
+                                            path=['Wissel Nr', 'afdelling', 'storing', 'begin tijd'],
                                             values='count',
-                                            color='storing',
+                                            color='Wissel Nr',
                                             color_continuous_scale=px.colors.sequential.RdBu,
-                                            hover_data=['begin tijd', 'eind tijd'],
+                                            hover_data=['begin tijd', 'eind tijd', 'lijn nr', 'categorie', 'service'],
                                             height=layout_height)
                 st.plotly_chart(fig_storing_1, use_container_width=True)
             with col4:
-                fig_storing_1 = px.sunburst(i.get(select_wissel),
-                                            title='Storing overzicht',
-                                            path=['afdelling', 'storing', 'wissel nr', 'begin tijd'],
+                fig_storing_1 = px.sunburst(fig_data,
+                                            title='Afdelling overzicht',
+                                            path=['afdelling', 'storing', 'Wissel Nr', 'begin tijd'],
                                             values='count',
-                                            color='storing',
+                                            color='afdelling',
                                             color_continuous_scale=px.colors.sequential.RdBu,
-                                            hover_data=['begin tijd', 'eind tijd'],
+                                            hover_data=['begin tijd', 'eind tijd', 'lijn nr', 'categorie', 'service'],
                                             height=layout_height)
                 st.plotly_chart(fig_storing_1, use_container_width=True)
             with col5:
                 loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-                wagen_loc = pd.merge(loc_df, i.get(select_wissel), on=['Wissel Nr'], how='inner')
+                wagen_loc = pd.merge(loc_df, fig_data, on=['Wissel Nr'], how='inner')
                 st.map(wagen_loc, zoom=10)
     else:
         st.title('Kies een gegeven om te analyseren')
 
-
-def st_unknowstoring(select_data):
-    layout_height = 600
-    if len(select_data) > 0:
-        all_data_list, wissel_list = get_all_data(select_data, path='unknow_storing')
-        wissel_list.sort()
-        select_wissel = st.sidebar.selectbox('Kies een wissel', wissel_list)
-        for i in all_data_list:
-            st.dataframe(i.get(select_wissel), height=1000)
-
-    else:
-        st.title('Kies een gegeven om te analyseren')
