@@ -144,6 +144,6 @@ def wissel_eind_stand(dataframe) -> bool:
     """
     eind_stand = dataframe[(dataframe['<wissel> links'] == 0) & (dataframe['<wissel> rechts'] == 0)]
     
-    return len(eind_stand) / len(dataframe) >= 0.3 and len(eind_stand) / len(dataframe) != 1
+    return 0.3 < len(eind_stand) / len(dataframe) < 1
 
 
