@@ -2,7 +2,6 @@
 # coding: utf-8
 from __init__ import *
 
-
 from Run.core.Analyze.analyze_tool import *
 import pandas as pd
 from collections import OrderedDict
@@ -35,8 +34,8 @@ def recheck_storing(dataset):
         step_list = df['step']
         step_list = [i for i in step_list if i is not None]
         # is_storing = False
-        for i in range(len(step_list)-1):
-            if step_list[i+1] < step_list[i]:
+        for i in range(len(step_list) - 1):
+            if step_list[i + 1] < step_list[i]:
                 step_revert += 1
 
         return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> wagen']))) * 2,
@@ -55,37 +54,41 @@ def define_storing(dataset):
     :param dataset: pd.DataFrame
     :return: str, pd.DataFrame
     """
+    wagen_nr = max(dataset['<aanmelden> wagen'].tolist(), key=dataset['<aanmelden> wagen'].tolist().count)
     storing_type = {
         'begin tijd': [dataset.iloc[1]['date-time']],
         'eind tijd': [dataset.iloc[-1]['date-time']],
         'Wissel Nr': [dataset.iloc[1]['wissel nr']],
-        'lijn nr': [dataset.iloc[2]['<aanmelden> lijn']],
-        'service': [dataset.iloc[2]['<aanmelden> service']],
-        'categorie': [dataset.iloc[2]['<aanmelden> categorie']],
-        # 'wagen nr': [ i for i in list(set(dataset['<aktuell> wagen'].tolist())) if i != 0]
+        'lijn nr': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> lijn']],
+        'service': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> service']],
+        'categorie': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> categorie']],
+        'wagen nr': [wagen_nr]
     }
     storing = ['ontbekend']
     afdelling = ['ontbekend']
-
-    func_dict = OrderedDict([
-        (wissel_buiten_dinst(dataset), [['wissel buiten dienst'], ['infra']]),
-        (wissel_eind_stand(dataset), [['wissel heeft geen eind stand'], ['infra']]),
-        (check_bad_contact(dataset, '<hfp> schakelcriterium bezet'), [['HFP slecht contact'], ['infra']]),
-        (check_bad_contact(dataset, '<hfk> schakelcriterium bezet'), [['HFK slecht contact'], ['infra']]),
-        (check_fout_state(dataset, '<vecom> track zonder vergrendeling'), [['wissel kan lijn nr niet handelen'], ['wagen']]),
-        (check_fout_state(dataset, '<vecom> com. fout ifc'), [['VECOM error'], ['infra']]),
-        (check_fout_state(dataset, '<vecom> lus zonder richting'), [['lijn nr niet in de handel lijst'], ['wagen']]),
-        (check_werk_wagen(dataset), [['wissel kan werk de wagen niet afmeden'], ['werk wagen']]),
-        (check_wagen_vecom(dataset), [['vecom in wagen slect contitie'], ['wagen']]),
-        # (miss_out_meld(dataset), [['miss out meld lus'], ['vecom']]),
-        (check_verkeerd_code(dataset), [['verkeerde code'], ['bestuurder']])
-    ])
-    for i in func_dict.keys():
-        if i:
-            storing, afdelling = func_dict.get(i)
+    func_list = [
+        wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),  # 1
+        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),  # 2
+        wacht_op_sein(dataset, 'bestuurder wacht nit op sein', 'bestuurder'),  # 3
+        check_bad_contact(dataset, '<hfp> schakelcriterium bezet', 'HFP slecht contact', 'infra'),  # 4
+        check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK slecht contact', 'infra'),  # 5
+        check_wagen_vecom(dataset, 'vecom in wagen error', 'wagen'),  # 6
+        check_fout_state(dataset, '<vecom> track zonder vergrendeling', 'categorie/handbedien code fout', 'bestuurder'),  # 7
+        check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware error', 'infra'),  # 8
+        check_fout_state(dataset, '<vecom> lus zonder richting', 'categorie/handbedien code fout', 'bestuurder'),  # 9
+        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),  # 10
+        check_verkeerd_code(dataset, 'richting-code niet overeen', 'bestuurder'),  # 11
+        # miss_out_meld(dataset,'miss out meld lus', 'vecom')
+    ]
+    for i in func_list:
+        if all(i):
+            state, storing, afdelling = i
             break
-    storing_type['storing'] = storing
-    storing_type['afdelling'] = afdelling
+    storing_type['storing'] = [storing]
+    storing_type['afdelling'] = [afdelling]
     storing_type['count'] = [1]
+    try:
+        storing_type['wagen nr'] = [i for i in dataset['<aktuell> wagen'].tolist() if i != 0][0]
+    except:
+        storing_type['wagen nr'] = [0]
     return storing[0], pd.DataFrame(storing_type)
-

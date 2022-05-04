@@ -1,6 +1,8 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+from multiprocessing import Pool
+
 import pandas as pd
 
 from Run.core.Analyze.check_storing_df import check_storing_df, recheck_storing, define_storing
@@ -139,9 +141,7 @@ class Calculator:
                 pass
             else:
                 storing_list.append(storing)
-          
         storingen_dict['all storingen'] = pd.concat(storing_list)
-       
         if len(unknow_storing_list) > 0:
             x = 0
             for i in unknow_storing_list:
