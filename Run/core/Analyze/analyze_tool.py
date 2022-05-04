@@ -177,7 +177,7 @@ def hfp_start_index(hfp_list: list) -> list:
 def wacht_op_sein(dataframe, storing:str, afdelling: str) -> Tuple[bool, str, str]:
     state_list = []
     for i in hfp_start_index(dataframe['<hfp> schakelcriterium bezet'].tolist()):
-        state_list.append(any([dataframe.iloc[i]['<wls> seinbeld links geactiveerd'] == 0,
+        state_list.append(all([dataframe.iloc[i]['<wls> seinbeld links geactiveerd'] == 0,
                               dataframe.iloc[i]['<wls> seinbeld rechts geactiveerd'] == 0]))
 
     return any(state_list), storing, afdelling
