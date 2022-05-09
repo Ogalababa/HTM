@@ -39,4 +39,3 @@ def wissel_gerade(wissel_nr: str) -> str:
         return '<wissel> rechts'
     else:
         return '<wissel> links'
-

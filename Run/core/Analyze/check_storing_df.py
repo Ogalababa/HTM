@@ -2,9 +2,10 @@
 # coding: utf-8
 from __init__ import *
 
+
 from Run.core.Analyze.analyze_tool import *
 import pandas as pd
-from collections import OrderedDict
+
 
 
 def check_storing_df(dataset):
@@ -34,8 +35,8 @@ def recheck_storing(dataset):
         step_list = df['step']
         step_list = [i for i in step_list if i is not None]
         # is_storing = False
-        for i in range(len(step_list) - 1):
-            if step_list[i + 1] < step_list[i]:
+        for i in range(len(step_list)-1):
+            if step_list[i+1] < step_list[i]:
                 step_revert += 1
 
         return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> wagen']))) * 2,
@@ -54,6 +55,7 @@ def define_storing(dataset):
     :param dataset: pd.DataFrame
     :return: str, pd.DataFrame
     """
+    error_info = None
     wagen_nr = max(dataset['<aanmelden> wagen'].tolist(), key=dataset['<aanmelden> wagen'].tolist().count)
     storing_type = {
         'begin tijd': [dataset.iloc[1]['date-time']],
@@ -67,28 +69,51 @@ def define_storing(dataset):
     storing = ['ontbekend']
     afdelling = ['ontbekend']
     func_list = [
-        wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),  # 1
-        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),  # 2
-        wacht_op_sein(dataset, 'bestuurder wacht nit op sein', 'bestuurder'),  # 3
-        check_bad_contact(dataset, '<hfp> schakelcriterium bezet', 'HFP slecht contact', 'infra'),  # 4
-        check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK slecht contact', 'infra'),  # 5
-        check_wagen_vecom(dataset, 'vecom in wagen error', 'wagen'),  # 6
-        check_fout_state(dataset, '<vecom> track zonder vergrendeling', 'categorie/handbedien code fout', 'bestuurder'),  # 7
-        check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware error', 'infra'),  # 8
-        check_fout_state(dataset, '<vecom> lus zonder richting', 'categorie/handbedien code fout', 'bestuurder'),  # 9
-        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),  # 10
-        check_verkeerd_code(dataset, 'richting-code niet overeen', 'bestuurder'),  # 11
+        # 1
+        wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'), 
+        # 2
+        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),  
+        # 3
+        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),  
+        # 4
+        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),  
+        # 5
+        check_bad_contact(dataset, '<hfp> schakelcriterium bezet', 'HFP slecht contact', 'infra'),  
+        # 6
+        check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK slecht contact', 'infra'),  
+        # 7
+        check_wagen_vecom(dataset, 'vecom in wagen error', 'wagen'),  
+        # 8
+        check_fout_state(dataset, '<vecom> track zonder vergrendeling', 'categorie/handbedien code fout', 'bestuurder'),  
+        # 9
+        check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware error', 'infra'),  
+        # 10
+        check_fout_state(dataset, '<vecom> lus zonder richting', 'categorie/handbedien code fout', 'bestuurder'),  
+        # 11
+        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),  
+        # 12
+        check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),  
+        
         # miss_out_meld(dataset,'miss out meld lus', 'vecom')
     ]
-    for i in func_list:
-        if all(i):
-            state, storing, afdelling = i
-            break
-    storing_type['storing'] = [storing]
-    storing_type['afdelling'] = [afdelling]
-    storing_type['count'] = [1]
     try:
         storing_type['wagen nr'] = [i for i in dataset['<aktuell> wagen'].tolist() if i != 0][0]
     except:
         storing_type['wagen nr'] = [0]
+        
+    for i in func_list:
+        if i[-1]:
+            error_info = i
+            storing = [error_info[0]]
+            afdelling = [error_info[1]]
+            if len(error_info) == 7:
+                storing_type['lijn nr'] = [error_info[2]]
+                storing_type['service'] = [error_info[3]]
+                storing_type['categorie'] = [error_info[4]]
+                storing_type['wagen nr'] = [error_info[5]]
+            break
+    storing_type['storing'] = storing
+    storing_type['afdelling'] = afdelling
+    storing_type['count'] = [1]
+
     return storing[0], pd.DataFrame(storing_type)

@@ -1,9 +1,8 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
-from multiprocessing import Pool
-
 import pandas as pd
+from multiprocessing import Pool
 
 from Run.core.Analyze.check_storing_df import check_storing_df, recheck_storing, define_storing
 from Run.core.Analyze.wissel_schakel import wissel_schakel
@@ -95,7 +94,6 @@ class Calculator:
                     else:
                         pass
             except (ValueError, TypeError, KeyError, ZeroDivisionError) as err:
-                print(f'{key}:{err}')
                 pass
         save_to_sql(self.db_name, data_dict, 'snelheid')
 
@@ -131,6 +129,7 @@ class Calculator:
         storingen_dict = {}
         unknow_storing_list = []
         unknow_storing_dict = {}
+        all_storing_dict = {}
         self.error_list = [i for i in self.error_list if len(set(i['<wissel> op slot'])) == 2]
         self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
         for i in self.error_list:
@@ -141,12 +140,19 @@ class Calculator:
                 pass
             else:
                 storing_list.append(storing)
-        storingen_dict['all storingen'] = pd.concat(storing_list)
+        if len(storing_list) > 0:
+            storingen_dict['all storingen'] = pd.concat(storing_list)
+            save_to_sql(self.db_name, storingen_dict, 'storing')
         if len(unknow_storing_list) > 0:
             x = 0
             for i in unknow_storing_list:
                 unknow_storing_dict[str(x).zfill(3)] = i
                 x += 1
-
-            save_to_sql(self.db_name, storingen_dict, 'storing')
             save_to_sql(self.db_name, unknow_storing_dict, 'unknow_storing')
+        if len(self.error_list) > 0:
+            x = 0
+            for i in self.error_list:
+                all_storing_dict[str(x).zfill(3)] = i
+                x += 1
+            save_to_sql(self.db_name, all_storing_dict, 'all_storing')
+            

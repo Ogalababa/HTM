@@ -2,7 +2,7 @@
 # coding:utf-8
 # sys
 from __init__ import *
-
+from datetime import datetime
 from Run.core.ConvertData.ReadLogs import read_log, log_to_sql, set_steps_denbdb3c
 from Run.core.Integration.DataCalculator import Calculator
 
@@ -17,14 +17,23 @@ def process_db(log_file):
     wissel_log, date = read_log(log_path)
 
     try:
+        print(f'{datetime.now().strftime("%H:%M:%S")} Start update')
         log_to_sql(wissel_log, date)
+        print(f'{datetime.now().strftime("%H:%M:%S")} Read log done')
         set_steps_denbdb3c(date)
+        print(f'{datetime.now().strftime("%H:%M:%S")} Set steps done')
         data_exp = Calculator(date)
+        print(f'{datetime.now().strftime("%H:%M:%S")} Calculation done')
         data_exp.C_tram_speed()
+        print(f'{datetime.now().strftime("%H:%M:%S")} Tram speed done')
         data_exp.C_wissel_schakel()
+        print(f'{datetime.now().strftime("%H:%M:%S")} Wissel schakel done')
         data_exp.C_storingen()
+        print(f'{datetime.now().strftime("%H:%M:%S")} Storingen done')
+        print('-'*30)
     except (AttributeError, UnicodeDecodeError, IndexError) as err:
-        print(err)
+        # print(err)
+        pass
 
     except KeyboardInterrupt:
         exit()

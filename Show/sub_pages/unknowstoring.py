@@ -8,7 +8,6 @@ import streamlit as st
 import plotly.express as px
 from Show.core.GetData import get_all_data
 
-
 def st_unknowstoring(select_data):
     layout_height = 600
     if len(select_data) > 0:

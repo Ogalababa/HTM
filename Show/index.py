@@ -66,6 +66,15 @@ PAGES = OrderedDict(
                     """,
             ),
         ),
+        (
+            "All storing",
+            (
+                pages.st_all_storing,
+                """
+                    Deze pagina toont alle storing data van wissel status
+                    """,
+            ),
+        ),
     ]
 )
 
@@ -112,6 +121,14 @@ def run():
         page(select_data)
     elif page_name == "Unknow storing":
         all_table_name = GetData.get_data_name(path="unknow_storing")
+        all_table_name.sort(reverse=True)
+        default_table = all_table_name[:1]
+        select_data = st.sidebar.multiselect(
+            "Selecteer gegevens om te analyseren", all_table_name, default_table
+        )
+        page(select_data)
+    elif page_name == "All storing":
+        all_table_name = GetData.get_data_name(path="all_storing")
         all_table_name.sort(reverse=True)
         default_table = all_table_name[:1]
         select_data = st.sidebar.multiselect(
