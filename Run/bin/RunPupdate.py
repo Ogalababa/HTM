@@ -10,7 +10,10 @@ from datetime import datetime
 
 def update_db():
     """Update database from last log file"""
+    # Check log files
+    # 检测log文件
     log_file_list = os.listdir(os.path.join(rootPath, 'log'))
+    
     if len(log_file_list) == 0:
         mount_log()  # mount extern dir
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
@@ -19,6 +22,8 @@ def update_db():
         log_file_list = [x for x in log_file_list if 'log' in x]
         log_file = max(log_file_list)
         try:
+            # Analyze log files
+            # 分析log文件
             process_db(log_file)
             now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             with open(os.path.join(

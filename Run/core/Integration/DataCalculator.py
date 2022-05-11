@@ -130,16 +130,20 @@ class Calculator:
         unknow_storing_list = []
         unknow_storing_dict = {}
         all_storing_dict = {}
-        self.error_list = [i for i in self.error_list if len(set(i['<wissel> op slot'])) == 2]
-        self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
+        # self.error_list = [i for i in self.error_list if '<wissel> op slot' in i.tolist()]
+        # self.error_list = [i for i in self.error_list if len(set(i['<wissel> op slot'])) > 0]
+        # self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
         for i in self.error_list:
-            unknow_state, storing = define_storing(i)
-            if unknow_state == 'ontbekend':
-                unknow_storing_list.append(i)
-            elif unknow_state == 'noerror':
+            try:
+                unknow_state, storing = define_storing(i)
+                if unknow_state == 'ontbekend':
+                    unknow_storing_list.append(i)
+                elif unknow_state == 'noerror':
+                    pass
+                else:
+                    storing_list.append(storing)
+            except:
                 pass
-            else:
-                storing_list.append(storing)
         if len(storing_list) > 0:
             storingen_dict['all storingen'] = pd.concat(storing_list)
             save_to_sql(self.db_name, storingen_dict, 'storing')
@@ -155,4 +159,4 @@ class Calculator:
                 all_storing_dict[str(x).zfill(3)] = i
                 x += 1
             save_to_sql(self.db_name, all_storing_dict, 'all_storing')
-            
+             

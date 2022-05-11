@@ -2,16 +2,14 @@
 # coding: utf-8
 from __init__ import *
 
-
 from Run.core.Analyze.analyze_tool import *
 import pandas as pd
-
 
 
 def check_storing_df(dataset):
     """
     Check dataframe is correct data, if not return False
-    :param df: DataFrame
+    :param dataset: DataFrame
     :return: boolean
     """
     # filter data from reniging
@@ -35,8 +33,8 @@ def recheck_storing(dataset):
         step_list = df['step']
         step_list = [i for i in step_list if i is not None]
         # is_storing = False
-        for i in range(len(step_list)-1):
-            if step_list[i+1] < step_list[i]:
+        for i in range(len(step_list) - 1):
+            if step_list[i + 1] < step_list[i]:
                 step_revert += 1
 
         return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> wagen']))) * 2,
@@ -69,38 +67,40 @@ def define_storing(dataset):
     storing = ['ontbekend']
     afdelling = ['ontbekend']
     func_list = [
+        # Sorting method: Arrange from top to bottom according to the detection index
+        # 排序方式：根据检测index从上到下排列
         # 1
-        wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'), 
+        wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),
         # 2
-        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),  
+        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),
         # 3
-        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),  
+        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),
         # 4
-        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),  
+        check_fout_state(dataset, '<vecom> track zonder vergrendeling', 'categorie/handbedien code fout', 'bestuurder'),
         # 5
-        check_bad_contact(dataset, '<hfp> schakelcriterium bezet', 'HFP slecht contact', 'infra'),  
+        check_bad_contact(dataset, '<hfp> schakelcriterium bezet', 'HFP detector fout', 'infra'),
         # 6
-        check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK slecht contact', 'infra'),  
+        check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK detector fout', 'infra'),
         # 7
-        check_wagen_vecom(dataset, 'vecom in wagen error', 'wagen'),  
+        miss_out_meld(dataset, 'afmelden fout', 'infra'),
         # 8
-        check_fout_state(dataset, '<vecom> track zonder vergrendeling', 'categorie/handbedien code fout', 'bestuurder'),  
+        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
         # 9
-        check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware error', 'infra'),  
+        check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
         # 10
-        check_fout_state(dataset, '<vecom> lus zonder richting', 'categorie/handbedien code fout', 'bestuurder'),  
+        check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware fout', 'infra'),
         # 11
-        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),  
+        check_fout_state(dataset, '<vecom> lus zonder richting', 'categorie/handbedien code fout', 'bestuurder'),
         # 12
-        check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),  
-        
-        # miss_out_meld(dataset,'miss out meld lus', 'vecom')
+        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
+        # 13
+        check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),
     ]
     try:
         storing_type['wagen nr'] = [i for i in dataset['<aktuell> wagen'].tolist() if i != 0][0]
     except:
         storing_type['wagen nr'] = [0]
-        
+
     for i in func_list:
         if i[-1]:
             error_info = i

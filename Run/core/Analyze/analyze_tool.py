@@ -65,7 +65,7 @@ def check_werk_wagen(dataframe, storing: str, afdelling: str) -> Tuple[str, str,
         return storing, afdelling, False
 
 
-def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
+def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
     """
     check if the trame with wrong code
     :param dataframe: pd.DataFrame
@@ -77,10 +77,18 @@ def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     gerade = wissel_gerade(wissel_nr)
     wissel_ijzer_index = dataframe[dataframe['<wissel> ijzer'] == 0].index.to_list()
     verkeerd_code = []
+    lijn_nr = None
+    service = None
+    categroie = None
+    wagen_nr = None
     if len(wissel_ijzer_index) == 0:
-        return storing, afdelling, False
+        return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
     else:
         try:
+            lijn_nr = dataframe[dataframe['<wissel> ijzer'] == 0].iloc[0]['<aanmelden> lijn']
+            service = dataframe[dataframe['<wissel> ijzer'] == 0].iloc[0]['<aanmelden> service']
+            categroie = dataframe[dataframe['<wissel> ijzer'] == 0].iloc[0]['<aanmelden> categorie']
+            wagen_nr = dataframe[dataframe['<wissel> ijzer'] == 0].iloc[0]['<aanmelden> wagen']
             for i in wissel_ijzer_index:
                 sub_cycle = dataframe[dataframe['<aanmelden> wagen'] == dataframe.loc[i]['<aanmelden> wagen']]
                 request_direction = None
@@ -96,32 +104,41 @@ def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, s
                     verkeerd_code.append(True)
                 else:
                     verkeerd_code.append(False)
-            return storing, afdelling, any(verkeerd_code)
+            return storing, afdelling, lijn_nr, service, categroie, wagen_nr, any(verkeerd_code)
         except KeyError:
-            return storing, afdelling, False
+            return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
 
 
-def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
+
+def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
     """
     check if vecom afmelden error
     :param dataframe: pd.DataFrame
     :param afdelling: str
     :param storing: str
-    :return: Tuple[bool, str, str
+    :return: Tuple[str, str, int, int, int, int, bool]
     """
-    wagen_nr_list = list(set(dataframe['<aanmelden> wagen'].tolist()))
-    out_lus_list = []
-    for i in wagen_nr_list:
-        try:
-            sub_cycle = dataframe[dataframe['<aanmelden> wagen'] == i]
-            hfk_dataset = sub_cycle[sub_cycle['<hfk> schakelcriterium bezet'] == 1]
-            if 1 in hfk_dataset['<vecom> aftellen'].tolist():
-                out_lus_list.append(True)
-            else:
-                out_lus_list.append(False)
-        except KeyError:
-            return storing, afdelling, False
-    return storing, afdelling, any(out_lus_list)
+    state_list = []
+    wagen_nr_set = set(dataframe['<aanmelden> wagen'].tolist())
+    lijn_nr = None
+    service = None
+    categroie = None
+    wagen_nr = None
+    for i in wagen_nr_set:
+        sub_cycle_dataframe = dataframe[(dataframe['<aanmelden> wagen'] == i) &
+                                        (dataframe["<hfp> schakelcriterium bezet"] == 1) &
+                                        (dataframe["<hfk> schakelcriterium bezet"] == 0)]
+        if len(sub_cycle_dataframe) > 0:
+            lijn_nr = sub_cycle_dataframe.iloc[0]['<aanmelden> lijn']
+            service = sub_cycle_dataframe.iloc[0]['<aanmelden> service']
+            categroie = sub_cycle_dataframe.iloc[0]['<aanmelden> categorie']
+            wagen_nr = sub_cycle_dataframe.iloc[0]['<aanmelden> wagen']
+            if any([1 not in sub_cycle_dataframe['<vecom> aftellen'].tolist(),
+                    0 not in sub_cycle_dataframe['<vecom> aftellen'].tolist()]):
+                return storing, afdelling, lijn_nr, service, categroie, wagen_nr, True
+        else:
+            continue
+    return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
 
 
 def check_wagen_vecom(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
@@ -208,3 +225,5 @@ def no_wagen_nr(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int,
         categroie = dataframe[dataframe['<aanmelden> wagen'] == 0].iloc[0]['<aanmelden> categorie']
         
     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, 0 in dataframe['<aanmelden> wagen'].tolist()
+
+
