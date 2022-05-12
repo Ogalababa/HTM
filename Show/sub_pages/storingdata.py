@@ -8,12 +8,15 @@ import streamlit as st
 import plotly.express as px
 from Show.core.GetData import get_all_data
 
+
 def st_storingdata(select_data):
     layout_height = 600
     col2, space2, col3 = st.columns((10, 1, 10))
     col4, space4, col5 = st.columns((10, 1, 10))
     if len(select_data) > 0:
+
         all_data_list, wissel_list = get_all_data(select_data, path='storing')
+        
         wissel_list.sort()
         select_wissel = st.sidebar.selectbox('Kies een wissel', wissel_list)
         for i in all_data_list:

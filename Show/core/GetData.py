@@ -53,8 +53,25 @@ def create_download_link(val, filename, pdf='pdf'):
            f'{b64.decode()}" download="{filename}.{pdf}">Download {pdf.upper()}</a>'
 
 
-# @st.cache(allow_output_mutation=True)
+
 def get_all_data(selected_db, path='db'):
+    """
+    Read all data from log db
+    :param selected_db: list
+    :param path: database dir
+    :return: {wissel nr: Dataframe}
+    """
+    data_list = []
+    wissel_list = []
+    for i in selected_db:
+        data_dict = get_alldata_from_db(i, path=path)
+        wissel_list.extend(data_dict.keys())
+        data_list.append(data_dict)
+    return data_list, list(set(wissel_list))
+
+
+@st.cache(allow_output_mutation=True)
+def get_all_data_cache(selected_db, path='db'):
     """
     Read all data from log db
     :param selected_db: list

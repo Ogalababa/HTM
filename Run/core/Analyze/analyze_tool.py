@@ -34,7 +34,7 @@ def check_bad_contact(dataframe, col_name: str, storing: str, afdelling: str) ->
                                     len(dataframe[dataframe[col_name] == 1]) / len(dataframe) > 0.7])
 
 
-def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> Tuple[str, str, bool]:
+def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
     """
     check if error state in dataset
     :param dataframe: pd.DataFrame
@@ -43,7 +43,16 @@ def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> 
     :param storing: str
     :return: Tuple[bool, str, str
     """
-    return storing, afdelling, 1 in dataframe[col_name].to_list()
+    lijn_nr = None
+    service = None
+    categroie = None
+    wagen_nr = None
+    if 1 in dataframe[col_name].to_list():
+        lijn_nr = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> lijn']
+        service = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> service']
+        categroie = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> categorie']
+        wagen_nr = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> wagen']
+    return storing, afdelling, lijn_nr, service, categroie, wagen_nr, 1 in dataframe[col_name].to_list()
 
 
 def check_werk_wagen(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
