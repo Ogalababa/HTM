@@ -10,16 +10,11 @@ def wissel_storing(df):
     :param df: sigle wissel cycle dataframe
     :return: wissel switch status dataframe
     """
-    status = {}
-    status['Begin tijd'] = [df.iloc[1]['date-time']]
-    status['Eind tijd'] = [df.iloc[-1]['date-time']]
-    status['Wissel nr'] = [df.iloc[-1]['wissel nr']]
-    status['lijn'] = [df.iloc[-1]['<aanmelden> lijn']]
-    status['service'] = [df.iloc[-1]['<aanmelden> service']]
-    status['categorie'] = [df.iloc[-1]['<aanmelden> categorie']]
-    status['wagen'] = [df.iloc[-1]['<aktuell> wagen']]
     desc = df.describe()
-    status['fifo'] = [desc.loc['max']['<aktuell> niveau fifo']]
+    status = {'Begin tijd': [df.iloc[1]['date-time']], 'Eind tijd': [df.iloc[-1]['date-time']],
+              'Wissel nr': [df.iloc[-1]['wissel nr']], 'lijn': [df.iloc[-1]['<aanmelden> lijn']],
+              'service': [df.iloc[-1]['<aanmelden> service']], 'categorie': [df.iloc[-1]['<aanmelden> categorie']],
+              'wagen': [df.iloc[-1]['<aktuell> wagen']], 'fifo': [desc.loc['max']['<aktuell> niveau fifo']]}
 
     if desc.loc['max']['<aktuell> wagen'] == 0:
         status['Error type'] = ['Wagen nummer aanmelden fout']

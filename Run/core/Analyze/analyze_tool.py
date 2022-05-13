@@ -86,10 +86,10 @@ def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     gerade = wissel_gerade(wissel_nr)
     wissel_ijzer_index = dataframe[dataframe['<wissel> ijzer'] == 0].index.to_list()
     verkeerd_code = []
-    lijn_nr = None
-    service = None
-    categroie = None
-    wagen_nr = None
+    lijn_nr = -1
+    service = -1
+    categroie = -1
+    wagen_nr = -1
     if len(wissel_ijzer_index) == 0:
         return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
     else:
@@ -116,7 +116,6 @@ def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, s
             return storing, afdelling, lijn_nr, service, categroie, wagen_nr, any(verkeerd_code)
         except KeyError:
             return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
-
 
 
 def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:

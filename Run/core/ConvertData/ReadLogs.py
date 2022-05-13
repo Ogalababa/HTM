@@ -18,7 +18,6 @@ from Run.core.ConvertData.ImportConf import bit_config, byte_config, drop_config
 from Run.core.ConvertData.Config import WisselData
 from Run.core.ConvertData.VerSelect import get_version, get_wissel_type_nr
 from Run.core.ConvertData.ConnectDB import conn_engine
-from Run.core.Analyze.tram_speed import tram_speed_to_sql
 
 
 def read_log(log_file):
@@ -130,22 +129,3 @@ def set_steps_denbdb3c(db_file):
     except KeyboardInterrupt:
         exit()
 
-
-def process_log_sql(log_file):
-    log_path = os.path.join(rootPath, 'log', log_file)
-    wissel_log, date = read_log(log_path)
-    try:
-        log_to_sql(wissel_log, date)
-        set_steps_denbdb3c(date)
-        tram_speed_to_sql(date)
-
-    except AttributeError as ae:
-        print(ae)
-
-    except UnicodeDecodeError as ue:
-        print(ue)
-
-    except IndexError as ie:
-        print(ie)
-    except KeyboardInterrupt:
-        exit()

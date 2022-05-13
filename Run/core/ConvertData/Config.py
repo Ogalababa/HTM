@@ -13,11 +13,12 @@ class WisselData:
     Convert wissel data from log file
     """
 
-    def __init__(self, hex_data, bit_config, byte_config):
+    def __init__(self, hex_data: str, bit_config: dict, byte_config: dict):
         """
-        :type hex_data: str
-        :type bit_config: dict
-        :type byte_config: dict
+
+        :param hex_data: str
+        :param bit_config: dict
+        :param byte_config: dict
         """
 
         self.config = configparser.ConfigParser()
