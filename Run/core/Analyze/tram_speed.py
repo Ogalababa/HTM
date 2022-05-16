@@ -39,14 +39,19 @@ def calculation_tram_speed(dataset):
             richting = 'ontbekend'
             hfk_df = dataset[dataset['<afmelden> wagen'] == i]
             # 判断数据正确性
-            if check_bad_contact(hfk_df, '<hfk> schakelcriterium bezet', 'hfk', 'infra')[-1] is not True:
-                hfk_index_list = hfk_df[hfk_df['<hfk> schakelcriterium bezet'] == 1].index.tolist()
+            hfk_index_list = hfk_df[hfk_df['<hfk> schakelcriterium bezet'] == 1].index.tolist()
+            # 验证数据连续性
+            continuity = dataset.loc[hfk_index_list[0]]['Count'] - dataset.loc[hfk_index_list[0] - 1]['Count']
+            hfk_state = any([check_bad_contact(hfk_df, '<hfk> schakelcriterium bezet', 'hfk', 'infra')[-1],
+                             continuity > 3])
+            if hfk_state is not True:
+
                 if len(hfk_index_list) >= 3:
                     speed_dict = {}
                     wissel_nr = dataset.loc[hfk_index_list[0]]['wissel nr']
-                    lijn_nr = dataset.loc[hfk_index_list[0]]['<aanmelden> lijn']
-                    service = dataset.loc[hfk_index_list[0]]['<aanmelden> service']
-                    categorie = dataset.loc[hfk_index_list[0]]['<aanmelden> categorie']
+                    lijn_nr = dataset[dataset['<aanmelden> wagen'] == i].iloc[0]['<aanmelden> lijn']
+                    service = dataset[dataset['<aanmelden> wagen'] == i].iloc[0]['<aanmelden> service']
+                    categorie = dataset[dataset['<aanmelden> wagen'] == i].iloc[0]['<aanmelden> categorie']
                     wagen_nr = dataset.loc[hfk_index_list[0]]['<afmelden> wagen']
                     # 判断行进方向
                     if dataset.loc[hfk_index_list[0]]['<wissel> links'] == 1:

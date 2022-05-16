@@ -1,7 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
-from typing import Tuple, Any
+from typing import Tuple
 
 from Run.core.Tools.VaribleTool import wissel_gerade
 
