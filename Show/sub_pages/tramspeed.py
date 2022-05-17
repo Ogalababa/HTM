@@ -474,8 +474,8 @@ def tram_speed(select_data):
             st.sidebar.markdown(html, unsafe_allow_html=True)
         if export_as_csv:
             csv = df_all_data[[
-                'Lijn', 'Wagen Nr', 'Categorie',
-                'Service', 'Wissel Nr', 'Tijd',
+                'Wagen Nr', 'Lijn', 'Service',
+                'Categorie', 'Wissel Nr', 'Tijd',
                 'snelheid km/h', 'Richting']].sort_values(by=['snelheid km/h']).to_csv(index=False).encode()
             if len(select_data) >= 2:
                 href = create_download_link(csv, f'{mode}-{select_data[-1]}_{select_data[0]}', 'csv')
