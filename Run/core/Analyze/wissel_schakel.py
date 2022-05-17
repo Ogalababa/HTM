@@ -5,6 +5,8 @@
 import pandas as pd
 
 
+# Detect wissel steering
+# 检测wissel转向
 def wissel_schakel(df):
     """
     Calculate wissel switch from single wissel cycle

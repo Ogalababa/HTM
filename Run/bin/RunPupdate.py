@@ -26,6 +26,8 @@ def update_db():
             # 分析log文件
             process_db(log_file)
             now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            # write update record
+            # 写入更新记录
             with open(os.path.join(
                     usrPath, 'crontab_log', 'database_update.log'), 'a') as u_log:
                 u_log.write(f'{now}\t Database {log_file} updated\n')

@@ -7,6 +7,8 @@ import pandas as pd
 from Run.core.Tools.VaribleTool import wissel_gerade
 
 
+# Return the length of the vehicle according to the vehicle number
+# 根据车号返回车辆长度
 def wagen_lent(wagen_nr):
     """
     default wagen lent
@@ -19,11 +21,14 @@ def wagen_lent(wagen_nr):
         lent = 37
     elif 5000 <= wagen_nr < 6000:
         lent = 35
+    elif wagen_nr == 1165 or wagen_nr == 1315:
+        lent = 14
     else:
         lent = 0
     return lent
 
 
+# 计算车辆速度
 def calculation_tram_speed(dataset):
     """
     calculation the tram speed
@@ -60,6 +65,8 @@ def calculation_tram_speed(dataset):
                         richting = '<wissel> rechts'
                     if richting == wissel_gerade(wissel_nr):
                         richting = 'Recht door'
+                    elif richting == 'ontbekend':
+                        richting = 'ontbekend'
                     else:
                         richting = f'{richting[8:]} af'
                     # 储存数据
@@ -77,6 +84,7 @@ def calculation_tram_speed(dataset):
                         speed_dict['hfk_in'] = [hfk_in]
                         speed_dict['hfk_uit'] = [hfk_out]
                         speed_dict['snelheid km/h'] = [speed]
+                        speed_dict['code'] = [f'{wagen_nr}-{lijn_nr}-{service}']
                         # 转换成data frame
                         speed_df_list.append(pd.DataFrame(speed_dict))
                     else:

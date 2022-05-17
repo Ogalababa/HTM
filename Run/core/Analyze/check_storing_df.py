@@ -6,6 +6,8 @@ from Run.core.Analyze.analyze_tool import *
 import pandas as pd
 
 
+# Check if the data is normal
+# 检测数据是否正常
 def check_storing_df(dataset):
     """
     Check dataframe is correct data, if not return False
@@ -25,6 +27,8 @@ def check_storing_df(dataset):
     return any(check_error_list)
 
 
+# Check again if the data is normal
+# 再次检测数据是否正常
 def recheck_storing(dataset):
     try:
         # cleaning dataset
@@ -46,7 +50,9 @@ def recheck_storing(dataset):
     except:
         return True
 
-
+    
+# Parse error data
+# 分析错误数据
 def define_storing(dataset):
     """
     define storing type.

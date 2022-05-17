@@ -13,6 +13,8 @@ def match_list(small_list: list, big_list: list) -> bool:
     :param big_list: list
     :return: bool
     """
+    # Check if the byte is wrong
+    # 检测字节是否错误
     compare_result = []
     for i in range(len(big_list)):
         compare_result.append(small_list == big_list[i:i + len(small_list)])
@@ -28,6 +30,8 @@ def check_bad_contact(dataframe, col_name: str, storing: str, afdelling: str) ->
     :param storing: str
     :return: Tuple[bool, str, str
     """
+    # Check hfk, hfp data correctness
+    # 检测hfk， hfp数据正确性
     aanmelden_list = dataframe['<aanmelden> wagen'].tolist()
     return storing, afdelling, any([match_list([1, 0, 1], dataframe[col_name].to_list()),
                                     match_list([1, 0, 0, 1], dataframe[col_name].to_list()),
@@ -43,6 +47,8 @@ def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> 
     :param storing: str
     :return: Tuple[bool, str, str
     """
+    # Check state correctness
+    # 检测状态正确性
     lijn_nr = None
     service = None
     categroie = None
@@ -63,6 +69,8 @@ def check_werk_wagen(dataframe, storing: str, afdelling: str) -> Tuple[str, str,
     :param storing: str
     :return: Tuple[bool, str, str
     """
+    # Detect work cart logout error
+    # 检测工作车登出错误
     aanmelden_list = list(set(dataframe['<aanmelden> wagen'].tolist()))
     afmelden_list = list(set(dataframe['<afmelden> wagen'].tolist()))
     aktuell_list = list(set(dataframe['<aktuell> wagen'].tolist()))
@@ -82,6 +90,8 @@ def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     :param storing: str
     :return: Tuple[bool, str, str
     """
+    # Check the consistency between the planned direction and the travel direction
+    # 检测计划方向与行进方向一致性
     wissel_nr = dataframe['wissel nr'].tolist()[0]
     gerade = wissel_gerade(wissel_nr)
     wissel_ijzer_index = dataframe[dataframe['<wissel> ijzer'] == 0].index.to_list()
@@ -126,6 +136,8 @@ def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     :param storing: str
     :return: Tuple[str, str, int, int, int, int, bool]
     """
+    # Check for logout errors
+    # 检测登出错误
     state_list = []
     wagen_nr_set = set(dataframe['<aanmelden> wagen'].tolist())
     lijn_nr = None
@@ -157,6 +169,8 @@ def check_wagen_vecom(dataframe, storing: str, afdelling: str) -> Tuple[str, str
     :param storing: str
     :return: Tuple[bool, str, str
     """
+    # Detect vehicle VECOM errors
+    # 检测车载VECOM错误
     aanmelden_list = dataframe['<aanmelden> wagen'].tolist()
     fifo_wagen = None
     handel_list = []
@@ -175,6 +189,8 @@ def wissel_buiten_dinst(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     :param storing: str
     :return: Tuple[bool, str, str
     """
+    # Check if wissel is out of order
+    # 检测wissel是否关闭
     return storing, afdelling, all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0])
 
 
@@ -186,12 +202,16 @@ def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str
     :param storing: str
     :return: Tuple[bool, str, str
     """
+    # Check if wissel is fully closed
+    # 检测wissel是否完全闭合
     eind_stand = dataframe[(dataframe['<wissel> links'] == 0) & (dataframe['<wissel> rechts'] == 0)]
 
     return storing, afdelling, 0.3 < len(eind_stand) / len(dataframe) < 1
 
 
 def hfp_start_index(hfp_list: list) -> list:
+    # Detect hfp data start sequence
+    # 检测hfp数据开始序列
     hfp_start_list = []
     for i in range(len(hfp_list)):
         if [0, 1, 1] == hfp_list[i: i + 3]:
@@ -200,6 +220,8 @@ def hfp_start_index(hfp_list: list) -> list:
 
 
 def wacht_op_sein(dataframe, storing:str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+    # Check if the driver is driving in sequence
+    # 检测司机是否按序行驶
     lijn_nr = None
     service = None
     categroie = None
@@ -223,6 +245,8 @@ def wacht_op_sein(dataframe, storing:str, afdelling: str) -> Tuple[str, str, int
 
 
 def no_wagen_nr(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+    # Check if the vehicle has vecom installed
+    # 检测车辆是是否安装vecom
     lijn_nr = None
     service = None
     categroie = None

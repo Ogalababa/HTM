@@ -7,10 +7,12 @@ from multiprocessing import Pool
 from Run.core.Integration.ProcessDataBase import process_db
 from Run.core.LogFilter.MountDir import mount_log
 
-
+# Re-analyze all log files
+# 重新分析所有log文件
 def recover_db():
     """Recover all database from wissel log files"""
     while True:
+        # 检测log文件
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
         if len(log_file_list) == 0:
             # extern dir not mount
@@ -18,7 +20,8 @@ def recover_db():
             # os comment, dont edit
             mount_log()
             log_file_list = os.listdir(os.path.join(rootPath, 'log'))
-
+        # log file queue analysis
+        # log文件排队分析
         if len(log_file_list) >= 1:
             log_file_list = [x for x in log_file_list if 'log' in x]
             log_file_list.sort()

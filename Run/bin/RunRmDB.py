@@ -4,6 +4,8 @@
 from __init__ import *
 from datetime import datetime
 
+# Periodically delete the database
+# 定期删除database
 if __name__ == '__main__':
     log_path = os.path.join(rootPath, 'DataBase', 'db')
     log_db = os.listdir(log_path)

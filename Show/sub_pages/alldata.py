@@ -7,6 +7,7 @@ import streamlit as st
 from Show.core.GetData import get_all_data
 from core.GetData import get_all_data_cache
 
+
 def all_data(select_data):
     layout_height = 600
     cache = st.sidebar.checkbox('Cache')
