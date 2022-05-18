@@ -23,6 +23,7 @@ def tram_speed(select_data):
         # else:
         #     df_all_data = get_tram_speed(select_data)
         df_all_data = get_tram_speed(select_data)
+        speed_record_size = len(df_all_data)
         mode = st.sidebar.radio(
             'Grafiek mode：',
             (
@@ -128,9 +129,9 @@ def tram_speed(select_data):
                 speed_counts_wissel['Tijd'] = speed_counts_wissel['Tijd'].astype(str)
                 fig_counts = px.sunburst(speed_counts_wissel,
                                          title='Snelheid overzicht',
-                                         path=['code', 'snelheid km/h', 'Richting', 'Wagen Nr', 'Tijd'],
+                                         path=['snelheid km/h', 'Richting', 'code', 'Tijd'],
                                          values='hoeveelheid',
-                                         color='code',
+                                         color='snelheid km/h',
                                          color_continuous_scale=px.colors.sequential.RdBu,
                                          height=layout_height,
                                          hover_data=[
@@ -176,12 +177,15 @@ def tram_speed(select_data):
             col4, space4, col5 = st.columns((10, 1, 10))
             col6, space6, col7 = st.columns((10, 1, 10))
             wagen_list = list(set(df_all_data['Wagen Nr']))
-            wagen_list = [i for i in wagen_list if i != '0']
+            ex_list = list(map(str, range(1000)))
+            # wagen_list = [i for i in wagen_list if i != '0']
+            wagen_list = [i for i in wagen_list if i not in ex_list]
             wagen_list.sort()
             selected_wagen = st.sidebar.selectbox('Kies een wagen', wagen_list)
             df_all_data = df_all_data.set_index('Wagen Nr', drop=False)
             speed_counts = df_all_data.loc[selected_wagen].copy()
             speed_counts['hoeveelheid'] = 1
+            
             with col2:
                 fig_wagen_2 = px.bar(speed_counts.sort_values(by='snelheid km/h'),
                                      title='Wissel/snelheid overzicht',
@@ -280,7 +284,7 @@ def tram_speed(select_data):
             speed_counts = df_all_data.copy()
             speed_counts['hoeveelheid'] = 1
             with col1:
-                st.sidebar.metric(f'Totale records over {select_speed} km/h:', len(df_all_data), delta=None,
+                st.sidebar.metric(f'Totale records boven {select_speed} km/h:', len(df_all_data), delta=f'{round(((len(df_all_data)/speed_record_size)*100),3)}% van totale records',
                                   delta_color="normal")
 
             with col2:
@@ -412,9 +416,9 @@ def tram_speed(select_data):
                 speed_counts['Tijd'] = speed_counts['Tijd'].astype(str)
                 fig_counts_2 = px.sunburst(speed_counts,
                                            title='Snelheid overzicht',
-                                           path=['code', 'snelheid km/h', 'Tijd'],
+                                           path=['snelheid km/h','code', 'Tijd'],
                                            values='hoeveelheid',
-                                           color='code',
+                                           color='snelheid km/h',
                                            color_continuous_scale=px.colors.sequential.RdBu,
                                            height=layout_height,
                                            hover_data=[

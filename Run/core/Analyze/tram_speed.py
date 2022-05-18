@@ -21,7 +21,7 @@ def wagen_lent(wagen_nr):
         lent = 37
     elif 5000 <= wagen_nr < 6000:
         lent = 35
-    elif wagen_nr == 1165 or wagen_nr == 1315:
+    elif 1000 <= wagen_nr < 2000:
         lent = 14
     else:
         lent = 0

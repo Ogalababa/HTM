@@ -98,7 +98,7 @@ def run():
     elif page_name == "Tram snelheid":
         all_table_name = GetData.get_data_name(path="snelheid")
         all_table_name.sort(reverse=True)
-        default_table = all_table_name[:1]
+        default_table = all_table_name[1]
         select_data = st.sidebar.multiselect(
             "Selecteer gegevens om te analyseren", all_table_name, default_table
         )
