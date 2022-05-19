@@ -17,7 +17,7 @@ def st_unknowstoring(select_data):
         else:
             all_data_list, wissel_list = get_all_data(select_data, path='unknow_storing')
         wissel_list.sort()
-        select_wissel = st.sidebar.selectbox('Kies een wissel', wissel_list)
+        select_wissel = st.sidebar.selectbox('', wissel_list)
         for i in all_data_list:
             st.subheader(i.get(select_wissel)['wissel nr'].tolist()[0])
             st.dataframe(i.get(select_wissel), height=1000)

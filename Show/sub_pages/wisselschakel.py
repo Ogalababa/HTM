@@ -15,7 +15,7 @@ from Show.core.GetData import get_tram_speed, create_download_link, get_all_data
 from Show.core.GetData import get_all_data_cache
 from fpdf import FPDF
 from tempfile import NamedTemporaryFile
-
+import plotly.graph_objects as go
 
 def st_wissel_schakel(select_data):
     """
@@ -84,9 +84,18 @@ def st_wissel_schakel(select_data):
             col3.metric("Storing", storing, f'{-storing_delta} %')
             if storing_delta > 50:
                 st.error('Incorrecte data')
+        # with col4:
+        #     loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
+        #     st.map(loc_df[loc_df['Wissel Nr'] == selected_wissel], zoom=10)
         with col4:
+           
             loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-            st.map(loc_df[loc_df['Wissel Nr'] == selected_wissel], zoom=10)
+            fig_5 = px.scatter_mapbox(loc_df[loc_df['Wissel Nr'] == selected_wissel], 
+                                      lat="latitude", lon="longitude",
+                                      color_continuous_scale=px.colors.sequential.RdBu, 
+                                      height=layout_height, size_max=15, zoom=13, 
+                                      hover_data=['Wissel Nr'],mapbox_style="carto-positron")
+            st.plotly_chart(fig_5)
 
     else:
         st.title('Kies een gegeven om te analyseren')

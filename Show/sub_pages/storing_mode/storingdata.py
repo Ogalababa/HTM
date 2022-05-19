@@ -18,32 +18,12 @@ def st_storingdata(select_data):
         all_data_list, wissel_list = get_all_data(select_data, path='storing')
         
         wissel_list.sort()
-        select_wissel = st.sidebar.selectbox('Kies een wissel', wissel_list)
+        # select_wissel = st.sidebar.selectbox('Kies een wissel', wissel_list)
+        select_wissel = wissel_list[0]
         for i in all_data_list:
             fig_data = i.get(select_wissel)[i.get(select_wissel)['storing'] != 'wissel buiten dienst']
             st.dataframe(fig_data)
-            with col4:
-                fig_storing_1 = px.sunburst(fig_data,
-                                            title='Storing overzicht',
-                                            path=['storing', 'Wissel Nr', 'afdelling', 'wagen nr', 'begin tijd'], 
-                                            values='count', 
-                                            color='storing',
-                                            color_continuous_scale=px.colors.sequential.RdBu,
-                                            hover_data=['begin tijd', 'eind tijd', 'lijn nr', 'categorie', 'service', 'wagen nr'],
-                                            height=layout_height,
-                                            template='seaborn')
-                st.plotly_chart(fig_storing_1, use_container_width=True)
-            with col3:
-                fig_storing_1 = px.sunburst(fig_data,
-                                            title='Wissel overzicht',
-                                            path=['wagen nr','afdelling','storing', 'Wissel Nr', 'begin tijd'], 
-                                            values='count', 
-                                            color='wagen nr',
-                                            color_continuous_scale=px.colors.sequential.RdBu,
-                                            hover_data=['begin tijd', 'eind tijd', 'lijn nr', 'categorie', 'service', 'wagen nr'],
-                                            height=layout_height,
-                                            template='seaborn')
-                st.plotly_chart(fig_storing_1, use_container_width=True)
+            
             with col2:
                 fig_storing_1 = px.sunburst(fig_data,
                                             title='Afdelling overzicht',
@@ -55,10 +35,38 @@ def st_storingdata(select_data):
                                             height=layout_height,
                                             template='seaborn')
                 st.plotly_chart(fig_storing_1, use_container_width=True)
+            with col3:
+                fig_storing_1 = px.sunburst(fig_data,
+                                            title='Wissel overzicht',
+                                            path=['Wissel Nr','wagen nr','afdelling','storing', 'begin tijd'], 
+                                            values='count', 
+                                            color='wagen nr',
+                                            color_continuous_scale=px.colors.sequential.RdBu,
+                                            hover_data=['begin tijd', 'eind tijd', 'lijn nr', 'categorie', 'service', 'wagen nr'],
+                                            height=layout_height,
+                                            template='seaborn')
+                st.plotly_chart(fig_storing_1, use_container_width=True)
+            with col4:
+                fig_storing_1 = px.sunburst(fig_data,
+                                            title='Storing overzicht',
+                                            path=['storing', 'Wissel Nr', 'afdelling', 'wagen nr', 'begin tijd'], 
+                                            values='count', 
+                                            color='storing',
+                                            color_continuous_scale=px.colors.sequential.RdBu,
+                                            hover_data=['begin tijd', 'eind tijd', 'lijn nr', 'categorie', 'service', 'wagen nr'],
+                                            height=layout_height,
+                                            template='seaborn')
+                st.plotly_chart(fig_storing_1, use_container_width=True)
             with col5:
                 loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
                 wagen_loc = pd.merge(loc_df, fig_data, on=['Wissel Nr'], how='inner')
-                st.map(wagen_loc, zoom=10)
+                # st.map(wagen_loc, zoom=10)
+                fig_7 = px.scatter_mapbox(wagen_loc, 
+                                      lat="latitude", lon="longitude",
+                                      color_discrete_sequence=px.colors.sequential.RdBu, 
+                                      height=layout_height, size_max=15, zoom=10,color='Wissel Nr',
+                                      hover_data=['Wissel Nr'],mapbox_style="carto-positron")
+                st.plotly_chart(fig_7)
     else:
         st.title('Kies een gegeven om te analyseren')
 

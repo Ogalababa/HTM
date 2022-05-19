@@ -170,7 +170,14 @@ def tram_speed(select_data):
                 figs.append(fig_wissel_4)
             with col7:
                 loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-                st.map(loc_df[loc_df['Wissel Nr'] == selected_wissel], zoom=10)
+                # st.map(loc_df[loc_df['Wissel Nr'] == selected_wissel], zoom=10)
+                fig_7 = px.scatter_mapbox(loc_df[loc_df['Wissel Nr'] == selected_wissel], 
+                                      lat="latitude", lon="longitude",
+                                      color_discrete_sequence=px.colors.sequential.RdBu, 
+                                      height=layout_height, size_max=15, zoom=13,color='Wissel Nr',
+                                      hover_data=['Wissel Nr'],mapbox_style="carto-positron")
+                st.plotly_chart(fig_7)
+                figs.append(fig_7)
 
         elif mode == 'Grafiek per wagen':
             col2, space2, col3 = st.columns((10, 1, 10))
@@ -265,7 +272,14 @@ def tram_speed(select_data):
             with col7:
                 loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
                 wagen_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
-                st.map(wagen_loc, zoom=10)
+                # st.map(wagen_loc, zoom=10)
+                fig_7 = px.scatter_mapbox(wagen_loc, 
+                                      lat="latitude", lon="longitude",
+                                      color_discrete_sequence=px.colors.sequential.RdBu, 
+                                      height=layout_height, size_max=15, zoom=10,color='Wissel Nr',
+                                      hover_data=['Wissel Nr'],mapbox_style="carto-positron")
+                st.plotly_chart(fig_7)
+                figs.append(fig_7)
 
         elif mode == 'Snelheidswaarschuwing':
             col1, space1, col1_1 = st.columns((21, 0.1, 0.1))
@@ -366,7 +380,14 @@ def tram_speed(select_data):
             with col7:
                 loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
                 wagen_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
-                st.map(wagen_loc, zoom=10)
+                # st.map(wagen_loc, zoom=10)
+                fig_7 = px.scatter_mapbox(wagen_loc, 
+                                      lat="latitude", lon="longitude",
+                                      color_discrete_sequence=px.colors.sequential.RdBu, 
+                                      height=layout_height, size_max=15, zoom=10,color='Wissel Nr',
+                                      hover_data=['Wissel Nr'],mapbox_style="carto-positron")
+                st.plotly_chart(fig_7)
+                figs.append(fig_7)
 
         else:
             col2, space2, col3 = st.columns((10, 1, 10))
@@ -458,7 +479,14 @@ def tram_speed(select_data):
             with col7:
                 loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
                 wagen_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
-                st.map(wagen_loc, zoom=10)
+                # st.map(wagen_loc, zoom=10)
+                fig_7 = px.scatter_mapbox(wagen_loc, 
+                                      lat="latitude", lon="longitude",
+                                      color_discrete_sequence=px.colors.sequential.RdBu, 
+                                      height=layout_height, size_max=15, zoom=10,color='Wissel Nr',
+                                      hover_data=['Wissel Nr'],mapbox_style="carto-positron")
+                st.plotly_chart(fig_7)
+                figs.append(fig_7)
 
         export_as_pdf = st.sidebar.button("Download Rapport")
         export_as_csv = st.sidebar.button("Download Details")
