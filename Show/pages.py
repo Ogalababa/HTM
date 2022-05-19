@@ -6,6 +6,4 @@ from sub_pages.intro import intro
 from sub_pages.tramspeed import tram_speed
 from sub_pages.alldata import all_data
 from sub_pages.wisselschakel import st_wissel_schakel
-from sub_pages.storingdata import st_storingdata
-from sub_pages.unknowstoring import st_unknowstoring
-from sub_pages.allstoring import st_all_storing
+from sub_pages.storing import st_storing

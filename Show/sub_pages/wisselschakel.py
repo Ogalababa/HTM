@@ -12,7 +12,7 @@ import plotly.graph_objects as go
 # streamlit
 import streamlit as st
 from Show.core.GetData import get_tram_speed, create_download_link, get_all_data
-from core.GetData import get_all_data_cache
+from Show.core.GetData import get_all_data_cache
 from fpdf import FPDF
 from tempfile import NamedTemporaryFile
 

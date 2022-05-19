@@ -3,11 +3,10 @@
 # sys
 
 from __init__ import *
-import pandas as pd
 import streamlit as st
-import plotly.express as px
 from Show.core.GetData import get_all_data
-from core.GetData import get_all_data_cache
+from Show.core.GetData import get_all_data_cache
+
 
 def st_unknowstoring(select_data):
     layout_height = 600

@@ -40,6 +40,15 @@ PAGES = OrderedDict(
             ),
         ),
         (
+            "Storing data",
+            (
+                pages.st_storing,
+                """
+                    Deze pagina toont alle storing data van wissel status
+                    """,
+            ),
+        ),
+        (
             "All data",
             (
                 pages.all_data,
@@ -48,38 +57,12 @@ PAGES = OrderedDict(
                     """,
             ),
         ),
-        (
-            "Storing data",
-            (
-                pages.st_storingdata,
-                """
-                    Deze pagina toont alle storing data van wissel status
-                    """,
-            ),
-        ),
-        (
-            "Unknow storing",
-            (
-                pages.st_unknowstoring,
-                """
-                    Deze pagina toont alle storing data van wissel status
-                    """,
-            ),
-        ),
-        (
-            "All storing",
-            (
-                pages.st_all_storing,
-                """
-                    Deze pagina toont alle storing data van wissel status
-                    """,
-            ),
-        ),
     ]
 )
 
 
 def run():
+    st.sidebar.warning('De website wordt om 11:00 onderhouden, het hele proces duurt ongeveer 30 minuten')
     page_name = st.sidebar.selectbox("Kies een pagina", list(PAGES.keys()), 0)
     page = PAGES[page_name][0]
     hide_st_style = """
@@ -119,23 +102,6 @@ def run():
             "Selecteer gegevens om te analyseren", all_table_name, default_table
         )
         page(select_data)
-    elif page_name == "Unknow storing":
-        all_table_name = GetData.get_data_name(path="unknow_storing")
-        all_table_name.sort(reverse=True)
-        default_table = all_table_name[:1]
-        select_data = st.sidebar.multiselect(
-            "Selecteer gegevens om te analyseren", all_table_name, default_table
-        )
-        page(select_data)
-    elif page_name == "All storing":
-        all_table_name = GetData.get_data_name(path="all_storing")
-        all_table_name.sort(reverse=True)
-        default_table = all_table_name[:1]
-        select_data = st.sidebar.multiselect(
-            "Selecteer gegevens om te analyseren", all_table_name, default_table
-        )
-        page(select_data)
-
     else:
         st.markdown("# %s" % page_name)
         desc = PAGES[page_name][1]

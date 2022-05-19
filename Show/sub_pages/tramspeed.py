@@ -8,7 +8,7 @@ import plotly.io as pio
 
 # streamlit
 import streamlit as st
-from core.GetData import get_tram_speed, create_download_link, get_tram_speed_cache
+from Show.core.GetData import get_tram_speed, create_download_link, get_tram_speed_cache
 from fpdf import FPDF
 from tempfile import NamedTemporaryFile
 
@@ -27,7 +27,7 @@ def tram_speed(select_data):
         mode = st.sidebar.radio(
             'Grafiek mode：',
             (
-            'Snelheidswaarschuwing (Beta)', 'Max waarde', 'Grafiek per wissel', 'Grafiek per wagen', 'Grafiek per lijn')
+            'Snelheidswaarschuwing', 'Max waarde', 'Grafiek per wissel', 'Grafiek per wagen', 'Grafiek per lijn')
         )
         if mode == 'Max waarde':
             col2, space2, col3 = st.columns((10, 1, 10))
@@ -267,7 +267,7 @@ def tram_speed(select_data):
                 wagen_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
                 st.map(wagen_loc, zoom=10)
 
-        elif mode == 'Snelheidswaarschuwing (Beta)':
+        elif mode == 'Snelheidswaarschuwing':
             col1, space1, col1_1 = st.columns((21, 0.1, 0.1))
             col2, space2, col3 = st.columns((10, 1, 10))
             col4, space4, col5 = st.columns((10, 1, 10))
