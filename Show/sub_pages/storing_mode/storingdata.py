@@ -9,10 +9,15 @@ import plotly.express as px
 from Show.core.GetData import get_all_data
 
 
-def st_storingdata(select_data):
+def st_storingdata(select_data_full):
     layout_height = 600
     col2, space2, col3 = st.columns((10, 1, 10))
     col4, space4, col5 = st.columns((10, 1, 10))
+    stop = st.sidebar.checkbox('Storing veroorzak wissel stoppen')
+    if stop:
+        select_data = select_data_full[select_data_full['wissel stop'] == 1]
+    else:
+        select_data = select_data_full
     if len(select_data) > 0:
 
         all_data_list, wissel_list = get_all_data(select_data, path='storing')

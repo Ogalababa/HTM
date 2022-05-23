@@ -220,7 +220,9 @@ def wissel_buiten_dinst(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     """
     # Check if wissel is out of order
     # 检测wissel是否关闭
-    return storing, afdelling, all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0])
+    return storing, afdelling, any(
+        [all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0]),
+         max(dataframe['<bis> schakelaar s1'] == 1)])
 
 
 def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
