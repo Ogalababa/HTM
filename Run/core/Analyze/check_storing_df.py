@@ -50,7 +50,7 @@ def recheck_storing(dataset):
     except:
         return True
 
-
+    
 # Parse error data
 # 分析错误数据
 def define_storing(dataset):
@@ -68,8 +68,7 @@ def define_storing(dataset):
         'lijn nr': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> lijn']],
         'service': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> service']],
         'categorie': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> categorie']],
-        'wagen nr': [wagen_nr],
-        'wissel stop': [(min(dataset['<wissel> ijzer']) - 1) * -1]
+        'wagen nr': [wagen_nr]
     }
     storing = ['ontbekend']
     afdelling = ['ontbekend']

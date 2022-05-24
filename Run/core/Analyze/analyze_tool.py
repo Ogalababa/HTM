@@ -38,8 +38,7 @@ def check_bad_contact(dataframe, col_name: str, storing: str, afdelling: str) ->
                                     len(dataframe[dataframe[col_name] == 1]) / len(dataframe) > 0.7])
 
 
-def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> Tuple[
-    str, str, int, int, int, int, bool]:
+def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
     """
     check if error state in dataset
     :param dataframe: pd.DataFrame
@@ -162,34 +161,6 @@ def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
 
 
-# def check_wagen_vecom(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
-#     """
-#     check the condition of the vecom in tram
-#     :param dataframe: pd.DataFrame
-#     :param afdelling: str
-#     :param storing: str
-#     :return: Tuple[str, str, int, int, int, int, bool]
-#     """
-#     # Detect vehicle VECOM errors
-#     # 检测车载VECOM错误
-#     aanmelden_list = dataframe['<aanmelden> wagen'].tolist()
-#     fifo_wagen = None
-#     handel_list = []
-#     lijn_nr = 0
-#     service = 0
-#     categroie = 0
-#     wagen_nr = 0
-#     for i in aanmelden_list:
-#         if i != fifo_wagen:
-#             handel_list.append(i)
-#             fifo_wagen = i
-#     if len(handel_list) != len(set(handel_list)):
-#         wagen_nr = [handel_list[i] for i in range(len(handel_list) - 1) if handel_list[i] == handel_list[i + 1]][0]
-#         lijn_nr = dataframe[dataframe['<aanmelden> wagen'] == wagen_nr][0]['<aanmelden> lijn']
-#         service = dataframe[dataframe['<aanmelden> wagen'] == wagen_nr][0]['<aanmelden> service']
-#         categroie = dataframe[dataframe['<aanmelden> wagen'] == wagen_nr][0]['<aanmelden> categorie']
-#
-#     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, len(handel_list) != len(set(handel_list))
 def check_wagen_vecom(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
     """
     check the condition of the vecom in tram
@@ -220,9 +191,7 @@ def wissel_buiten_dinst(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     """
     # Check if wissel is out of order
     # 检测wissel是否关闭
-    return storing, afdelling, any(
-        [all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0]),
-         max(dataframe['<bis> schakelaar s1'] == 1)])
+    return storing, afdelling, all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0])
 
 
 def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
@@ -231,7 +200,7 @@ def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str
     :param dataframe: pd.DataFrame
     :param afdelling: str
     :param storing: str
-    :return: Tuple[bool, str, str
+    :return: Tuple[str, str, bool]
     """
     # Check if wissel is fully closed
     # 检测wissel是否完全闭合
@@ -250,7 +219,7 @@ def hfp_start_index(hfp_list: list) -> list:
     return hfp_start_list
 
 
-def wacht_op_sein(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+def wacht_op_sein(dataframe, storing:str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
     # Check if the driver is driving in sequence
     # 检测司机是否按序行驶
     lijn_nr = None
@@ -260,12 +229,12 @@ def wacht_op_sein(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     state_list = []
     for i in hfp_start_index(dataframe['<hfp> schakelcriterium bezet'].tolist()):
         if i <= 3:
-            hfp_error = all([all(dataframe.iloc[:i + 1]['<wls> seinbeld links geactiveerd'] == 0),
-                             all(dataframe.iloc[:i + 1]['<wls> seinbeld rechts geactiveerd'] == 0)])
+            hfp_error = all([all(dataframe.iloc[:i+1]['<wls> seinbeld links geactiveerd'] == 0),
+                             all(dataframe.iloc[:i+1]['<wls> seinbeld rechts geactiveerd'] == 0)])
             state_list.append(hfp_error)
         else:
-            hfp_error = all([all(dataframe.iloc[i - 3:i + 1]['<wls> seinbeld links geactiveerd'] == 0),
-                             all(dataframe.iloc[i - 3:i + 1]['<wls> seinbeld rechts geactiveerd'] == 0)])
+            hfp_error = all([all(dataframe.iloc[i-3:i + 1]['<wls> seinbeld links geactiveerd'] == 0),
+                             all(dataframe.iloc[i-3:i + 1]['<wls> seinbeld rechts geactiveerd'] == 0)])
             state_list.append(hfp_error)
         if hfp_error:
             wagen_nr = dataframe.iloc[i]['<aanmelden> wagen']
@@ -286,5 +255,25 @@ def no_wagen_nr(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int,
         lijn_nr = dataframe[dataframe['<aanmelden> wagen'] == 0].iloc[0]['<aanmelden> lijn']
         service = dataframe[dataframe['<aanmelden> wagen'] == 0].iloc[0]['<aanmelden> service']
         categroie = dataframe[dataframe['<aanmelden> wagen'] == 0].iloc[0]['<aanmelden> categorie']
-
+        
     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, 0 in dataframe['<aanmelden> wagen'].tolist()
+
+
+def miss_data(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
+    # 放到检测列表末端
+    """
+    check if the dataset complete
+    :param dataframe: pd.DAtaFrame
+    :param storing: str
+    :param afdelling: str
+    :return: Tuple[str, str, bool]
+    """
+    status = False
+    count_list = dataframe['Count'].tolist()
+    fifo = count_list[0]
+    for i in count_list:
+        if i - fifo > 20:
+            status = True
+        else:
+            fifo = i
+    return storing, afdelling, status
