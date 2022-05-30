@@ -1,6 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+import os
 
 from __init__ import *
 
@@ -19,6 +20,7 @@ def st_storing(select_data):
     )
     if mode == 'Storing data':
         st_storingdata(select_data)
+
     elif mode == 'Unknow storing':
         st_unknowstoring(select_data)
     # elif mode == 'All storing':

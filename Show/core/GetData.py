@@ -90,9 +90,10 @@ def get_all_data(selected_db, path='db'):
     data_list = []
     wissel_list = []
     for i in selected_db:
-        data_dict = get_alldata_from_db(i, path=path)
-        wissel_list.extend(data_dict.keys())
-        data_list.append(data_dict)
+        if f'{i}.db' in os.listdir(os.path.join(rootPath, 'DataBase', path)):
+            data_dict = get_alldata_from_db(i, path=path)
+            wissel_list.extend(data_dict.keys())
+            data_list.append(data_dict)
     return data_list, list(set(wissel_list))
 
 
@@ -107,7 +108,8 @@ def get_all_data_cache(selected_db, path='db'):
     data_list = []
     wissel_list = []
     for i in selected_db:
-        data_dict = get_alldata_from_db(i, path=path)
-        wissel_list.extend(data_dict.keys())
-        data_list.append(data_dict)
+        if f'{i}.db' in os.listdir(os.path.join(rootPath, 'DataBase', path)):
+            data_dict = get_alldata_from_db(i, path=path)
+            wissel_list.extend(data_dict.keys())
+            data_list.append(data_dict)
     return data_list, list(set(wissel_list))

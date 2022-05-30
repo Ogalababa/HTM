@@ -42,11 +42,7 @@ def recheck_storing(dataset):
                 step_revert += 1
 
         return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> wagen']))) * 2,
-                    0 in df['<wissel> ijzer'].to_list(),
-                    match_list([1, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
-                    match_list([1, 0, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
-                    match_list([1, 0, 0, 1], df['<hfk> schakelcriterium bezet'].to_list()),
-                    match_list([1, 0, 1], df['<hfk> schakelcriterium bezet'].to_list())])
+                    0 in df['<wissel> ijzer'].to_list()])
     except:
         return True
 
@@ -121,6 +117,9 @@ def define_storing(dataset):
                 storing_type['categorie'] = [error_info[4]]
                 storing_type['wagen nr'] = [error_info[5]]
             break
+        elif recheck_storing(dataset) is not True:
+            storing = ['not_error']
+
     storing_type['storing'] = storing
     storing_type['afdelling'] = afdelling
     storing_type['count'] = [1]

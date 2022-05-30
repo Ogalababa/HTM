@@ -101,7 +101,7 @@ class Calculator:
                 unknow_state, storing = define_storing(i)
                 if unknow_state == 'ontbekend':
                     unknow_storing_list.append(i)
-                elif unknow_state == 'noerror':
+                elif unknow_state == 'not_error':
                     pass
                 elif unknow_state == 'invalid data':
                     pass

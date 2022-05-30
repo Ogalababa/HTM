@@ -18,6 +18,7 @@ def st_storingdata(select_data_full):
         select_data = select_data_full[select_data_full['wissel stop'] == 1]
     else:
         select_data = select_data_full
+
     if len(select_data) > 0:
 
         all_data_list, wissel_list = get_all_data(select_data, path='storing')
