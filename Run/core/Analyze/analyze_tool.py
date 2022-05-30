@@ -191,8 +191,9 @@ def wissel_buiten_dinst(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     """
     # Check if wissel is out of order
     # 检测wissel是否关闭
-    return storing, afdelling, all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0])
-
+    return storing, afdelling, any(
+        [all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0]),
+         max(dataframe['<bis> schakelaar s1'] == 1)])
 
 def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
     """
@@ -200,7 +201,7 @@ def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str
     :param dataframe: pd.DataFrame
     :param afdelling: str
     :param storing: str
-    :return: Tuple[str, str, bool]
+    :return: Tuple[bool, str, str
     """
     # Check if wissel is fully closed
     # 检测wissel是否完全闭合
@@ -259,21 +260,12 @@ def no_wagen_nr(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int,
     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, 0 in dataframe['<aanmelden> wagen'].tolist()
 
 
-def miss_data(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
-    # 放到检测列表末端
-    """
-    check if the dataset complete
-    :param dataframe: pd.DAtaFrame
-    :param storing: str
-    :param afdelling: str
-    :return: Tuple[str, str, bool]
-    """
-    status = False
-    count_list = dataframe['Count'].tolist()
-    fifo = count_list[0]
-    for i in count_list:
-        if i - fifo > 20:
-            status = True
-        else:
-            fifo = i
-    return storing, afdelling, status
+def small_dataset(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+    lijn_nr = 0
+    service = 0
+    categroie = 0
+    wagen_nr = 0
+    null_state = dataframe['step'].tolist().count(0)
+    return storing, afdelling, lijn_nr, service, categroie, wagen_nr, \
+        any([len(dataframe) < 4, null_state/len(dataframe) > 0.7])
+

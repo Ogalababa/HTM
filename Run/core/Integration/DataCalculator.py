@@ -103,6 +103,8 @@ class Calculator:
                     unknow_storing_list.append(i)
                 elif unknow_state == 'noerror':
                     pass
+                elif unknow_state == 'invalid data':
+                    pass
                 else:
                     storing_list.append(storing)
             except:

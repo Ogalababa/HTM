@@ -90,6 +90,8 @@ def log_to_sql(log_data, db_name):
             data = list(map(conver_data_value, values))
             df_data_list = list(map(dataframe_str, data))
             df_data = pd.concat(df_data_list, ignore_index=True)
+            # 去除重复项
+            df_data = df_data.drop_duplicates()
             dtypedict = mapping_df_types(df_data)
             df_data.set_index('date-time', drop=True, inplace=True)
             df_data.to_sql(key, sqlite_connection, if_exists='replace', dtype=dtypedict)

@@ -35,8 +35,8 @@ def recover_db():
 
             conver_list.sort()
             try:
-                p = Pool(20)
-                p.imap(process_db, conver_list[:20])
+                p = Pool(30)
+                p.imap(process_db, conver_list[:30])
                 # process_log_sql(conver_list[0])
                 p.close()
                 p.join()

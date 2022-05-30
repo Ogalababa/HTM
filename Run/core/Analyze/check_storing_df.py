@@ -21,7 +21,7 @@ def check_storing_df(dataset):
         len(set(df["<wissel> ijzer"])) > 1,
         len(set(df["<vecom> com. fout ifc"])) > 1,
         len(set(df["<vecom> lus zonder richting"])) > 1,
-        len(set(df["<aanmelden> wagen"])) > 2,
+        len(set(df["<aanmelden> wagen"])) > 2,  # !!!!
         len(set(df["<wissel> op slot"])) < 2
     ]
     return any(check_error_list)
@@ -50,7 +50,7 @@ def recheck_storing(dataset):
     except:
         return True
 
-    
+
 # Parse error data
 # 分析错误数据
 def define_storing(dataset):
@@ -68,13 +68,16 @@ def define_storing(dataset):
         'lijn nr': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> lijn']],
         'service': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> service']],
         'categorie': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> categorie']],
-        'wagen nr': [wagen_nr]
+        'wagen nr': [wagen_nr],
+        'wissel stop': [(min(dataset['<wissel> ijzer']) - 1) * -1]
     }
     storing = ['ontbekend']
     afdelling = ['ontbekend']
     func_list = [
         # Sorting method: Arrange from top to bottom according to the detection index
         # 排序方式：根据检测index从上到下排列
+        # 0
+        small_dataset(dataset, 'invalid data', 'system'),
         # 1
         wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),
         # 2
@@ -88,11 +91,11 @@ def define_storing(dataset):
         # 6
         check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK detector fout', 'infra'),
         # 7
-        miss_out_meld(dataset, 'afmelden fout', 'infra'),
-        # 8
-        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
-        # 9
         check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
+        # 8
+        miss_out_meld(dataset, 'afmelden fout', 'infra'),
+        # 9
+        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
         # 10
         check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware fout', 'infra'),
         # 11
@@ -107,9 +110,9 @@ def define_storing(dataset):
     except:
         storing_type['wagen nr'] = [0]
 
-    for i in func_list:
-        if i[-1]:
-            error_info = i
+    for error_info in func_list:
+        if error_info[-1]:
+            #  error_info = i
             storing = [error_info[0]]
             afdelling = [error_info[1]]
             if len(error_info) == 7:

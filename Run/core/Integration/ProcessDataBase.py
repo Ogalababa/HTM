@@ -17,7 +17,7 @@ def process_db(log_file):
     wissel_log, date = read_log(log_path)
 
     try:
-        print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Start update')
+        print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Start update {log_file}')
         log_to_sql(wissel_log, date)
         print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Read log done')
         set_steps_denbdb3c(date)

@@ -117,7 +117,8 @@ class WisselData:
         record_time = self.bin_data[self.LOC_TIME_START: self.LOC_TIME_END]
 
         # data count
-        data_count = self.bin_data[-self.DATA_HEADER:]
+        # data_count = self.bin_data[-self.DATA_HEADER:]
+        data_count = self.bin_data[-8:]
         self.wissel_info['Count'] = [int(data_count, 2)]
         try:
             self.wissel_info['date-time'] = [

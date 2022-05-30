@@ -8,21 +8,16 @@ from Run.core.LogFilter.MountDir import mount_log
 from datetime import datetime, timedelta
 
 
-def re_update_db():
+def re_update_db(log_date: str):
     """Update database from last log file"""
     # Check log files
     # 检测log文件
     log_file_list = os.listdir(os.path.join(rootPath, 'log'))
-
     if len(log_file_list) == 0:
         mount_log()  # mount extern dir
         log_file_list = os.listdir(os.path.join(rootPath, 'log'))
-
     if len(log_file_list) > 1:
-        today = datetime.date(datetime.today())
-        yesterday = today - timedelta(days=1)
-        log_file = f'{yesterday.year}{str(yesterday.month).zfill(2)}{str(yesterday.day).zfill(2)}.log'
-
+        log_file = f'{log_date[:4]}{log_date[5:7]}{log_date[8:]}.log'
         try:
             # Analyze log files
             # 分析log文件
@@ -45,4 +40,16 @@ def re_update_db():
 
 
 if __name__ == '__main__':
-    re_update_db()
+    today = datetime.date(datetime.today())
+    yesterday = str(today - timedelta(days=1))
+    storing_path = os.path.join(rootPath, 'DataBase', 'storing', f'{yesterday}.db')
+    unknow_str_path = os.path.join(rootPath, 'DataBase', 'unknow_storing', f'{yesterday}.db')
+    try:
+        os.remove(storing_path)
+    except:
+        pass
+    try:
+        os.remove(unknow_str_path)
+    except:
+        pass
+    re_update_db(yesterday)
