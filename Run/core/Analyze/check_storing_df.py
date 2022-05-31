@@ -42,11 +42,15 @@ def recheck_storing(dataset):
                 step_revert += 1
 
         return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> wagen']))) * 2,
-                    0 in df['<wissel> ijzer'].to_list()])
+                    0 in df['<wissel> ijzer'].to_list(),
+                    match_list([1, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
+                    match_list([1, 0, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
+                    match_list([1, 0, 0, 1], df['<hfk> schakelcriterium bezet'].to_list()),
+                    match_list([1, 0, 1], df['<hfk> schakelcriterium bezet'].to_list())])
     except:
         return True
 
-
+    
 # Parse error data
 # 分析错误数据
 def define_storing(dataset):
@@ -55,6 +59,7 @@ def define_storing(dataset):
     :param dataset: pd.DataFrame
     :return: str, pd.DataFrame
     """
+
     error_info = None
     wagen_nr = max(dataset['<aanmelden> wagen'].tolist(), key=dataset['<aanmelden> wagen'].tolist().count)
     storing_type = {
@@ -105,7 +110,7 @@ def define_storing(dataset):
         storing_type['wagen nr'] = [i for i in dataset['<aktuell> wagen'].tolist() if i != 0][0]
     except:
         storing_type['wagen nr'] = [0]
-
+    
     for error_info in func_list:
         if error_info[-1]:
             #  error_info = i
@@ -119,7 +124,6 @@ def define_storing(dataset):
             break
         elif recheck_storing(dataset) is not True:
             storing = ['not_error']
-
     storing_type['storing'] = storing
     storing_type['afdelling'] = afdelling
     storing_type['count'] = [1]

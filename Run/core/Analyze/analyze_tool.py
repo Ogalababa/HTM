@@ -195,7 +195,6 @@ def wissel_buiten_dinst(dataframe, storing: str, afdelling: str) -> Tuple[str, s
         [all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0]),
          max(dataframe['<bis> schakelaar s1'] == 1)])
 
-
 def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
     """
     check if the wissel do not have end state
@@ -269,4 +268,4 @@ def small_dataset(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     null_state = dataframe['step'].tolist().count('0')
     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, \
         any([len(dataframe) < 4, all([4 <= len(dataframe) < 10, null_state/len(dataframe) > 0.7])])
-
+    

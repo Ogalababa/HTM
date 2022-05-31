@@ -6,7 +6,6 @@ import pandas as pd
 import sqlalchemy
 from Run.core.ConvertData.ConnectDB import conn_engine
 from Run.core.Integration.DataInitialization import get_alldata_from_db
-from pathos.multiprocessing import ProcessingPool as newPool
 
 # streamlit
 import streamlit as st
@@ -78,6 +77,7 @@ def create_download_link(val, filename, pdf='pdf'):
     b64 = base64.b64encode(val)
     return f'<a href="data:application/octet-stream;base64,' \
            f'{b64.decode()}" download="{filename}.{pdf}">Download {pdf.upper()}</a>'
+
 
 
 def get_all_data(selected_db, path='db'):

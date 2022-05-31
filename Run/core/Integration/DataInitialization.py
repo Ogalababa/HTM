@@ -22,11 +22,13 @@ def get_alldata_from_db(db_name, path='db'):
     """Get data info from db file
     :return: dict
     """
+    data_list = os.listdir(os.path.join(rootPath, 'DataBase', path, f'{db_name}.db'))
     data_dict = {}
-    insp = sqlalchemy.inspect(conn_engine(db_name, path))
-    tables = insp.get_table_names()
-    for name in tables:
-        data_dict[name] = pd.read_sql_table(name, conn_engine(db_name, path))
+    if f'{db_name}.db' in data_list:
+        insp = sqlalchemy.inspect(conn_engine(db_name, path))
+        tables = insp.get_table_names()
+        for name in tables:
+            data_dict[name] = pd.read_sql_table(name, conn_engine(db_name, path))
 
     return data_dict
 

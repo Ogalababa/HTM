@@ -21,7 +21,7 @@ def wissel_schakel(df):
     position_request = None
     # position_action = None
     wagen_nr = 0
-    wissel_omloop = -2  # default Error
+    wissel_omloop = -2 # default Error
     try:
 
         for i in range(len(df) - 1):
@@ -49,7 +49,7 @@ def wissel_schakel(df):
             #         position_action = "Links"
             #     elif row_dict.get("<wissel> naar rechts") == 1:
             #         position_action = "Rechts"
-            elif position_request is not None:
+            elif  position_request is not None:
                 if row_dict.get("<wissel> links") == 1:
                     position_after = "Links"
                 elif row_dict.get("<wissel> rechts") == 1:

@@ -129,7 +129,7 @@ def tram_speed(select_data):
                 speed_counts_wissel['Tijd'] = speed_counts_wissel['Tijd'].astype(str)
                 fig_counts = px.sunburst(speed_counts_wissel,
                                          title='Snelheid overzicht',
-                                         path=['snelheid km/h', 'Richting', 'code', 'Tijd'],
+                                         path=['snelheid km/h', 'Richting', 'code'],
                                          values='hoeveelheid',
                                          color='snelheid km/h',
                                          color_continuous_scale=px.colors.sequential.RdBu,
@@ -137,7 +137,6 @@ def tram_speed(select_data):
                                          hover_data=[
                                              'Categorie',
                                              'Service',
-                                             'Tijd',
                                              'Richting'
                                          ])
                 st.plotly_chart(fig_counts, use_container_width=True)
@@ -230,7 +229,7 @@ def tram_speed(select_data):
                 speed_counts['Tijd'] = speed_counts['Tijd'].astype(str)
                 fig_counts_2 = px.sunburst(speed_counts,
                                            title='Snelheid overzicht',
-                                           path=['code', 'snelheid km/h', 'Richting', 'Wissel Nr', 'Tijd'],
+                                           path=['code', 'snelheid km/h', 'Richting', 'Wissel Nr'],
                                            values='hoeveelheid',
                                            color='snelheid km/h',
                                            color_continuous_scale=px.colors.sequential.RdBu,
@@ -238,7 +237,6 @@ def tram_speed(select_data):
                                            hover_data=[
                                                'Categorie',
                                                'Service',
-                                               'Tijd'
                                            ])
                 st.plotly_chart(fig_counts_2, use_container_width=True)
                 figs.append(fig_counts_2)
@@ -338,7 +336,7 @@ def tram_speed(select_data):
                 speed_counts['Tijd'] = speed_counts['Tijd'].astype(str)
                 fig_counts_2 = px.sunburst(speed_counts,
                                            title='Snelheid overzicht',
-                                           path=['snelheid km/h', 'code', 'Tijd'],
+                                           path=['snelheid km/h', 'code'],
                                            values='hoeveelheid',
                                            color='snelheid km/h',
                                            color_continuous_scale=px.colors.sequential.RdBu,
@@ -346,7 +344,6 @@ def tram_speed(select_data):
                                            hover_data=[
                                                'Categorie',
                                                'Service',
-                                               'Tijd'
                                            ])
                 st.plotly_chart(fig_counts_2, use_container_width=True)
                 figs.append(fig_counts_2)
@@ -437,7 +434,7 @@ def tram_speed(select_data):
                 speed_counts['Tijd'] = speed_counts['Tijd'].astype(str)
                 fig_counts_2 = px.sunburst(speed_counts,
                                            title='Snelheid overzicht',
-                                           path=['snelheid km/h','code', 'Tijd'],
+                                           path=['snelheid km/h','code'],
                                            values='hoeveelheid',
                                            color='snelheid km/h',
                                            color_continuous_scale=px.colors.sequential.RdBu,

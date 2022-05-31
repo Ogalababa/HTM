@@ -62,7 +62,7 @@ PAGES = OrderedDict(
 
 
 def run():
-    # st.sidebar.warning('De website wordt om 11:00 onderhouden, het hele proces duurt ongeveer 30 minuten')
+    # st.sidebar.warning('De website is nu in onderhouden, het hele proces duurt ongeveer 10 minuten')
     page_name = st.sidebar.selectbox("Kies een pagina", list(PAGES.keys()), 0)
     page = PAGES[page_name][0]
     hide_st_style = """
