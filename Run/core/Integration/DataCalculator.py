@@ -33,11 +33,10 @@ class Calculator:
         """
         speed_dict = {}
         for key, values in self.db_dict.items():
-
-            # set to time format
-            values['date-time'] = pd.to_datetime(values['date-time'])
-            # check cycles
             try:
+                # set to time format
+                values['date-time'] = pd.to_datetime(values['date-time'])
+                # check cycles
                 index_list = wissel_cycle_list(values)
                 speed_df_list = []
                 for i in range(len(index_list) - 1):
