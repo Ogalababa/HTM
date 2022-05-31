@@ -1,28 +1,33 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+from Show.core import GetData
 from __init__ import *
 import pandas as pd
 import plotly.express as px
-import plotly.io as pio
-import plotly.graph_objects as go
-
-
 
 # streamlit
 import streamlit as st
-from Show.core.GetData import get_tram_speed, create_download_link, get_all_data
+from Show.core.GetData import get_all_data, get_data_name
 from Show.core.GetData import get_all_data_cache
-from fpdf import FPDF
-from tempfile import NamedTemporaryFile
-import plotly.graph_objects as go
 
-def st_wissel_schakel(select_data):
+
+def st_wissel_schakel():
     """
     Get wissl switch data display on streamlit
     :param select_data: database name in list
     :return: display on streamlit
     """
+    # get database file name
+    # 获取数据库文件名
+    all_table_name = get_data_name(path="schakelen")
+    all_table_name.sort(reverse=True)
+    default_table = all_table_name[:1]
+    select_data = st.sidebar.multiselect(
+        "Selecteer gegevens om te analyseren", all_table_name, default_table
+    )
+
+    # website content
     layout_height = 600
     figs = []
     cache = st.sidebar.checkbox('Cache')

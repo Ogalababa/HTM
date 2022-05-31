@@ -6,9 +6,19 @@ import streamlit as st
 
 from Show.core.GetData import get_all_data
 from Show.core.GetData import get_all_data_cache
+from Show.core.GetData import get_data_name
 
 
-def all_data(select_data):
+def all_data():
+    # get database file name
+    # 获取数据库文件名
+    all_table_name = get_data_name()
+    all_table_name.sort(reverse=True)
+    default_table = all_table_name[:1]
+    select_data = st.sidebar.multiselect(
+        "Selecteer gegevens om te analyseren", all_table_name, default_table
+    )
+    # website content
     layout_height = 600
     cache = st.sidebar.checkbox('Cache')
     if len(select_data) > 0:
