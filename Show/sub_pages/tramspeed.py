@@ -23,7 +23,7 @@ def tram_speed():
     select_data = st.sidebar.multiselect(
         "Selecteer gegevens om te analyseren", all_table_name, default_table
     )
-
+    
     # website content
     layout_height = 600
     figs = []

@@ -13,7 +13,7 @@ from Show.core import GetData
 
 
 def st_storing():
-
+    
     mode = st.sidebar.radio(
         'Grafiek mode：',
         (

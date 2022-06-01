@@ -195,6 +195,7 @@ def wissel_buiten_dinst(dataframe, storing: str, afdelling: str) -> Tuple[str, s
         [all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0]),
          max(dataframe['<bis> schakelaar s1'] == 1)])
 
+
 def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
     """
     check if the wissel do not have end state

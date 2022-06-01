@@ -26,7 +26,7 @@ def st_wissel_schakel():
     select_data = st.sidebar.multiselect(
         "Selecteer gegevens om te analyseren", all_table_name, default_table
     )
-
+    
     # website content
     layout_height = 600
     figs = []
@@ -55,7 +55,7 @@ def st_wissel_schakel():
         with col2:
             fig_schakelen_1 = px.line(schakel_data,
                                       x='Tijd', y='Na',
-                                      title=f'Wissel {selected_wissel} schakelen overzicht',
+                                      title=f'Wissel {selected_wissel} omstel beweging overzicht',
                                       hover_data=['Wagen Nr',
                                                   'Voor',
                                                   'aanvragen',
@@ -85,7 +85,7 @@ def st_wissel_schakel():
             st.markdown('#')
             st.subheader(selected_wissel)
             col3.metric("Aanvraag ", len(schakel_data), )
-            col3.metric("Overschakelen", aantalen, f'{schakel_delta} %')
+            col3.metric("Omstel beweging", aantalen, f'{schakel_delta} %')
             col3.metric("Storing", storing, f'{-storing_delta} %')
             if storing_delta > 50:
                 st.error('Incorrecte data')

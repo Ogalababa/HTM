@@ -26,7 +26,6 @@ def wissel_gerade(wissel_nr: str) -> str:
     :param wissel_nr: str
     :return: Links/Recht
     """
-    # wissel in list == rechts
     rechts_wissel = [
         'W001', 'W003', 'W013', 'W014', 'W018', 'W022', 'W027', 'W028', 'W031', 'W038', 'W046', 'W056', 'W057',
         'W067', 'W081', 'W084', 'W094', 'W104', 'W113', 'W118', 'W121', 'W127', 'W133', 'W135', 'W151', 'W153',
@@ -34,7 +33,7 @@ def wissel_gerade(wissel_nr: str) -> str:
         'W228', 'W232', 'W235', 'W257', 'W268', 'W271', 'W275', 'W291', 'W287', 'W307', 'W383', 'W385', 'W391',
         'W399', 'W425', 'W500', 'W520', 'W523', 'W542', 'W550', 'W560', 'W564', 'W573', 'W583', 'W584', 'W601',
         'W607', 'W619', 'W628', 'W632', 'W636', 'W640', 'W644', 'W646', 'W649', 'W656', 'W657', 'W658', 'W660',
-        'W662', 'W665', 'W668', 'W689', 'W297', 'W223'
+        'W662', 'W665', 'W668', 'W689', 'W297',
     ]
     if wissel_nr in rechts_wissel:
         return '<wissel> rechts'

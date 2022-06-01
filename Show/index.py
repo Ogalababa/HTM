@@ -31,11 +31,11 @@ PAGES = OrderedDict(
             ),
         ),
         (
-            "Wissel schakelen",
+            "Wissel omstel beweging",
             (
                 pages.st_wissel_schakel,
                 """
-                    Deze pagina toont de aantal schakelen van wissels
+                    Deze pagina toont de aantal omstel beweging van wissels
                     """,
             ),
         ),
@@ -89,9 +89,10 @@ def run():
         desc = PAGES[page_name][1]
         if desc:
             st.write(desc)
-
+        
         page()
 
 
 if __name__ == "__main__":
     run()
+    
