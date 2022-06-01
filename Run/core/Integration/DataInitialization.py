@@ -43,6 +43,6 @@ def save_to_sql(db_name, data_dict, path):
         try:
             value.to_sql(key, conn_engine(db_name, path), index=False, if_exists='replace')
 
-        except (ValueError, TypeError, KeyError):
+        except:
             pass
     return None

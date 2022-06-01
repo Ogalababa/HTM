@@ -109,7 +109,11 @@ class Calculator:
             except:
                 pass
         if len(storing_list) > 0:
-            storingen_dict['all storingen'] = pd.concat(storing_list)
+            # storingen_dict['all storingen'] = pd.concat(storing_list)
+            x = 0
+            for i in storing_list:
+                storingen_dict[str(x).zfill(4)] = i
+                x += 1
             save_to_sql(self.db_name, storingen_dict, 'storing')
         if len(unknow_storing_list) > 0:
             x = 0
