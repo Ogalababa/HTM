@@ -1,6 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+import os.path
 
 from __init__ import *
 import pandas as pd
@@ -117,7 +118,7 @@ class Calculator:
                 storingen_dict[str(x).zfill(4)] = i
                 x += 1
             if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'storing')):
-                os.remove(f'{self.db_name}.db')
+                os.remove(os.path.join(rootPath, 'DataBase', 'storing', f'{self.db_name}.db'))
             save_to_sql(self.db_name, storingen_dict, 'storing')
         if len(unknow_storing_list) > 0:
             x = 0
@@ -125,7 +126,7 @@ class Calculator:
                 unknow_storing_dict[str(x).zfill(3)] = i
                 x += 1
             if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'unknow_storing')):
-                os.remove(f'{self.db_name}.db')
+                os.remove(os.path.join(rootPath, 'DataBase', 'unknow_storing', f'{self.db_name}.db'))
             save_to_sql(self.db_name, unknow_storing_dict, 'unknow_storing')
         if len(self.error_list) > 0:
             x = 0
@@ -133,5 +134,5 @@ class Calculator:
                 all_storing_dict[str(x).zfill(3)] = i
                 x += 1
             if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'all_storing')):
-                os.remove(f'{self.db_name}.db')
+                os.remove(os.path.join(rootPath, 'DataBase', 'all_storing', f'{self.db_name}.db'))
             save_to_sql(self.db_name, all_storing_dict, 'all_storing')
