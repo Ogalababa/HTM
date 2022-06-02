@@ -38,7 +38,8 @@ def check_bad_contact(dataframe, col_name: str, storing: str, afdelling: str) ->
                                     len(dataframe[dataframe[col_name] == 1]) / len(dataframe) > 0.7])
 
 
-def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> Tuple[
+    str, str, int, int, int, int, bool]:
     """
     check if error state in dataset
     :param dataframe: pd.DataFrame
@@ -221,7 +222,7 @@ def hfp_start_index(hfp_list: list) -> list:
     return hfp_start_list
 
 
-def wacht_op_sein(dataframe, storing:str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+def wacht_op_sein(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
     # Check if the driver is driving in sequence
     # 检测司机是否按序行驶
     lijn_nr = None
@@ -231,12 +232,12 @@ def wacht_op_sein(dataframe, storing:str, afdelling: str) -> Tuple[str, str, int
     state_list = []
     for i in hfp_start_index(dataframe['<hfp> schakelcriterium bezet'].tolist()):
         if i <= 3:
-            hfp_error = all([all(dataframe.iloc[:i+1]['<wls> seinbeld links geactiveerd'] == 0),
-                             all(dataframe.iloc[:i+1]['<wls> seinbeld rechts geactiveerd'] == 0)])
+            hfp_error = all([all(dataframe.iloc[:i + 1]['<wls> seinbeld links geactiveerd'] == 0),
+                             all(dataframe.iloc[:i + 1]['<wls> seinbeld rechts geactiveerd'] == 0)])
             state_list.append(hfp_error)
         else:
-            hfp_error = all([all(dataframe.iloc[i-3:i + 1]['<wls> seinbeld links geactiveerd'] == 0),
-                             all(dataframe.iloc[i-3:i + 1]['<wls> seinbeld rechts geactiveerd'] == 0)])
+            hfp_error = all([all(dataframe.iloc[i - 3:i + 1]['<wls> seinbeld links geactiveerd'] == 0),
+                             all(dataframe.iloc[i - 3:i + 1]['<wls> seinbeld rechts geactiveerd'] == 0)])
             state_list.append(hfp_error)
         if hfp_error:
             wagen_nr = dataframe.iloc[i]['<aanmelden> wagen']
@@ -257,7 +258,7 @@ def no_wagen_nr(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int,
         lijn_nr = dataframe[dataframe['<aanmelden> wagen'] == 0].iloc[0]['<aanmelden> lijn']
         service = dataframe[dataframe['<aanmelden> wagen'] == 0].iloc[0]['<aanmelden> service']
         categroie = dataframe[dataframe['<aanmelden> wagen'] == 0].iloc[0]['<aanmelden> categorie']
-        
+
     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, 0 in dataframe['<aanmelden> wagen'].tolist()
 
 
@@ -268,5 +269,23 @@ def small_dataset(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     wagen_nr = 0
     null_state = dataframe['step'].tolist().count('0')
     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, \
-        any([len(dataframe) < 4, all([4 <= len(dataframe) < 10, null_state/len(dataframe) > 0.7])])
-    
+           any([len(dataframe) < 4, all([4 <= len(dataframe) < 10, null_state / len(dataframe) > 0.7])])
+
+
+def double_wissels(dataframe,  storing: str, afdelling: str) -> Tuple[str, str, bool]:
+    wissel_nr = dataframe['wissel nr'].to_list()[0]
+    if wissel_nr == 'W091':
+        if all([32 in dataframe['<aanmelden> uitgang'].to_list(),
+                1 in dataframe['<vecom> lus zonder richting'].to_list()]):
+            return storing, afdelling, True
+        else:
+            return storing, afdelling, False
+    elif wissel_nr == 'W533':
+        if all([8 in dataframe['<aanmelden> uitgang'].to_list(),
+                1 in dataframe['<vecom> lus zonder richting'].to_list()]):
+            return storing, afdelling, True
+        else:
+            return storing, afdelling, False
+
+    else:
+        return storing, afdelling, False

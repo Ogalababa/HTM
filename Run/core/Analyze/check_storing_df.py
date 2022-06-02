@@ -82,28 +82,30 @@ def define_storing(dataset):
         # 1
         wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),
         # 2
-        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),
+        double_wissels(dataset, 'not_error', 'double wissels'),
         # 3
-        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),
+        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),
         # 4
-        check_fout_state(dataset, '<vecom> track zonder vergrendeling', 'categorie/handbedien code fout', 'bestuurder'),
+        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),
         # 5
-        check_bad_contact(dataset, '<hfp> schakelcriterium bezet', 'HFP detector fout', 'infra'),
+        check_fout_state(dataset, '<vecom> track zonder vergrendeling', 'categorie/handbedien code fout', 'bestuurder'),
         # 6
-        check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK detector fout', 'infra'),
+        check_bad_contact(dataset, '<hfp> schakelcriterium bezet', 'HFP detector fout', 'infra'),
         # 7
-        check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
+        check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK detector fout', 'infra'),
         # 8
-        miss_out_meld(dataset, 'afmelden fout', 'infra'),
+        check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
         # 9
-        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
+        miss_out_meld(dataset, 'afmelden fout', 'infra'),
         # 10
-        check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware fout', 'infra'),
+        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
         # 11
-        check_fout_state(dataset, '<vecom> lus zonder richting', 'categorie/handbedien code fout', 'bestuurder'),
+        check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware fout', 'infra'),
         # 12
-        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
+        check_fout_state(dataset, '<vecom> lus zonder richting', 'categorie/handbedien code fout', 'bestuurder'),
         # 13
+        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
+        # 14
         check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),
     ]
     try:
