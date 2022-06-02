@@ -102,7 +102,7 @@ def define_storing(dataset):
         # 11
         check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware fout', 'infra'),
         # 12
-        check_fout_state(dataset, '<vecom> lus zonder richting', 'categorie/handbedien code fout', 'bestuurder'),
+        check_fout_state(dataset, '<vecom> lus zonder richting', 'Elektronisch blokkeren', 'bestuurder'),
         # 13
         check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
         # 14
