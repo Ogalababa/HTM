@@ -129,6 +129,37 @@ def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, s
             return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
 
 
+# def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+#     """
+#     check if vecom afmelden error
+#     :param dataframe: pd.DataFrame
+#     :param afdelling: str
+#     :param storing: str
+#     :return: Tuple[str, str, int, int, int, int, bool]
+#     """
+#     # Check for logout errors
+#     # 检测登出错误
+#     state_list = []
+#     wagen_nr_set = set(dataframe['<aanmelden> wagen'].tolist())
+#     lijn_nr = None
+#     service = None
+#     categroie = None
+#     wagen_nr = None
+#     for i in wagen_nr_set:
+#         sub_cycle_dataframe = dataframe[(dataframe['<aanmelden> wagen'] == i) &
+#                                         (dataframe["<hfp> schakelcriterium bezet"] == 1) &
+#                                         (dataframe["<hfk> schakelcriterium bezet"] == 0)]
+#         if len(sub_cycle_dataframe) > 0:
+#             lijn_nr = sub_cycle_dataframe.iloc[0]['<aanmelden> lijn']
+#             service = sub_cycle_dataframe.iloc[0]['<aanmelden> service']
+#             categroie = sub_cycle_dataframe.iloc[0]['<aanmelden> categorie']
+#             wagen_nr = sub_cycle_dataframe.iloc[0]['<aanmelden> wagen']
+#             if any([1 not in sub_cycle_dataframe['<vecom> aftellen'].tolist(),
+#                     0 not in sub_cycle_dataframe['<vecom> aftellen'].tolist()]):
+#                 return storing, afdelling, lijn_nr, service, categroie, wagen_nr, True
+#         else:
+#             continue
+#     return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
 def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
     """
     check if vecom afmelden error
@@ -140,26 +171,23 @@ def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     # Check for logout errors
     # 检测登出错误
     state_list = []
-    wagen_nr_set = set(dataframe['<aanmelden> wagen'].tolist())
-    lijn_nr = None
-    service = None
-    categroie = None
-    wagen_nr = None
-    for i in wagen_nr_set:
-        sub_cycle_dataframe = dataframe[(dataframe['<aanmelden> wagen'] == i) &
-                                        (dataframe["<hfp> schakelcriterium bezet"] == 1) &
-                                        (dataframe["<hfk> schakelcriterium bezet"] == 0)]
-        if len(sub_cycle_dataframe) > 0:
-            lijn_nr = sub_cycle_dataframe.iloc[0]['<aanmelden> lijn']
-            service = sub_cycle_dataframe.iloc[0]['<aanmelden> service']
-            categroie = sub_cycle_dataframe.iloc[0]['<aanmelden> categorie']
-            wagen_nr = sub_cycle_dataframe.iloc[0]['<aanmelden> wagen']
-            if any([1 not in sub_cycle_dataframe['<vecom> aftellen'].tolist(),
-                    0 not in sub_cycle_dataframe['<vecom> aftellen'].tolist()]):
-                return storing, afdelling, lijn_nr, service, categroie, wagen_nr, True
+    aanmelden_set = set(dataframe['<aanmelden> wagen'].tolist())
+    afmelden_set = set(dataframe['<afmelden> wagen'].tolist())
+    lijn_nr = -1
+    service = -1
+    categroie = -1
+    wagen_nr = -1
+    try:
+        if aanmelden_set == afmelden_set:
+            return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
         else:
-            continue
-    return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
+            wagen_nr = list(aanmelden_set - afmelden_set)[0]
+            lijn_nr = dataframe[dataframe['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> lijn']
+            service = dataframe[dataframe['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> service']
+            categroie = dataframe[dataframe['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> categorie']
+            return storing, afdelling, lijn_nr, service, categroie, wagen_nr, True
+    except:
+        return storing, afdelling, lijn_nr, service, categroie, wagen_nr, False
 
 
 def check_wagen_vecom(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
@@ -272,7 +300,7 @@ def small_dataset(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
            any([len(dataframe) < 4, all([4 <= len(dataframe) < 10, null_state / len(dataframe) > 0.7])])
 
 
-def double_wissels(dataframe,  storing: str, afdelling: str) -> Tuple[str, str, bool]:
+def double_wissels(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
     wissel_nr = dataframe['wissel nr'].to_list()[0]
     if wissel_nr == 'W091':
         if all([32 in dataframe['<aanmelden> uitgang'].to_list(),

@@ -295,9 +295,16 @@ def tram_speed():
             col2, space2, col3 = st.columns((10, 1, 10))
             col4, space4, col5 = st.columns((10, 1, 10))
             col6, space6, col7 = st.columns((10, 1, 10))
-            select_speed = st.sidebar.number_input('Vul de waarschuwing snelheid in (km/h)', min_value=20,
-                                                   max_value=max(df_all_data['snelheid km/h'].tolist()),
-                                                   step=1, value=25)
+            max_snelheid = max(df_all_data['snelheid km/h'].tolist())
+            if max_snelheid >= 25:
+                select_speed = st.sidebar.number_input('Vul de waarschuwing snelheid in (km/h)', min_value=20,
+                                                       max_value=max(df_all_data['snelheid km/h'].tolist()),
+                                                       step=1, value=25)
+            else:
+                select_speed = st.sidebar.number_input('Vul de waarschuwing snelheid in (km/h)',
+                                                       min_value=(max_snelheid - 5),
+                                                       max_value=max_snelheid,
+                                                       step=1, value=(max_snelheid - 2))
             df_all_data = df_all_data[df_all_data['snelheid km/h'] >= select_speed]
             # wagen_list = list(set(df_all_data['Lijn']))
             # wagen_list = [i for i in wagen_list if i != 0]
