@@ -107,6 +107,8 @@ def define_storing(dataset):
         check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
         # 14
         check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),
+        # 15
+        double_input(dataset, 'double richting aanvragen', 'bestuurder'),
     ]
     try:
         storing_type['wagen nr'] = [i for i in dataset['<aktuell> wagen'].tolist() if i != 0][0]
