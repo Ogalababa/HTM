@@ -204,20 +204,23 @@ def tram_speed():
             speed_counts['hoeveelheid'] = 1
             
             with col2:
-                fig_wagen_2 = px.bar(speed_counts.sort_values(by='snelheid km/h'),
-                                     title='Wissel/snelheid overzicht',
-                                     x='snelheid km/h', y='hoeveelheid',
-                                     color='code',
-                                     height=layout_height,
-                                     hover_data=['Lijn',
-                                                 'Wissel Nr',
-                                                 'Categorie',
-                                                 'Service',
-                                                 'Tijd',
-                                                 'Richting'],
-                                     color_continuous_scale=px.colors.sequential.Sunsetdark)
-                st.plotly_chart(fig_wagen_2, use_container_width=True)
-                figs.append(fig_wagen_2)
+                try:
+                    fig_wagen_2 = px.bar(speed_counts.sort_values(by='snelheid km/h'),
+                                         title='Wissel/snelheid overzicht',
+                                         x='snelheid km/h', y='hoeveelheid',
+                                         color='code',
+                                         height=layout_height,
+                                         hover_data=['Lijn',
+                                                     'Wissel Nr',
+                                                     'Categorie',
+                                                     'Service',
+                                                     'Tijd',
+                                                     'Richting'],
+                                         color_continuous_scale=px.colors.sequential.Sunsetdark)
+                    st.plotly_chart(fig_wagen_2, use_container_width=True)
+                    figs.append(fig_wagen_2)
+                except:
+                    st.title('Geen Data')
 
             with col3:
                 fig_wagen = px.scatter(df_all_data.loc[selected_wagen],

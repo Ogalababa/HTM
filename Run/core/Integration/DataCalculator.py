@@ -128,11 +128,11 @@ class Calculator:
             if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'unknow_storing')):
                 os.remove(os.path.join(rootPath, 'DataBase', 'unknow_storing', f'{self.db_name}.db'))
             save_to_sql(self.db_name, unknow_storing_dict, 'unknow_storing')
-        if len(self.error_list) > 0:
-            x = 0
-            for i in self.error_list:
-                all_storing_dict[str(x).zfill(3)] = i
-                x += 1
-            if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'all_storing')):
-                os.remove(os.path.join(rootPath, 'DataBase', 'all_storing', f'{self.db_name}.db'))
-            save_to_sql(self.db_name, all_storing_dict, 'all_storing')
+        # if len(self.error_list) > 0:
+        #     x = 0
+        #     for i in self.error_list:
+        #         all_storing_dict[str(x).zfill(3)] = i
+        #         x += 1
+        #     if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'all_storing')):
+        #         os.remove(os.path.join(rootPath, 'DataBase', 'all_storing', f'{self.db_name}.db'))
+        #     save_to_sql(self.db_name, all_storing_dict, 'all_storing')

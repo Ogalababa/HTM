@@ -32,7 +32,7 @@ def get_version(values):
         'denBDC1C': ['W033', 'W052', 'W079', 'W104', 'W120', 'W151', 'W169', 'W171', 'W178', 'W189', 'W200', 'W246',
                      'W260'],
         'denBEA1C': ['W072', 'W084'],
-        'denBGA5C': ['W487', 'W560', 'W595'],
+        'denBGA5C': ['W487', 'W560'],
         'denBQA5C': ['W500', 'W662', 'W665', 'W668'],
         'denBXB2C': ['W018', 'W022', 'W127', 'W129', 'W689', 'W692', 'W662'],
         'denBYA1C': ['W145', 'W291', 'W646', 'W651'],
@@ -40,7 +40,8 @@ def get_version(values):
         'denCHA3C': ['W656'],
         'denhBA04': ['W540'],
         'denCEA3C': ['W660'],
-        'denCFA2C': ['W661']
+        'denCFA2C': ['W661'],
+        'denBPA5C': ['W595'],
     }
     if isinstance(values, list):
 
