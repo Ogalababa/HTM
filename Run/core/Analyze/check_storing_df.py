@@ -15,14 +15,14 @@ def check_storing_df(dataset):
     :return: boolean
     """
     # filter data from reniging
-    df = dataset[(dataset['<wissel> op slot'] != 0) | (dataset['<wissel> ijzer'] != 0)]
+    df = dataset[(dataset['<wissel> vergrendeld'] != 0) | (dataset['<wissel> ijzer'] != 0)]
     check_error_list = [
-        len(set(df["<vecom> track zonder vergrendeling"])) > 1,
+        len(set(df["<vecom> aanvraag onbekend"])) > 1,
         len(set(df["<wissel> ijzer"])) > 1,
-        len(set(df["<vecom> com. fout ifc"])) > 1,
-        len(set(df["<vecom> lus zonder richting"])) > 1,
+        len(set(df["<vecom> storing"])) > 1,
+        len(set(df["<vecom> geen output"])) > 1,
         len(set(df["<aanmelden> wagen"])) > 2,  # !!!!
-        len(set(df["<wissel> op slot"])) < 2
+        len(set(df["<wissel> vergrendeld"])) < 2
     ]
     return any(check_error_list)
 
@@ -32,7 +32,7 @@ def check_storing_df(dataset):
 def recheck_storing(dataset):
     try:
         # cleaning dataset
-        df = dataset[(dataset['<wissel> op slot'] != 0) | (dataset['<wissel> ijzer'] != 0)]
+        df = dataset[(dataset['<wissel> vergrendeld'] != 0) | (dataset['<wissel> ijzer'] != 0)]
         step_revert = 0
         step_list = df['step']
         step_list = [i for i in step_list if i is not None]
@@ -43,10 +43,10 @@ def recheck_storing(dataset):
 
         return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> wagen']))) * 2,
                     0 in df['<wissel> ijzer'].to_list(),
-                    match_list([1, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
-                    match_list([1, 0, 0, 1], df['<hfp> schakelcriterium bezet'].to_list()),
-                    match_list([1, 0, 0, 1], df['<hfk> schakelcriterium bezet'].to_list()),
-                    match_list([1, 0, 1], df['<hfk> schakelcriterium bezet'].to_list())])
+                    match_list([1, 0, 1], df['<hfp> spoorstroomkring bezet'].to_list()),
+                    match_list([1, 0, 0, 1], df['<hfp> spoorstroomkring bezet'].to_list()),
+                    match_list([1, 0, 0, 1], df['<hfk> aanwezigheidslus bezet'].to_list()),
+                    match_list([1, 0, 1], df['<hfk> aanwezigheidslus bezet'].to_list())])
     except:
         return True
 
@@ -88,11 +88,11 @@ def define_storing(dataset):
         # 4
         wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),
         # 5
-        check_fout_state(dataset, '<vecom> track zonder vergrendeling', 'categorie/handbedien code fout', 'bestuurder'),
+        check_fout_state(dataset, '<vecom> aanvraag onbekend', 'categorie/handbedien code fout', 'bestuurder'),
         # 6
-        check_bad_contact(dataset, '<hfp> schakelcriterium bezet', 'HFP detector fout', 'infra'),
+        check_bad_contact(dataset, '<hfp> spoorstroomkring bezet', 'HFP detector fout', 'infra'),
         # 7
-        check_bad_contact(dataset, '<hfk> schakelcriterium bezet', 'HFK detector fout', 'infra'),
+        check_bad_contact(dataset, '<hfk> aanwezigheidslus bezet', 'HFK detector fout', 'infra'),
         # 8
         check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
         # 9
@@ -100,9 +100,9 @@ def define_storing(dataset):
         # 10
         wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
         # 11
-        check_fout_state(dataset, '<vecom> com. fout ifc', 'VECOM hardware fout', 'infra'),
+        check_fout_state(dataset, '<vecom> storing', 'VECOM hardware fout', 'infra'),
         # 12
-        check_fout_state(dataset, '<vecom> lus zonder richting', 'Elektronisch blokkeren', 'bestuurder'),
+        check_fout_state(dataset, '<vecom> geen output', 'Elektronisch blokkeren', 'bestuurder'),
         # 13
         check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
         # 14

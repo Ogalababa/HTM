@@ -7,7 +7,6 @@ from multiprocessing import Pool
 from Run.core.Integration.ProcessDataBase import process_db
 from Run.core.LogFilter.MountDir import mount_log
 
-
 # Re-analyze all log files
 # 重新分析所有log文件
 def recover_db():

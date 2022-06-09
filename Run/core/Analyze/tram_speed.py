@@ -38,16 +38,16 @@ def calculation_tram_speed(dataset):
     speed_df_list = []
     try:
         # 筛选wagen数据
-        wagen_set = set(dataset[dataset['<hfk> schakelcriterium bezet'] == 1]['<afmelden> wagen'].tolist())
+        wagen_set = set(dataset[dataset['<hfk> aanwezigheidslus bezet'] == 1]['<afmelden> wagen'].tolist())
         # 筛选wagen通过wissel数据集
         for i in wagen_set:
             richting = 'ontbekend'
             hfk_df = dataset[dataset['<afmelden> wagen'] == i]
             # 判断数据正确性
-            hfk_index_list = hfk_df[hfk_df['<hfk> schakelcriterium bezet'] == 1].index.tolist()
+            hfk_index_list = hfk_df[hfk_df['<hfk> aanwezigheidslus bezet'] == 1].index.tolist()
             # 验证数据连续性
             continuity = dataset.loc[hfk_index_list[0]]['Count'] - dataset.loc[hfk_index_list[0] - 1]['Count']
-            hfk_state = any([check_bad_contact(hfk_df, '<hfk> schakelcriterium bezet', 'hfk', 'infra')[-1],
+            hfk_state = any([check_bad_contact(hfk_df, '<hfk> aanwezigheidslus bezet', 'hfk', 'infra')[-1],
                              continuity > 3])
             if hfk_state is not True:
 

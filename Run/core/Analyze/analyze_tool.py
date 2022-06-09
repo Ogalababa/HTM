@@ -94,7 +94,7 @@ def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     # Check the consistency between the planned direction and the travel direction
     # 检测计划方向与行进方向一致性
     wissel_nr = dataframe['wissel nr'].tolist()[0]
-    gerade = wissel_gerade(wissel_nr)
+    midden = wissel_gerade(wissel_nr)
     wissel_ijzer_index = dataframe[dataframe['<wissel> ijzer'] == 0].index.to_list()
     verkeerd_code = []
     lijn_nr = -1
@@ -112,8 +112,8 @@ def check_verkeerd_code(dataframe, storing: str, afdelling: str) -> Tuple[str, s
             for i in wissel_ijzer_index:
                 sub_cycle = dataframe[dataframe['<aanmelden> wagen'] == dataframe.loc[i]['<aanmelden> wagen']]
                 request_direction = None
-                if 1 in sub_cycle['<input> naar gerade'].tolist() and request_direction is None:
-                    request_direction = gerade
+                if 1 in sub_cycle['<input> naar midden'].tolist() and request_direction is None:
+                    request_direction = midden
                 elif 1 in sub_cycle['<input> naar links'].tolist() and request_direction is None:
                     request_direction = '<wissel> links'
                 elif 1 in sub_cycle['<input> naar rechts'].tolist() and request_direction is None:
@@ -147,15 +147,15 @@ def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     wagen_nr = -1
     for i in wagen_nr_set:
         sub_cycle_dataframe = dataframe[(dataframe['<aanmelden> wagen'] == i) &
-                                        (dataframe["<hfp> schakelcriterium bezet"] == 1) &
-                                        (dataframe["<hfk> schakelcriterium bezet"] == 0)]
+                                        (dataframe["<hfp> spoorstroomkring bezet"] == 1) &
+                                        (dataframe["<hfk> aanwezigheidslus bezet"] == 0)]
         if len(sub_cycle_dataframe) > 0:
             lijn_nr = sub_cycle_dataframe.iloc[0]['<aanmelden> lijn']
             service = sub_cycle_dataframe.iloc[0]['<aanmelden> service']
             categorie = sub_cycle_dataframe.iloc[0]['<aanmelden> categorie']
             wagen_nr = sub_cycle_dataframe.iloc[0]['<aanmelden> wagen']
-            if any([1 not in sub_cycle_dataframe['<vecom> aftellen'].tolist(),
-                    0 not in sub_cycle_dataframe['<vecom> aftellen'].tolist()]):
+            if any([1 not in sub_cycle_dataframe['<vecom> uit melding'].tolist(),
+                    0 not in sub_cycle_dataframe['<vecom> uit melding'].tolist()]):
                 return storing, afdelling, lijn_nr, service, categorie, wagen_nr, \
                     all([True, 0 in sub_cycle_dataframe['<wissel> ijzer'].to_list()])
         else:
@@ -195,7 +195,7 @@ def wissel_buiten_dinst(dataframe, storing: str, afdelling: str) -> Tuple[str, s
     # 检测wissel是否关闭
     return storing, afdelling, any(
         [all([max(dataframe['<wissel> links']) == 0, max(dataframe['<wissel> rechts']) == 0]),
-        max(dataframe['<bis> schakelaar s1'] == 1)])
+        max(dataframe['<bis> wissel buiten dienst'] == 1)])
 
 
 def wissel_eind_stand(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
@@ -231,7 +231,7 @@ def wacht_op_sein(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     categorie = -1
     wagen_nr = -1
     state_list = []
-    for i in hfp_start_index(dataframe['<hfp> schakelcriterium bezet'].tolist()):
+    for i in hfp_start_index(dataframe['<hfp> spoorstroomkring bezet'].tolist()):
         if i <= 3:
             hfp_error = all([all(dataframe.iloc[:i + 1]['<wls> seinbeld links geactiveerd'] == 0),
                             all(dataframe.iloc[:i + 1]['<wls> seinbeld rechts geactiveerd'] == 0)])
@@ -277,13 +277,13 @@ def double_wissels(dataframe, storing: str, afdelling: str) -> Tuple[str, str, b
     wissel_nr = dataframe['wissel nr'].to_list()[0]
     if wissel_nr == 'W091':
         if all([32 in dataframe['<aanmelden> uitgang'].to_list(),
-                1 in dataframe['<vecom> lus zonder richting'].to_list()]):
+                1 in dataframe['<vecom> geen output'].to_list()]):
             return storing, afdelling, True
         else:
             return storing, afdelling, False
     elif wissel_nr == 'W533':
         if all([8 in dataframe['<aanmelden> uitgang'].to_list(),
-                1 in dataframe['<vecom> lus zonder richting'].to_list()]):
+                1 in dataframe['<vecom> geen output'].to_list()]):
             return storing, afdelling, True
         else:
             return storing, afdelling, False
@@ -306,9 +306,9 @@ def double_input(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int
     wagen_nr = -1
     try:
         double_input_dataset = dataframe[
-            ((dataframe['<input> naar links'] == 1) & (dataframe['<input> naar gerade'] == 1)) |
+            ((dataframe['<input> naar links'] == 1) & (dataframe['<input> naar midden'] == 1)) |
             ((dataframe['<input> naar links'] == 1) & (dataframe['<input> naar rechts'] == 1)) |
-            ((dataframe['<input> naar rechts'] == 1) & (dataframe['<input> naar gerade'] == 1))
+            ((dataframe['<input> naar rechts'] == 1) & (dataframe['<input> naar midden'] == 1))
         ]
         if len(double_input_dataset) >= 1:
             lijn_nr = double_input_dataset['<aanmelden> lijn'].to_list()[0]

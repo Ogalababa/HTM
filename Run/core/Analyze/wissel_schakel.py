@@ -42,7 +42,7 @@ def wissel_schakel(df):
                     position_request = "Links"
                 elif row_dict.get("<input> naar rechts") == 1 or row_dict.get("<wls> seinbeld rechts geactiveerd"):
                     position_request = "Rechts"
-                elif row_dict.get("<input> naar gerade") == 1:
+                elif row_dict.get("<input> naar midden") == 1:
                     position_request = "Gerade"
             # elif position_action == None:
             #     if row_dict.get("<wissel> naar links") == 1:

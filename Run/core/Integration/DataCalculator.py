@@ -95,8 +95,8 @@ class Calculator:
         unknow_storing_list = []
         unknow_storing_dict = {}
         all_storing_dict = {}
-        # self.error_list = [i for i in self.error_list if '<wissel> op slot' in i.tolist()]
-        # self.error_list = [i for i in self.error_list if len(set(i['<wissel> op slot'])) > 0]
+        # self.error_list = [i for i in self.error_list if '<wissel> vergrendeld' in i.tolist()]
+        # self.error_list = [i for i in self.error_list if len(set(i['<wissel> vergrendeld'])) > 0]
         # self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
         for i in self.error_list:
             try:

@@ -10,7 +10,7 @@ def wissel_cycle_list(df):
     :param df: wissel status dataframe
     :return: list with dataframe index nr
     """
-    index_list = df[df['<wissel> op slot'] == 0].index.values.tolist()
+    index_list = df[df['<wissel> vergrendeld'] == 0].index.values.tolist()
     if 0 not in index_list:
         index_list.insert(0,0)
     index_nr = 0

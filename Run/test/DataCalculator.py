@@ -38,15 +38,15 @@ class Calculator:
                 hfk = False
                 for i in range(len(value)):
                     row = value.iloc[i]
-                    if row['<input> naar gerade'] == 1:
+                    if row['<input> naar midden'] == 1:
                         richting = 'Recht door'
                     elif row['<input> naar rechts'] == 1:
                         richting = 'Rechts af'
                     elif row['<input> naar links'] == 1:
                         richting = 'links af'
 
-                    if row['<hfk> schakelcriterium bezet'] == 1 and \
-                            row['<hfp> schakelcriterium bezet'] == 1 and \
+                    if row['<hfk> aanwezigheidslus bezet'] == 1 and \
+                            row['<hfp> spoorstroomkring bezet'] == 1 and \
                             row['<afmelden> wagen'] != 0 and \
                             hfk is False:
 
@@ -55,8 +55,8 @@ class Calculator:
                         lijn_nr = str(row['<aanmelden> lijn'])
                         hfk = True
 
-                    elif row['<hfk> schakelcriterium bezet'] == 0 and \
-                            row['<hfp> schakelcriterium bezet'] == 0 and \
+                    elif row['<hfk> aanwezigheidslus bezet'] == 0 and \
+                            row['<hfp> spoorstroomkring bezet'] == 0 and \
                             row['<afmelden> wagen'] != 0 and \
                             hfk is True:
 
