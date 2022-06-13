@@ -322,3 +322,32 @@ def double_input(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int
             return storing, afdelling, lijn_nr, service, categorie, wagen_nr, False
     except:
         return storing, afdelling, lijn_nr, service, categorie, wagen_nr, False
+
+
+def no_aktuell(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+    """
+    check if aanmelden wagen niet verhandeld
+    :param dataframe: pd.dataframe
+    :param storing: str
+    :param afdelling: str
+    :return: Tuple[str, str, int, int, int, int, bool]
+    """
+    lijn_nr = -1
+    service = -1
+    categorie = -1
+    wagen_nr = -1
+    error_status = False
+    aanmelden_set = set(dataframe[(dataframe['<aanmelden> wagen']) != \
+                                  (dataframe['<afmelden> wagen'])]['<aanmelden> wagen'].to_list())
+    for i in aanmelden_set:
+        sub_df = dataframe[dataframe['<aanmelden> wagen'] == i]
+        if i not in sub_df['<aktuell> wagen'].to_list() and 1 in sub_df['<aktuell> niveau fifo'].to_list():
+            lijn_nr = sub_df['<aanmelden> lijn'].to_list()[0]
+            service = sub_df['<aanmelden> service'].to_list()[0]
+            categorie = sub_df['<aanmelden> categorie'].to_list()[0]
+            wagen_nr = sub_df['<aanmelden> wagen'].to_list()[0]
+            error_status = True
+            return storing, afdelling, lijn_nr, service, categorie, wagen_nr, error_status
+        else:
+            pass
+    return storing, afdelling, lijn_nr, service, categorie, wagen_nr, error_status

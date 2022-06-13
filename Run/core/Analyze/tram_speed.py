@@ -73,7 +73,6 @@ def calculation_tram_speed(dataset):
                     hfk_in = dataset.loc[hfk_index_list[0]]['date-time']
                     hfk_out = dataset.loc[hfk_index_list[-1] + 1]['date-time']
                     speed = round(wagen_lent(wagen_nr) / (hfk_out - hfk_in).total_seconds() * 3.6)
-
                     if speed < 50:
                         speed_dict['<aanmelden> lijn'] = [lijn_nr]
                         speed_dict['<afmelden> wagen'] = [wagen_nr]
