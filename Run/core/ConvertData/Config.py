@@ -43,7 +43,8 @@ class WisselData:
         self.curentpath = os.path.dirname(os.path.realpath(__file__))
         curentdir = os.path.basename(self.curentpath)
         self.mainpath = f'{self.curentpath.replace(curentdir, "")}'
-
+        include_dict = {'WESTVEST_LSA': 'LSA_689', 'HS_W656_LSA': 'LSA_655',
+                        'TTPW_LSA': 'LSA_018'}  # 'TTHS_LSA': 'LSA_130',}
         try:
             if self.hex_data.index('PZDA') > 0:
                 full_data_start = self.hex_data.index('PZDA') + 4
@@ -51,8 +52,17 @@ class WisselData:
 
                 # self.hex_data_list = self.line_to_hex()
                 server_date_time = self.hex_data[:19]
-                if re.search(r'W\d\d\d', self.hex_data) is not None:
+                if any(i in self.hex_data for i in include_dict.keys()):
+                    self.wissel_info['wissel nr'] = include_dict.get(
+                        [i for i in include_dict.keys() if i in self.hex_data][0])
+
+                elif re.search(r'W\d\d\d', self.hex_data) is not None:
                     self.wissel_info['wissel nr'] = [re.search(r'W\d\d\d', self.hex_data).group()]
+                #  if any(i in include_dict.keys() for i in self.hex_data):
+                # if any(i for i in include_dict.keys() if i in self.hex_data):
+                #     for i in include_dict.keys():
+                #         if i in self.hex_data:
+                #             self.wissel_info['wissel nr'] = [include_dict.get(i)]
                 else:
                     pass
                 # wissel_nr_start = self.hex_data.index('HTM_') + 4
@@ -126,13 +136,13 @@ class WisselData:
                 f'{str(int(record_date[5:9], 2)).zfill(2)}-'
                 f'{str(int(record_date[:5], 2)).zfill(2)} '
                 f'{str(int(record_time[:5], 2)).zfill(2)}:'
-                f'{str(int(record_time[5:11], 2)).zfill(2)}:' 
+                f'{str(int(record_time[5:11], 2)).zfill(2)}:'
                 f'{str(int(record_time[11:17], 2)).zfill(2)}.'
                 f'{str(int(record_time[17:], 2)).zfill(2)}'
             ]
             # if self.wissel_info['date-time'][:10] != self.wissel_info['server time'][:10]:
             #     self.wissel_info['date-time'] = self.wissel_info['server time']
-                
+
             for key, value in self.multi_bits.items():
                 bit_data = self.bin_data[-(self.DATA_HEADER + int(value[1])): -(self.DATA_HEADER + int(value[0]) - 1)]
 

@@ -42,6 +42,9 @@ def get_version(values):
         'denCEA3C': ['W660'],
         'denCFA2C': ['W661'],
         'denBPA5C': ['W595'],
+        'denBWC1C': ['LSA_018'],
+        'denCDA1C': ['LSA_689'],
+        'denCGA2C': ['LSA_655'],
     }
     if isinstance(values, list):
 
@@ -88,6 +91,9 @@ def get_wissel_type_nr(values):
         'denCHA3C': ['W656'],
         'denhBA04': ['W540'],
         'denCEA3C': ['W660'],
-        'denCFA2C': ['W661']
+        'denCFA2C': ['W661'],
+        'denBWC1C': ['LSA_018'],
+        'denCDA1C': ['LSA_689'],
+        'denCGA2C': ['LSA_655'],
     }
     return wissel_version.get(values)

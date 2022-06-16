@@ -28,18 +28,55 @@ def read_log(log_file):
     with open(log_file, 'r', encoding='utf-8', errors='ignore') as (log):
         exclude_list = ['##', 'W657', 'W666', 'W662', 'W665', 'W668', 'W540', '_LSA_', 'W260']
         # exclude_list = ['##', 'W666', 'W662','W665', 'W668', '_LSA_']
+        include_dict = {'WESTVEST_LSA': 'LSA_689', 'HS_W656_LSA': 'LSA_655',
+                        'TTPW_LSA': 'LSA_018'}  # 'TTHS_LSA': 'LSA_130',}
         for line in log:
-            if any(i in line for i in exclude_list):
+            if 'DATA:PZDA' in line:
+                if any(i in line for i in include_dict.keys()):
+                    wissel_nr = include_dict.get([i for i in include_dict.keys() if i in line][0])
+                    if wissel_nr in wissel_data_dict:
+                        wissel_data_dict[wissel_nr].append(line[: -1])
+                    else:
+                        wissel_data_dict[wissel_nr] = [line[: -1]]
+                elif any(i in line for i in exclude_list):
+                    pass
+                elif 'DATA:PZDA' in line and re.search(r'W\d\d\d', line) is not None:
+                    wissel_nr = [re.search(r'W\d\d\d', line).group()]
+                    wissel_nr = wissel_nr[0]
+                    if wissel_nr in wissel_data_dict:
+                        wissel_data_dict[wissel_nr].append(line[: -1])
+                    else:
+                        wissel_data_dict[wissel_nr] = [line[: -1]]
+            else:
                 pass
-            elif 'DATA:PZDA' in line and re.search(r'W\d\d\d', line) is not None:
-                # header_data = ConvertData(line)
-                wissel_nr = [re.search(r'W\d\d\d', line).group()]
-                wissel_nr = wissel_nr[0]
-                if wissel_nr in wissel_data_dict:
-                    wissel_data_dict[wissel_nr].append(line[: -1])
+    #             if any(i in line for i in exclude_list):
+    #                 pass
+    #             elif 'DATA:PZDA' in line and any(i in line for i in include_dict.keys()):
+    #                 wissel_nr = include_dict.get([i for i in include_dict.keys() if i in line][0])
+    #                 print(wissel_nr)
+    #                 if wissel_nr in wissel_data_dict:
+    #                     wissel_data_dict[wissel_nr].append(line[: -1])
+    #                 else:
+    #                     wissel_data_dict[wissel_nr] = [line[: -1]]
+    #             # elif 'DATA:PZDA' in line and any(i in line for i in include_dict.keys()):
+    #             #     print(line)
+    #             #     for nr in include_dict.keys():
+    #             #         if nr in line:
+    #             #             wissel_nr = include_dict.get(nr) # rename wissel nr
+    #             #             if wissel_nr in wissel_data_dict:
+    #             #                 wissel_data_dict[wissel_nr].append(line[:-1])
+    #             #             else:
+    #             #                 wissel_data_dict[wissel_nr] = [line[:-1]]
 
-                else:
-                    wissel_data_dict[wissel_nr] = [line[: -1]]
+    #             elif 'DATA:PZDA' in line and re.search(r'W\d\d\d', line) is not None:
+    #                 # header_data = ConvertData(line)
+    #                 wissel_nr = [re.search(r'W\d\d\d', line).group()]
+    #                 wissel_nr = wissel_nr[0]
+    #                 if wissel_nr in wissel_data_dict:
+    #                     wissel_data_dict[wissel_nr].append(line[: -1])
+    #                 else:
+    #                     wissel_data_dict[wissel_nr] = [line[: -1]]
+
     return wissel_data_dict, date
 
 
