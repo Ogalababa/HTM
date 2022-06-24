@@ -37,17 +37,33 @@ def st_storingdata(select_data):
         st.dataframe(fig_data)
 
         with col2:
-            fig_storing_2 = px.pie(fig_data,
-                                   values='count',
-                                   names='afdelling',
-                                   title='Afdelling percentage',
-                                   color_discrete_sequence=px.colors.sequential.RdBu,
-                                   height=layout_height,
-                                   hole=.25,
-                                   template='seaborn'
-                                   )
-            fig_storing_2.update_traces(textinfo='percent+label')
+            # fig_storing_2 = px.pie(fig_data,
+            #                        values='count',
+            #                        names='afdelling',
+            #                        title='Afdelling percentage',
+            #                        color_discrete_sequence=px.colors.sequential.RdBu,
+            #                        height=layout_height,
+            #                        hole=.25,
+            #                        template='seaborn'
+            #                        )
+            # fig_storing_2.update_traces(textinfo='percent+label')
+            # st.plotly_chart(fig_storing_2, use_container_width=True)
+            fig_storing_2 = px.sunburst(fig_data,
+                                       title='afdelling',
+                                       path=['afdelling', 'storing', 'begin tijd'],
+                                       values='count',
+                                       color='afdelling',
+                                       color_continuous_scale=px.colors.sequential.RdBu,
+                                       height=layout_height,
+                                       hover_data=[
+                                           'Wissel Nr',
+                                           'lijn nr',
+                                           'categorie',
+                                           'wagen nr'
+                                       ])
+            fig_storing_2.update_traces(textinfo='label+percent entry')
             st.plotly_chart(fig_storing_2, use_container_width=True)
+            
 
         with col3:
             fig_storing_4 = px.pie(fig_data,

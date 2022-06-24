@@ -10,6 +10,9 @@ import plotly.express as px
 import streamlit as st
 from Show.core.GetData import get_all_data, get_data_name
 from Show.core.GetData import get_all_data_cache
+from Show.core.GetData import create_download_link
+from fpdf import FPDF
+from tempfile import NamedTemporaryFile
 
 
 def st_wissel_schakel():
@@ -101,6 +104,29 @@ def st_wissel_schakel():
                                       height=layout_height, size_max=15, zoom=13, 
                                       hover_data=['Wissel Nr'],mapbox_style="carto-positron")
             st.plotly_chart(fig_5)
+        # export_as_pdf = st.sidebar.button("Download Rapport")
+        # export_as_csv = st.sidebar.button("Download Details")
+        # if export_as_pdf:
+        #     pdf = FPDF()
+        #     for fig in figs:
+        #         pdf.add_page(orientation='L')
+        #         with NamedTemporaryFile(delete=False, suffix='.png') as tmpfile:
+        #             pio.write_image(fig, tmpfile.name, height=500)
+        #             pdf.image(tmpfile.name, 10, 10)
+        #     if len(select_data) >= 2:
+        #         html = create_download_link(pdf.output(dest="S").encode("latin-1"),
+        #                                     f'{mode}_{select_data[-1]}_{select_data[0]}')
+        #     else:
+        #         html = create_download_link(pdf.output(dest="S").encode("latin-1"),
+        #                                     f'{mode}-{select_data[0]}')
+        #     st.sidebar.markdown(html, unsafe_allow_html=True)
+        # if export_as_csv:
+        #     csv = all_data_df.to_csv(index=False).encode()
+        #     if len(select_data) >= 2:
+        #         href = create_download_link(csv, f'{mode}-{select_data[-1]}_{select_data[0]}', 'csv')
+        #     else:
+        #         href = create_download_link(csv, f'{mode}-{select_data[0]}', 'csv')
+        #     st.sidebar.markdown(href, unsafe_allow_html=True)
 
     else:
         st.title('Kies een gegeven om te analyseren')

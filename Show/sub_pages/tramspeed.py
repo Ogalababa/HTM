@@ -152,6 +152,7 @@ def tram_speed():
                                                  'Service',
                                                  'Richting'
                                              ])
+                    fig_counts.update_traces(textinfo='label+percent entry')
                     st.plotly_chart(fig_counts, use_container_width=True)
                     figs.append(fig_counts)
 
@@ -255,6 +256,7 @@ def tram_speed():
                                                    'Categorie',
                                                    'Service',
                                                ])
+                    fig_counts_2.update_traces(textinfo='label+percent entry')
                     st.plotly_chart(fig_counts_2, use_container_width=True)
                     figs.append(fig_counts_2)
 
@@ -297,7 +299,6 @@ def tram_speed():
                     figs.append(fig_7)
 
             elif mode == 'Snelheidswaarschuwing':
-                
                 col1, space1, col1_1 = st.columns((21, 0.1, 0.1))
                 col2, space2, col3 = st.columns((10, 1, 10))
                 col4, space4, col5 = st.columns((10, 1, 10))
@@ -327,7 +328,6 @@ def tram_speed():
                     speed_counts = speed_counts[speed_counts['Richting'] == 'Recht door']
                 else:
                     pass
-                
                 with col1:
                     st.sidebar.metric(f'Totale records boven {select_speed} km/h:', len(speed_counts), delta=f'{round(((len(speed_counts)/speed_record_size)*100),3)}% van totale records',
                                       delta_color="normal")
@@ -379,6 +379,7 @@ def tram_speed():
                                                    'Categorie',
                                                    'Service',
                                                ])
+                    fig_counts_2.update_traces(textinfo='label+percent entry')
                     st.plotly_chart(fig_counts_2, use_container_width=True)
                     figs.append(fig_counts_2)
 
@@ -398,13 +399,13 @@ def tram_speed():
                 with col6:
                     fig_wissel_5 = px.pie(speed_counts,
                                           values='hoeveelheid',
-                                          names='Richting',
-                                          title='Richting percentage',
+                                          names='Wissel Nr',
+                                          title='Wissels percentage',
                                           color_discrete_sequence=px.colors.sequential.RdBu,
                                           height=layout_height,
                                           hole=.25,
                                           )
-                    fig_wissel_5.update_traces(textinfo='percent+label')
+                    # fig_wissel_5.update_traces(textinfo='percent+label')
                     st.plotly_chart(fig_wissel_5, use_container_width=True)
                     figs.append(fig_wissel_5)
 
@@ -478,6 +479,7 @@ def tram_speed():
                                                    'Service',
                                                    'Tijd'
                                                ])
+                    fig_counts_2.update_traces(textinfo='label+percent entry')
                     st.plotly_chart(fig_counts_2, use_container_width=True)
                     figs.append(fig_counts_2)
 

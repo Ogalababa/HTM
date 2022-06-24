@@ -351,3 +351,15 @@ def no_aktuell(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, 
         else:
             pass
     return storing, afdelling, lijn_nr, service, categorie, wagen_nr, error_status
+
+
+def hfk_defect(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
+    """
+    Bepaal of hfk beschadigd is
+    判断hfk是否损坏
+    :param dataframe: pd.DataFrame
+    :param storing: str
+    :param afdelling: str
+    :return: Tuple(str, str, int, int, int, int, bool)
+    """
+    return storing, afdelling, len(dataframe[dataframe['<hfk> aanwezigheidslus bezet']== 1]) / len(dataframe) > 0.6

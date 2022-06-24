@@ -80,41 +80,46 @@ def define_storing(dataset):
         # 0
         small_dataset(dataset, 'invalid data', 'system'),
         # 1
-        wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),
+        hfk_defect(dataset, 'HFK defect', 'infra'),
         # 2
-        double_wissels(dataset, 'not_error', 'double wissels'),
+        wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),
         # 3
-        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),
+        double_wissels(dataset, 'not_error', 'double wissels'),
         # 4
-        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),
+        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),
         # 5
-        check_fout_state(dataset, '<vecom> aanvraag onbekend', 'categorie/handbedien code fout', 'bestuurder'),
+        wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),
         # 6
-        check_bad_contact(dataset, '<hfp> spoorstroomkring bezet', 'HFP detector fout', 'infra'),
+        check_fout_state(dataset, '<vecom> aanvraag onbekend', 'categorie/handbedien code fout', 'bestuurder'),
         # 7
-        check_bad_contact(dataset, '<hfk> aanwezigheidslus bezet', 'HFK detector fout', 'infra'),
+        check_bad_contact(dataset, '<hfp> spoorstroomkring bezet', 'HFP detector fout', 'infra'),
         # 8
-        check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
+        check_bad_contact(dataset, '<hfk> aanwezigheidslus bezet', 'HFK detector fout', 'infra'),
         # 9
-        miss_out_meld(dataset, 'afmelden fout', 'infra'),
+        hfk_defect(dataset, 'HFK defect', 'infra'),
         # 10
-        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
+        check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
         # 11
-        check_fout_state(dataset, '<vecom> storing', 'VECOM hardware fout', 'infra'),
+        miss_out_meld(dataset, 'afmelden fout', 'infra'),
         # 12
-        check_fout_state(dataset, '<vecom> geen output', 'Elektronisch blokkeren', 'bestuurder'),
+        wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
         # 13
-        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
+        check_fout_state(dataset, '<vecom> storing', 'VECOM hardware fout', 'infra'),
         # 14
-        check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),
+        check_fout_state(dataset, '<vecom> geen output', 'Elektronisch blokkeren', 'bestuurder'),
         # 15
+        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
+        # 16
+        check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),
+        # 17
         double_input(dataset, 'richting veranderen na de aanvragen', 'bestuurder'),
+        # 18
+        no_aktuell(dataset, 'bestuurder rit te vroeg naar de hfp', 'bestuurder'),
     ]
     try:
         storing_type['wagen nr'] = [i for i in dataset['<aktuell> wagen'].tolist() if i != 0][0]
     except:
         storing_type['wagen nr'] = [0]
-    
     for error_info in func_list:
         if error_info[-1]:
             #  error_info = i

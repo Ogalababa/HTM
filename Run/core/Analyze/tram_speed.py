@@ -70,22 +70,26 @@ def calculation_tram_speed(dataset):
                     else:
                         richting = f'{richting[8:]} af'
                     # 储存数据
-                    hfk_in = dataset.loc[hfk_index_list[0]]['date-time']
-                    hfk_out = dataset.loc[hfk_index_list[-1] + 1]['date-time']
-                    speed = round(wagen_lent(wagen_nr) / (hfk_out - hfk_in).total_seconds() * 3.6)
-                    if speed < 50:
-                        speed_dict['<aanmelden> lijn'] = [lijn_nr]
-                        speed_dict['<afmelden> wagen'] = [wagen_nr]
-                        speed_dict['<aanmelden> categorie'] = [categorie]
-                        speed_dict['<aanmelden> service'] = [service]
-                        speed_dict['wissel nr'] = [wissel_nr]
-                        speed_dict['Richting'] = [richting]
-                        speed_dict['hfk_in'] = [hfk_in]
-                        speed_dict['hfk_uit'] = [hfk_out]
-                        speed_dict['snelheid km/h'] = [speed]
-                        speed_dict['code'] = [f'{wagen_nr}-{lijn_nr}-{service}']
-                        # 转换成data frame
-                        speed_df_list.append(pd.DataFrame(speed_dict))
+                    # 最后判断数据准确性
+                    if dataset.loc[hfk_index_list[-1] + 1]['<hfk> aanwezigheidslus bezet'] == 0:
+                        hfk_in = dataset.loc[hfk_index_list[0]]['date-time']
+                        hfk_out = dataset.loc[hfk_index_list[-1] + 1]['date-time']
+                        speed = round(wagen_lent(wagen_nr) / (hfk_out - hfk_in).total_seconds() * 3.6)
+                        if speed < 50:
+                            speed_dict['<aanmelden> lijn'] = [lijn_nr]
+                            speed_dict['<afmelden> wagen'] = [wagen_nr]
+                            speed_dict['<aanmelden> categorie'] = [categorie]
+                            speed_dict['<aanmelden> service'] = [service]
+                            speed_dict['wissel nr'] = [wissel_nr]
+                            speed_dict['Richting'] = [richting]
+                            speed_dict['hfk_in'] = [hfk_in]
+                            speed_dict['hfk_uit'] = [hfk_out]
+                            speed_dict['snelheid km/h'] = [speed]
+                            speed_dict['code'] = [f'{wagen_nr}-{lijn_nr}-{service}']
+                            # 转换成data frame
+                            speed_df_list.append(pd.DataFrame(speed_dict))
+                        else:
+                            pass
                     else:
                         pass
                 else:
