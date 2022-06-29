@@ -6,6 +6,7 @@ import sqlalchemy
 import functools
 import gc
 import re
+from multiprocessing import Pool
 # analysis
 
 import pandas as pd
@@ -49,34 +50,6 @@ def read_log(log_file):
                         wissel_data_dict[wissel_nr] = [line[: -1]]
             else:
                 pass
-#             if any(i in line for i in exclude_list):
-#                 pass
-#             elif 'DATA:PZDA' in line and any(i in line for i in include_dict.keys()):
-#                 wissel_nr = include_dict.get([i for i in include_dict.keys() if i in line][0])
-#                 print(wissel_nr)
-#                 if wissel_nr in wissel_data_dict:
-#                     wissel_data_dict[wissel_nr].append(line[: -1])
-#                 else:
-#                     wissel_data_dict[wissel_nr] = [line[: -1]]
-#             # elif 'DATA:PZDA' in line and any(i in line for i in include_dict.keys()):
-#             #     print(line)
-#             #     for nr in include_dict.keys():
-#             #         if nr in line:
-#             #             wissel_nr = include_dict.get(nr) # rename wissel nr
-#             #             if wissel_nr in wissel_data_dict:
-#             #                 wissel_data_dict[wissel_nr].append(line[:-1])
-#             #             else:
-#             #                 wissel_data_dict[wissel_nr] = [line[:-1]]
-
-#             elif 'DATA:PZDA' in line and re.search(r'W\d\d\d', line) is not None:
-#                 # header_data = ConvertData(line)
-#                 wissel_nr = [re.search(r'W\d\d\d', line).group()]
-#                 wissel_nr = wissel_nr[0]
-#                 if wissel_nr in wissel_data_dict:
-#                     wissel_data_dict[wissel_nr].append(line[: -1])
-#                 else:
-#                     wissel_data_dict[wissel_nr] = [line[: -1]]
-            
     return wissel_data_dict, date
 
 
@@ -102,38 +75,36 @@ def mapping_df_types(df):
             dtypedict.update({i: VARCHAR()})
         elif "wissel nr" in i:
             dtypedict.update({i: VARCHAR()})
-        # elif "time" in i:
-        #     dtypedict.update({i: VARCHAR()})
-        # elif "status" in i:
-        #     dtypedict.update({i: VARCHAR()})
         else:
             dtypedict.update({i: SMALLINT()})
     return dtypedict
 
 
+def conver_log_data(log_data, db_name, keys):
+    bit_configs = bit_config()
+    byte_configs = byte_config()
+    engine = sql_engine(db_name)
+    sqlite_connection = engine.connect()
+    conver_data_value = functools.partial(conver_data, bit_configs, byte_configs)
+    data = list(map(conver_data_value, log_data.get(keys)))
+    df_data_list = list(map(dataframe_str, data))
+    df_data = pd.concat(df_data_list, ignore_index=True)
+    # 去除重复项
+    df_data = df_data.drop_duplicates()
+    dtypedict = mapping_df_types(df_data)
+    df_data.set_index('date-time', drop=True, inplace=True)
+    df_data.sort_values(by='date-time')
+    df_data.to_sql(keys, sqlite_connection, if_exists='replace', dtype=dtypedict)
+
+
 def log_to_sql(log_data, db_name):
     """Convert log file to database"""
     try:
-        bit_configs = bit_config()
-        byte_configs = byte_config()
-        drop_configs = drop_config()
-        engine = sql_engine(db_name)
-        sqlite_connection = engine.connect()
+        wissel_nr_list = list(log_data.keys())
+        convert_data_to_sql = functools.partial(conver_log_data, log_data, db_name)
+        with Pool(16) as p:
+            p.map(convert_data_to_sql, wissel_nr_list)
 
-        for key, values in log_data.items():
-            # Multy processing
-            drop_list = drop_configs.get(get_version(key))
-            conver_data_value = functools.partial(conver_data, bit_configs, byte_configs)
-            data = list(map(conver_data_value, values))
-            df_data_list = list(map(dataframe_str, data))
-            df_data = pd.concat(df_data_list, ignore_index=True)
-            # 去除重复项
-            df_data = df_data.drop_duplicates()
-            dtypedict = mapping_df_types(df_data)
-            df_data.set_index('date-time', drop=True, inplace=True)
-            df_data.to_sql(key, sqlite_connection, if_exists='replace', dtype=dtypedict)
-        del conver_data_value, data, df_data_list, df_data
-        gc.collect()
     except KeyboardInterrupt:
         exit()
     return None
@@ -160,11 +131,7 @@ def set_steps_denbdb3c(db_file):
         for k in table_name:
             wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
             wissel_status.set_index('date-time', drop=True, inplace=True)
-            # df_data = df_data.set_index(['<aanmelden> wagen', '<aanmelden> categorie', '<aanmelden> service'],
-            # drop=False, inplace=False)
             wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
-        del wissel_status
-        gc.collect()
     except KeyboardInterrupt:
         exit()
 
