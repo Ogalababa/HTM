@@ -5,7 +5,7 @@ import os.path
 
 from __init__ import *
 import pandas as pd
-
+from multiprocessing import Pool
 from Run.core.Analyze.check_storing_df import check_storing_df, define_storing
 from Run.core.Analyze.tram_speed import calculation_tram_speed
 from Run.core.Analyze.wissel_schakel import wissel_schakel
@@ -28,39 +28,43 @@ class Calculator:
         self.db_name = db_name
         self.db_dict = get_alldata_from_db(db_name, path='db')
         self.error_list = []
+        # self.speed_dict = {}
+
+    def sub_tram_speed_(self, wissel_nr):
+        speed_dict = {}
+        try:
+            values = self.db_dict.get(wissel_nr)
+            # set to time format
+            values['date-time'] = pd.to_datetime(values['date-time'])
+            index_list = wissel_cycle_list(values)
+            speed_df_list = []
+            for i in range(len(index_list) - 1):
+                cycle_df = values[index_list[i]:index_list[i + 1]]
+                speed_df = calculation_tram_speed(cycle_df)
+                if len(speed_df) == 0:
+                    pass
+                elif len(speed_df) == 1:
+                    speed_df_list.append(speed_df[0])
+                else:
+                    speed_df_list.append(pd.concat(speed_df))
+            if len(speed_df_list) == 0:
+                pass
+            elif len(speed_df_list) == 1:
+                speed_dict[wissel_nr] = speed_df_list[0]
+            else:
+                speed_dict[wissel_nr] = pd.concat(speed_df_list)
+            save_to_sql(self.db_name, speed_dict, 'snelheid')
+        except:
+            pass
 
     def C_tram_speed(self):
         """
         Calculate tram speed while tram passing the wissel
         :return: dict
         """
-        speed_dict = {}
-        for key, values in self.db_dict.items():
-            try:
-                # set to time format
-                values['date-time'] = pd.to_datetime(values['date-time'])
-                # check cycles
-                index_list = wissel_cycle_list(values)
-                speed_df_list = []
-                for i in range(len(index_list) - 1):
-                    cycle_df = values[index_list[i]:index_list[i + 1]]
-                    speed_df = calculation_tram_speed(cycle_df)
-                    if len(speed_df) == 0:
-                        pass
-                    elif len(speed_df) == 1:
-                        speed_df_list.append(speed_df[0])
-                    else:
-                        speed_df_list.append(pd.concat(speed_df))
-                if len(speed_df_list) == 0:
-                    pass
-                elif len(speed_df_list) == 1:
-                    speed_dict[key] = speed_df_list[0]
-                else:
-                    speed_dict[key] = pd.concat(speed_df_list)
-            except:
-                pass
-
-        save_to_sql(self.db_name, speed_dict, 'snelheid')
+        wiessl_nr_list = list(self.db_dict.keys())
+        with Pool(16) as p:
+            p.map(self.sub_tram_speed_, wiessl_nr_list)
 
     def C_wissel_schakel(self):
         """
