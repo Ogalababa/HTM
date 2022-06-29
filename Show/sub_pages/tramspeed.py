@@ -4,6 +4,7 @@
 from Show.core import GetData
 from __init__ import *
 import pandas as pd
+# import modin.pandas as pd
 import plotly.express as px
 import plotly.io as pio
 

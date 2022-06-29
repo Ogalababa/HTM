@@ -45,6 +45,7 @@ def get_version(values):
         'denBWC1C': ['LSA_018'],
         'denCDA1C': ['LSA_689'],
         'denCGA2C': ['LSA_655'],
+        'denBVB1C': ['LSA_130'],
     }
     if isinstance(values, list):
 
@@ -95,5 +96,6 @@ def get_wissel_type_nr(values):
         'denBWC1C': ['LSA_018'],
         'denCDA1C': ['LSA_689'],
         'denCGA2C': ['LSA_655'],
+        'denBVB1C': ['LSA_130'],
     }
     return wissel_version.get(values)

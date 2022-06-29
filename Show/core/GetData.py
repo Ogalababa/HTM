@@ -3,13 +3,27 @@
 
 from __init__ import *
 import pandas as pd
+# import modin.pandas as pd
 import sqlalchemy
 from Run.core.ConvertData.ConnectDB import conn_engine
-from Run.core.Integration.DataInitialization import get_alldata_from_db
+# from Run.core.Integration.DataInitialization import get_alldata_from_db
 
 # streamlit
 import streamlit as st
 import base64
+
+
+def st_get_alldata_from_db(db_name, path='db'):
+    """Get data info from db file
+    :return: dict
+    """
+    data_dict = {}
+    insp = sqlalchemy.inspect(conn_engine(db_name, path))
+    tables = insp.get_table_names()
+    for name in tables:
+        data_dict[name] = pd.read_sql_table(name, conn_engine(db_name, path))
+
+    return data_dict
 
 
 def get_data_name(path='db'):
@@ -91,7 +105,7 @@ def get_all_data(selected_db, path='db'):
     wissel_list = []
     for i in selected_db:
         if f'{i}.db' in os.listdir(os.path.join(rootPath, 'DataBase', path)):
-            data_dict = get_alldata_from_db(i, path=path)
+            data_dict = st_get_alldata_from_db(i, path=path)
             wissel_list.extend(data_dict.keys())
             data_list.append(data_dict)
     return data_list, list(set(wissel_list))
@@ -109,7 +123,7 @@ def get_all_data_cache(selected_db, path='db'):
     wissel_list = []
     for i in selected_db:
         if f'{i}.db' in os.listdir(os.path.join(rootPath, 'DataBase', path)):
-            data_dict = get_alldata_from_db(i, path=path)
+            data_dict = st_get_alldata_from_db(i, path=path)
             wissel_list.extend(data_dict.keys())
             data_list.append(data_dict)
     return data_list, list(set(wissel_list))
