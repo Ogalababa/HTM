@@ -13,7 +13,9 @@ def process_db(log_file):
     :param log_file: log date
     :return: None
     """
+    start_time = datetime.now()
     log_path = os.path.join(rootPath, 'log', log_file)
+    print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Downloading {log_file}')
     wissel_log, date = read_log(log_path)
 
     try:
@@ -30,6 +32,9 @@ def process_db(log_file):
         print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Wissel schakel done')
         data_exp.C_storingen()
         print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Storingen done')
+        end_time = datetime.now()
+        delta = end_time - start_time
+        print(f'Total process time: {round(delta.total_seconds(),2)}seconds')
         print('-'*30)
     except (AttributeError, UnicodeDecodeError, IndexError) as err:
         # print(err)

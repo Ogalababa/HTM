@@ -115,6 +115,12 @@ def dataframe_str(value):
     return df_single_data
 
 
+# def sub_set_steps(db_file, steps, k):
+#     wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
+#     wissel_status.set_index('date-time', drop=True, inplace=True)
+#     wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
+    
+    
 def set_steps_denbdb3c(db_file):
     """Set cycle steps for wissel type denbdb3c"""
     try:
@@ -128,6 +134,9 @@ def set_steps_denbdb3c(db_file):
         table_name.sort()
         # get denDBD3C steps
         steps = pd.read_sql_table('denBDB3C', conn_engine('steps', path='norm'))
+        # set_steps = functools.partial(sub_set_steps, db_file,steps)
+        # with Pool(16) as p:
+        #     p.map(set_steps, table_name)
         for k in table_name:
             wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
             wissel_status.set_index('date-time', drop=True, inplace=True)

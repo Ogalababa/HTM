@@ -39,10 +39,15 @@ def save_to_sql(db_name, data_dict, path):
     :param path: database dir
     :return: None
     """
-    for key, value in data_dict.items():
-        try:
-            value.to_sql(key, conn_engine(db_name, path), index=False, if_exists='replace')
+    if len(data_dict.keys()) < 2:
+        table_name = list(data_dict.keys())[0]
+        value = data_dict.get(table_name)
+        value.to_sql(table_name, conn_engine(db_name, path), index=False, if_exists='replace')
+    else:
+        for key, value in data_dict.items():
+            try:
+                value.to_sql(key, conn_engine(db_name, path), index=False, if_exists='replace')
 
-        except:
-            pass
+            except:
+                pass
     return None

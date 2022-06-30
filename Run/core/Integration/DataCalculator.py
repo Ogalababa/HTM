@@ -5,7 +5,7 @@ import os.path
 
 from __init__ import *
 import pandas as pd
-from multiprocessing import Pool
+from multiprocessing import Pool, Manager
 from Run.core.Analyze.check_storing_df import check_storing_df, define_storing
 from Run.core.Analyze.tram_speed import calculation_tram_speed
 from Run.core.Analyze.wissel_schakel import wissel_schakel
@@ -27,7 +27,8 @@ class Calculator:
         """
         self.db_name = db_name
         self.db_dict = get_alldata_from_db(db_name, path='db')
-        self.error_list = []
+        self.error_list = Manager().list()
+        self.wissel_nr_list = list(self.db_dict.keys())
         # self.speed_dict = {}
 
     def sub_tram_speed_(self, wissel_nr):
@@ -62,36 +63,37 @@ class Calculator:
         Calculate tram speed while tram passing the wissel
         :return: dict
         """
-        wiessl_nr_list = list(self.db_dict.keys())
+        # wiessl_nr_list = list(self.db_dict.keys())
         with Pool(16) as p:
-            p.map(self.sub_tram_speed_, wiessl_nr_list)
+            p.map(self.sub_tram_speed_, self.wissel_nr_list)
+
+    def sub_wissel_schakel_(self, wissel_nr):
+        data_dict = {}
+        try:
+            values = self.db_dict.get(wissel_nr)
+            status_list = []
+            index_list = wissel_cycle_list(values)
+            for i in range(len(index_list) - 1):
+                cycle_df = values[index_list[i]:index_list[i + 1]]
+                if check_storing_df(cycle_df):
+                    self.error_list.append(cycle_df)
+                else:
+                    schakel_status = wissel_schakel(cycle_df)
+                    status_list.append(schakel_status[0])
+                    if len(schakel_status) > 1:
+                        self.error_list.append(schakel_status[1])
+            data_dict[wissel_nr] = pd.concat(status_list)
+            save_to_sql(self.db_name, data_dict, 'schakelen')
+        except:
+            pass
 
     def C_wissel_schakel(self):
         """
         Calculate wissel switch from database
         :return: save to sqlite3 file
         """
-        data_dict = {}
-
-        for key, values in self.db_dict.items():
-            try:
-                status_list = []
-                index_list = wissel_cycle_list(values)
-                for i in range(len(index_list) - 1):
-                    cycle_df = values[index_list[i]:index_list[i + 1]]
-                    if check_storing_df(cycle_df):
-                        self.error_list.append(cycle_df)
-                    else:
-                        schakel_status = wissel_schakel(cycle_df)
-                        status_list.append(schakel_status[0])
-                        if len(schakel_status) > 1:
-                            self.error_list.append(schakel_status[1])
-                data_dict[key] = pd.concat(status_list)
-
-            except(KeyError, IndexError, ValueError, TypeError, ZeroDivisionError):
-                pass
-
-        save_to_sql(self.db_name, data_dict, 'schakelen')
+        with Pool(16) as p:
+            p.map(self.sub_wissel_schakel_, self.wissel_nr_list)
 
     def C_storingen(self):
         storing_list = []
@@ -99,9 +101,7 @@ class Calculator:
         unknow_storing_list = []
         unknow_storing_dict = {}
         all_storing_dict = {}
-        # self.error_list = [i for i in self.error_list if '<wissel> vergrendeld' in i.tolist()]
-        # self.error_list = [i for i in self.error_list if len(set(i['<wissel> vergrendeld'])) > 0]
-        # self.error_list = [i for i in self.error_list if recheck_storing(i) is True]
+
         for i in self.error_list:
             try:
                 unknow_state, storing = define_storing(i)
@@ -116,11 +116,11 @@ class Calculator:
             except:
                 pass
         if len(storing_list) > 0:
-            # storingen_dict['all storingen'] = pd.concat(storing_list)
-            x = 0
-            for i in storing_list:
-                storingen_dict[str(x).zfill(4)] = i
-                x += 1
+            storingen_dict['all storingen'] = pd.concat(storing_list)
+            # x = 0
+            # for i in storing_list:
+            #     storingen_dict[str(x).zfill(4)] = i
+            #     x += 1
             if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'storing')):
                 os.remove(os.path.join(rootPath, 'DataBase', 'storing', f'{self.db_name}.db'))
             save_to_sql(self.db_name, storingen_dict, 'storing')
@@ -132,11 +132,4 @@ class Calculator:
             if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'unknow_storing')):
                 os.remove(os.path.join(rootPath, 'DataBase', 'unknow_storing', f'{self.db_name}.db'))
             save_to_sql(self.db_name, unknow_storing_dict, 'unknow_storing')
-        # if len(self.error_list) > 0:
-        #     x = 0
-        #     for i in self.error_list:
-        #         all_storing_dict[str(x).zfill(3)] = i
-        #         x += 1
-        #     if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'all_storing')):
-        #         os.remove(os.path.join(rootPath, 'DataBase', 'all_storing', f'{self.db_name}.db'))
-        #     save_to_sql(self.db_name, all_storing_dict, 'all_storing')
+
