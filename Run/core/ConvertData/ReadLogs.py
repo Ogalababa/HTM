@@ -83,8 +83,6 @@ def mapping_df_types(df):
 def conver_log_data(log_data, db_name, keys):
     bit_configs = bit_config()
     byte_configs = byte_config()
-    engine = sql_engine(db_name)
-    sqlite_connection = engine.connect()
     conver_data_value = functools.partial(conver_data, bit_configs, byte_configs)
     data = list(map(conver_data_value, log_data.get(keys)))
     df_data_list = list(map(dataframe_str, data))
@@ -94,7 +92,12 @@ def conver_log_data(log_data, db_name, keys):
     dtypedict = mapping_df_types(df_data)
     df_data.set_index('date-time', drop=True, inplace=True)
     df_data.sort_values(by='date-time')
-    df_data.to_sql(keys, sqlite_connection, if_exists='replace', dtype=dtypedict)
+    try:
+        engine = sql_engine(db_name)
+        sqlite_connection = engine.connect()
+        df_data.to_sql(keys, sqlite_connection, if_exists='replace', dtype=dtypedict)
+    except:
+        pass
 
 
 def log_to_sql(log_data, db_name):
@@ -115,12 +118,15 @@ def dataframe_str(value):
     return df_single_data
 
 
-# def sub_set_steps(db_file, steps, k):
-#     wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
-#     wissel_status.set_index('date-time', drop=True, inplace=True)
-#     wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
-    
-    
+def sub_set_steps(db_file, steps, k):
+    wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
+    wissel_status.set_index('date-time', drop=True, inplace=True)
+    try:
+        wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
+    except:
+        pass
+
+
 def set_steps_denbdb3c(db_file):
     """Set cycle steps for wissel type denbdb3c"""
     try:
@@ -134,13 +140,14 @@ def set_steps_denbdb3c(db_file):
         table_name.sort()
         # get denDBD3C steps
         steps = pd.read_sql_table('denBDB3C', conn_engine('steps', path='norm'))
-        # set_steps = functools.partial(sub_set_steps, db_file,steps)
-        # with Pool(16) as p:
-        #     p.map(set_steps, table_name)
-        for k in table_name:
-            wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
-            wissel_status.set_index('date-time', drop=True, inplace=True)
-            wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
+        set_steps = functools.partial(sub_set_steps, db_file,steps)
+        with Pool(16) as p:
+            p.map(set_steps, table_name)
+
+        # for k in table_name:
+        #     wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
+        #     wissel_status.set_index('date-time', drop=True, inplace=True)
+        #     wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
     except KeyboardInterrupt:
         exit()
 
