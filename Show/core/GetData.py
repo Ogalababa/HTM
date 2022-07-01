@@ -1,13 +1,13 @@
 # ！/usr/bin/python3
 # coding:utf-8
 
+
 from __init__ import *
 import pandas as pd
-# import modin.pandas as pd
 import sqlalchemy
 from Run.core.ConvertData.ConnectDB import conn_engine
-# from Run.core.Integration.DataInitialization import get_alldata_from_db
-
+from multiprocessing import Pool, Manager
+import functools
 # streamlit
 import streamlit as st
 import base64
@@ -36,6 +36,10 @@ def get_data_name(path='db'):
     return all_db_name
 
 
+def sub_tram_speed(i,lijn):
+    return pd.read_sql_table(lijn, conn_engine(i, path='snelheid'))
+
+
 def get_tram_speed(selected_db, path='snelheid'):
     """
 
@@ -43,13 +47,18 @@ def get_tram_speed(selected_db, path='snelheid'):
     :param path: str
     :return: DataFrame
     """
-    data_list = []
+    data_list = Manager().list()
+    all_data_list = []
     for i in selected_db:
         insp = sqlalchemy.inspect(conn_engine(i, path))
         lijn_nrs = insp.get_table_names()
-        for lijn in lijn_nrs:
-            data_list.append(pd.read_sql_table(lijn, conn_engine(i, path)))
-    all_data = pd.concat(data_list)
+        # for lijn in lijn_nrs:
+        #     data_list.append(pd.read_sql_table(lijn, conn_engine(i, path)))
+        speed = functools.partial(sub_tram_speed, i)
+        with Pool(32) as p:
+            data_list = p.map(speed, lijn_nrs)
+        all_data_list.append(pd.concat(data_list))
+    all_data = pd.concat(all_data_list)
     all_data.rename(columns={'<aanmelden> lijn': 'Lijn',
                              '<afmelden> wagen': 'Wagen Nr',
                              '<aanmelden> categorie': 'Categorie',
@@ -91,7 +100,6 @@ def create_download_link(val, filename, pdf='pdf'):
     b64 = base64.b64encode(val)
     return f'<a href="data:application/octet-stream;base64,' \
            f'{b64.decode()}" download="{filename}.{pdf}">Download {pdf.upper()}</a>'
-
 
 
 def get_all_data(selected_db, path='db'):
