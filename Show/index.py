@@ -48,6 +48,15 @@ PAGES = OrderedDict(
                     """,
             ),
         ),
+(
+            "Rapportage (Beta)",
+            (
+                pages.rapportage,
+                """
+                    Deze pagina toont weekdelijks/maandelijks rapportage
+                    """,
+            ),
+        ),
         (
             "All data",
             (
@@ -76,19 +85,19 @@ def run():
     if page_name == "Welkom":
         st.write("# Welkom bij de HTM automatische analyse-app")
         page()
-    elif page_name == "Intro" or page_name == "Wissel storingen":
-        page()
-    elif page_name == "Tram snelheid":
-        page()
-    elif page_name == "Wissel schakelen":
-        page()
-    elif page_name == "Storing data":
-        page()
+    # elif page_name == "Intro" or page_name == "Wissel storingen":
+    #     page()
+    # elif page_name == "Tram snelheid":
+    #     page()
+    # elif page_name == "Wissel schakelen":
+    #     page()
+    # elif page_name == "Storing data":
+    #     page()
     else:
-        st.markdown("# %s" % page_name)
-        desc = PAGES[page_name][1]
-        if desc:
-            st.write(desc)
+        # st.markdown("# %s" % page_name)
+        # desc = PAGES[page_name][1]
+        # if desc:
+        #     st.write(desc)
         
         page()
 

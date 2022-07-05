@@ -33,7 +33,7 @@ def check_bad_contact(dataframe, col_name: str, storing: str, afdelling: str) ->
     # Check hfk, hfp data correctness
     # 检测hfk， hfp数据正确性
     aanmelden_list = dataframe['<aanmelden> wagen'].tolist()
-    return storing, afdelling, any([match_list([1, 0, 1, 0], dataframe[col_name].to_list()),
+    return storing, afdelling, any([match_list([1, 0, 1], dataframe[col_name].to_list()),
                                     match_list([1, 0, 0, 1, 0], dataframe[col_name].to_list()),
                                     len(dataframe[dataframe[col_name] == 1]) / len(dataframe) > 0.7])
 

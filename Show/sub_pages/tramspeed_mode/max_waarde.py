@@ -6,6 +6,7 @@
 import pandas as pd
 import plotly.express as px
 
+
 # streamlit
 import streamlit as st
 
@@ -34,8 +35,8 @@ def max_col3(df_all_data):
                            color_continuous_scale=px.colors.sequential.Blues)
     st.plotly_chart(fig_max_wagen, use_container_width=True)
     return fig_max_wagen
-
-
+    
+    
 def max_col4(df_all_data):
     wissel_base = df_all_data.set_index('Wissel Nr', drop=False, inplace=False).sort_index()
     fig_mean_wissel = px.bar(wissel_base.groupby(
@@ -47,8 +48,8 @@ def max_col4(df_all_data):
                              color_continuous_scale=px.colors.sequential.Burg)
     st.plotly_chart(fig_mean_wissel, use_container_width=True)
     return fig_mean_wissel
-
-
+    
+    
 def max_col5(df_all_data):
     wagen_base = df_all_data.set_index('Wagen Nr', drop=False, inplace=False).sort_index()
     fig_mean_wagen = px.bar(wagen_base.groupby(
@@ -60,8 +61,8 @@ def max_col5(df_all_data):
                             color_continuous_scale=px.colors.sequential.dense)
     st.plotly_chart(fig_mean_wagen, use_container_width=True)
     return fig_mean_wagen
-
-
+    
+    
 def max_waarde(df_all_data):
     col2, space2, col3 = st.columns((10, 1, 10))
     col4, space4, col5 = st.columns((10, 1, 10))
@@ -72,7 +73,7 @@ def max_waarde(df_all_data):
         figs.append(fig_max_wissel)
 
     with col3:
-        fig_max_wagen = max_col3(df_all_data)
+        fig_max_wagen = max_col3(df_all_data) 
         figs.append(fig_max_wagen)
 
     with col4:

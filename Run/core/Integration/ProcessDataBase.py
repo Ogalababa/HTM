@@ -34,7 +34,7 @@ def process_db(log_file):
         print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Storingen done')
         end_time = datetime.now()
         delta = end_time - start_time
-        print(f'Total process time: {round(delta.total_seconds(),2)}seconds')
+        print(f'Total process time: {round(delta.total_seconds(),2)} seconds')
         print('-'*30)
     except (AttributeError, UnicodeDecodeError, IndexError) as err:
         # print(err)

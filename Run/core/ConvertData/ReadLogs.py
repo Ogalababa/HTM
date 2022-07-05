@@ -4,7 +4,8 @@
 from __init__ import *
 import sqlalchemy
 import functools
-import gc
+from random import uniform
+from time import sleep
 import re
 from multiprocessing import Pool
 # analysis
@@ -93,6 +94,7 @@ def conver_log_data(log_data, db_name, keys):
     df_data.set_index('date-time', drop=True, inplace=True)
     df_data.sort_values(by='date-time')
     try:
+        sleep(uniform(0.01, 0.2))
         engine = sql_engine(db_name)
         sqlite_connection = engine.connect()
         df_data.to_sql(keys, sqlite_connection, if_exists='replace', dtype=dtypedict)
@@ -122,6 +124,7 @@ def sub_set_steps(db_file, steps, k):
     wissel_status = pd.merge(pd.read_sql_table(k, conn_engine(db_file)), steps, how='left')
     wissel_status.set_index('date-time', drop=True, inplace=True)
     try:
+        sleep(uniform(0.01, 0.2))
         wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
     except:
         pass
