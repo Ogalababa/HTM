@@ -81,22 +81,7 @@ def get_tram_speed_cache(selected_db, path='snelheid'):
     :param path: str
     :return: DataFrame
     """
-    data_list = []
-    for i in selected_db:
-        insp = sqlalchemy.inspect(conn_engine(i, path))
-        lijn_nrs = insp.get_table_names()
-        for lijn in lijn_nrs:
-            data_list.append(pd.read_sql_table(lijn, conn_engine(i, path)))
-    all_data = pd.concat(data_list)
-    all_data.rename(columns={'<aanmelden> lijn': 'Lijn',
-                             '<afmelden> wagen': 'Wagen Nr',
-                             '<aanmelden> categorie': 'Categorie',
-                             '<aanmelden> service': 'Service',
-                             'wissel nr': 'Wissel Nr',
-                             'hfk_in': 'Tijd'}, inplace=True)
-    all_data = all_data.drop(all_data[all_data['snelheid km/h'] > 50].index)
-    all_data['Wagen Nr'] = all_data['Wagen Nr'].astype(str)
-    return all_data
+    return get_tram_speed(selected_db, path='snelheid')
 
 
 def create_download_link(val, filename, pdf='pdf'):

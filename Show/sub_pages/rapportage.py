@@ -15,7 +15,7 @@ def rapportage():
     year, week_nr, day_of_week = today.isocalendar()
     # last_week = week_nr - 1
     mode = st.sidebar.radio(
-        'rapport frequentie', ('Wekelijks rapport', 'Maandelijks rapport', 'Jaarlijks rapport')
+        'rapport frequentie', ('Wekelijks rapport', 'Maandelijks rapport','Jaarlijks rapport')
     )
     if mode == 'Wekelijks rapport':
         if week_nr > 1:
@@ -42,7 +42,7 @@ def rapportage():
         for i in date_of_month:
             str_month_date.append(i.strftime('%Y-%m-%d'))
         m_speed = snelheid_rapport(str_month_date, 'month')
-
+        
     elif mode == 'Jaarlijks rapport':
         year = '2022'
         str_year_date = [i[:-3] for i in os.listdir(os.path.join(rootPath, 'DataBase', 'snelheid')) if year in i]
