@@ -3,7 +3,6 @@
 # sys
 
 from __init__ import *
-from datetime import datetime
 import pandas as pd
 
 from Run.core.Integration.DataInitialization import get_alldata_from_db

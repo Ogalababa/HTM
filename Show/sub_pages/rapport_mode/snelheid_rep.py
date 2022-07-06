@@ -7,8 +7,6 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 from Show.core.GetData import st_get_alldata_from_db
-from Show.sub_pages.tramspeed_mode.max_waarde import max_waarde
-import plotly.graph_objects as go
 
 
 def snelheid_rapport(select_data: list, mode='week'):

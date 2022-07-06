@@ -1,12 +1,12 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
-import os
+
 
 from __init__ import *
+import calendar
+import datetime
 import streamlit as st
-import datetime, calendar
-from Show.core.GetData import get_tram_speed, create_download_link, get_data_name
 from Show.sub_pages.rapport_mode.snelheid_rep import snelheid_rapport
 
 
