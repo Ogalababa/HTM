@@ -8,6 +8,7 @@ from __init__ import *
 import streamlit as st
 from Show.sub_pages.storing_mode.storingdata import st_storingdata
 from Show.sub_pages.storing_mode.unknowstoring import st_unknowstoring
+from Show.sub_pages.storing_mode.allstoring import st_all_storing
 from Show.core import GetData
 
 

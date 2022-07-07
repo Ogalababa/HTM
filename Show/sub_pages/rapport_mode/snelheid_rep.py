@@ -41,6 +41,9 @@ def snelheid_rapport(select_data: list, mode='week'):
                                    columns=['Wissel Nr', 'hoeveelheid']).sort_values(by='hoeveelheid', ascending=False)
 
     figs = []
+    with col1:
+        title = st.title(f'Overbelast snelheid overzicht van {select_data[0]} tot {select_data[-1]}')
+        # figs.append(title)
     with col2:
         recht_door = px.bar(
             recht_door_speed,
@@ -48,13 +51,16 @@ def snelheid_rapport(select_data: list, mode='week'):
             x='datum', y='Recht door', color='datum',
             height=layout_height, color_continuous_scale=px.colors.sequential.Sunsetdark)
         st.plotly_chart(recht_door, use_container_width=True)
+        figs.append(recht_door)
     with space2:
-        st.sidebar.metric(f'Totale records boven 25 km/h', recht_door_speed['Recht door'].sum(),
+        met_recht = st.sidebar.metric(f'Totale records boven 25 km/h', recht_door_speed['Recht door'].sum(),
                   delta=f"{round((recht_door_speed['Recht door'].sum() / speed_data['Total recht'].sum()) * 100, 3)}\
                   % van totale records", delta_color="normal")
-        st.sidebar.metric(f'Totale records boven 20 km/h', af_speed['Links/Rechts af'].sum(),
+        met_af = st.sidebar.metric(f'Totale records boven 20 km/h', af_speed['Links/Rechts af'].sum(),
                          delta=f"{round((af_speed['Links/Rechts af'].sum() / speed_data['Total af'].sum()) * 100, 3)}\
                           % van totale records", delta_color="normal")
+        # figs.append(met_recht)
+        # figs.append(met_af)
     with col3:
         af = px.bar(
             af_speed,
@@ -62,6 +68,7 @@ def snelheid_rapport(select_data: list, mode='week'):
             x='datum', y='Links/Rechts af', color='datum',
             height=layout_height, color_continuous_scale=px.colors.sequential.Sunsetdark)
         st.plotly_chart(af, use_container_width=True)
+        figs.append(af)
 
     with col4:
         top_wissel = px.bar(wissel_speed_df.head(10),
@@ -70,6 +77,7 @@ def snelheid_rapport(select_data: list, mode='week'):
                             height=layout_height, color_continuous_scale=px.colors.sequential.Sunsetdark)
         top_wissel.update_traces(textfont_size=15, textangle=0, textposition="outside", cliponaxis=False)
         st.plotly_chart(top_wissel, use_container_width=True)
+        figs.append(top_wissel)
     with col5:
         loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
         wagen_loc = pd.merge(loc_df, wissel_speed_df.head(10), on=['Wissel Nr'], how='inner')
@@ -80,5 +88,6 @@ def snelheid_rapport(select_data: list, mode='week'):
                                   height=layout_height, size_max=15, zoom=10, color='Wissel Nr',
                                   hover_data=['Wissel Nr'], mapbox_style="carto-positron")
         st.plotly_chart(fig_7)
+        # figs.append(fig_7)
         
     return figs

@@ -10,9 +10,9 @@ import plotly.express as px
 import streamlit as st
 from Show.core.GetData import get_all_data, get_data_name
 from Show.core.GetData import get_all_data_cache
-# from Show.core.GetData import create_download_link
-# from fpdf import FPDF
-# from tempfile import NamedTemporaryFile
+from Show.core.GetData import create_download_link
+from fpdf import FPDF
+from tempfile import NamedTemporaryFile
 
 
 def st_wissel_schakel():

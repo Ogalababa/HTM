@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 import pages
 import streamlit as st
-# from core import GetData
+from core import GetData
 from streamlit.logger import get_logger
 
 # set page size
