@@ -108,7 +108,7 @@ def define_storing(dataset):
         # 14
         check_fout_state(dataset, '<vecom> geen output', 'Elektronisch blokkeren', 'bestuurder'),
         # 15
-        check_werk_wagen(dataset, 'wissel kan werk de wagen niet afmeden', 'werk wagen'),
+        check_werk_wagen(dataset, 'wissel kan de werk wagen niet afmeden', 'infra'),
         # 16
         check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),
         # 17
