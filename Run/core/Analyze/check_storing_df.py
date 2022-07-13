@@ -83,6 +83,8 @@ def define_storing(dataset):
         hfk_defect(dataset, 'HFK defect', 'infra'),
         # 2
         wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),
+        #19
+        wissel_loop_niet_om(dataset, 'wissel loop niet om', 'infra'),
         # 3
         double_wissels(dataset, 'not_error', 'double wissels'),
         # 4
@@ -115,6 +117,7 @@ def define_storing(dataset):
         double_input(dataset, 'richting veranderen na de aanvragen', 'bestuurder'),
         # 18
         no_aktuell(dataset, 'bestuurder rit te vroeg naar de hfp', 'bestuurder'),
+        
     ]
     try:
         storing_type['wagen nr'] = [i for i in dataset['<aktuell> wagen'].tolist() if i != 0][0]
