@@ -19,6 +19,7 @@ from Show.sub_pages.tramspeed_mode.fig_wissel import fig_wissel
 from Show.sub_pages.tramspeed_mode.fig_wagen import fig_wagens
 from Show.sub_pages.tramspeed_mode.fig_lijn import fig_lijn
 from Show.sub_pages.tramspeed_mode.waarschuwing import waarschuwing
+from Show.sub_pages.tramspeed_mode.fig_rit import fig_rit
 
 
 def tram_speed():
@@ -46,7 +47,7 @@ def tram_speed():
         mode = st.sidebar.radio(
             'Grafiek mode：',
             (
-            'Snelheidswaarschuwing', 'Max waarde', 'Grafiek per wissel', 'Grafiek per wagen', 'Grafiek per lijn')
+            'Snelheidswaarschuwing', 'Max waarde', 'Grafiek per wissel', 'Grafiek per wagen', 'Grafiek per lijn', 'Grafiek per rit(Beta)')
         )
         if mode == 'Max waarde':
             fig_max = max_waarde(df_all_data)
@@ -60,6 +61,8 @@ def tram_speed():
 
         elif mode == 'Snelheidswaarschuwing':
             waarschuwing(df_all_data, speed_record_size, layout_height)
+        elif mode == 'Grafiek per rit(Beta)':
+            fig_rit()
 
         else:
             fig_lijn(df_all_data, layout_height)

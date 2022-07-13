@@ -363,3 +363,22 @@ def hfk_defect(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]
     :return: Tuple(str, str, int, int, int, int, bool)
     """
     return storing, afdelling, len(dataframe[dataframe['<hfk> aanwezigheidslus bezet']== 1]) / len(dataframe) > 0.6
+
+
+def wissel_loop_niet_om(dataframe, storing:str, afdelling: str) -> Tuple[str, str, bool]:
+    """
+        check if the wissel do not have end state
+        :param dataframe: pd.DataFrame
+        :param afdelling: str
+        :param storing: str
+        :return: Tuple[bool, str, str
+        """
+    naar_links = list(dataframe['<wissel> naar links'] + dataframe['<wissel> rechts'])
+    naar_rechts = list(dataframe['<wissel> naar rechts'] + dataframe['<wissel> links'])
+    error_data = [2,2,2]
+    error_status = []
+    for i in range(len(naar_rechts)):
+        error_status.append(naar_rechts[i:i+3] == error_data)
+    for i in range(len(naar_links)):
+        error_status.append(naar_links[i:i + 3] == error_data)
+    return storing, afdelling, any(error_status)
