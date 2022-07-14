@@ -62,7 +62,7 @@ def tram_speed():
         elif mode == 'Snelheidswaarschuwing':
             waarschuwing(df_all_data, speed_record_size, layout_height)
         elif mode == 'Grafiek per rit(Beta)':
-            fig_rit()
+            rit_data = fig_rit(layout_height)
 
         else:
             fig_lijn(df_all_data, layout_height)
@@ -84,14 +84,19 @@ def tram_speed():
         #                                     f'{mode}-{select_data[0]}')
         #     st.sidebar.markdown(html, unsafe_allow_html=True)
         if export_as_csv:
-            csv = df_all_data[[
-                'Wagen Nr', 'Lijn', 'Service',
-                'Categorie', 'Wissel Nr', 'Tijd',
-                'snelheid km/h', 'Richting']].sort_values(by=['snelheid km/h']).to_csv(index=False).encode()
-            if len(select_data) >= 2:
-                href = create_download_link(csv, f'{mode}-{select_data[-1]}_{select_data[0]}', 'csv')
+            if mode == 'Grafiek per rit(Beta)':
+                csv = rit_data.to_csv(index=False).encode()
+                href = create_download_link(csv, f'{mode}', 'csv')
+                
             else:
-                href = create_download_link(csv, f'{mode}-{select_data[0]}', 'csv')
+                csv = df_all_data[[
+                    'Wagen Nr', 'Lijn', 'Service',
+                    'Categorie', 'Wissel Nr', 'Tijd',
+                    'snelheid km/h', 'Richting']].sort_values(by=['snelheid km/h']).to_csv(index=False).encode()
+                if len(select_data) >= 2:
+                    href = create_download_link(csv, f'{mode}-{select_data[-1]}_{select_data[0]}', 'csv')
+                else:
+                    href = create_download_link(csv, f'{mode}-{select_data[0]}', 'csv')
             st.sidebar.markdown(href, unsafe_allow_html=True)
 
     else:
