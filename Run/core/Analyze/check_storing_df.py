@@ -80,25 +80,24 @@ def define_storing(dataset):
         # 0
         small_dataset(dataset, 'invalid data', 'system'),
         # 1
-        hfk_defect(dataset, 'HFK defect', 'infra'),
+        hfk_defect(dataset, 'aanwezigheidslus defect', 'infra'),
         # 2
         wissel_buiten_dinst(dataset, 'wissel buiten dienst', 'infra'),
         #19
         wissel_loop_niet_om(dataset, 'wissel loop niet om', 'infra'),
         # 3
         double_wissels(dataset, 'not_error', 'double wissels'),
-        # 4
-        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),
+        
         # 5
         wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),
         # 6
         check_fout_state(dataset, '<vecom> aanvraag onbekend', 'categorie/handbedien code fout', 'bestuurder'),
         # 7
-        check_bad_contact(dataset, '<hfp> spoorstroomkring bezet', 'HFP detector fout', 'infra'),
+        check_bad_contact(dataset, '<hfp> spoorstroomkring bezet', 'spoorstroomkring detector fout', 'infra'),
         # 8
-        check_bad_contact(dataset, '<hfk> aanwezigheidslus bezet', 'HFK detector fout', 'infra'),
+        check_bad_contact(dataset, '<hfk> aanwezigheidslus bezet', 'aanwezigheidslus detector fout', 'infra'),
         # 9
-        hfk_defect(dataset, 'HFK defect', 'infra'),
+        # hfk_defect(dataset, 'HFK defect', 'infra'),
         # 10
         check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
         # 11
@@ -108,15 +107,17 @@ def define_storing(dataset):
         # 13
         check_fout_state(dataset, '<vecom> storing', 'VECOM hardware fout', 'infra'),
         # 14
-        check_fout_state(dataset, '<vecom> geen output', 'Elektronisch blokkeren', 'bestuurder'),
+        check_fout_state(dataset, '<vecom> geen output', 'wissel niet beschikken voor code', 'bestuurder'),
         # 15
         check_werk_wagen(dataset, 'wissel kan de werk wagen niet afmeden', 'infra'),
         # 16
-        check_verkeerd_code(dataset, 'richting-code richting niet overeen', 'bestuurder'),
+        check_verkeerd_code(dataset, 'richting en code niet overeen', 'bestuurder'),
         # 17
         double_input(dataset, 'richting veranderen na de aanvragen', 'bestuurder'),
         # 18
-        no_aktuell(dataset, 'bestuurder rit te vroeg naar de hfp', 'bestuurder'),
+        no_aktuell(dataset, 'bestuurder rit te vroeg naar de spoorstroomkring', 'bestuurder'),
+        # 4
+        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),
         
     ]
     try:

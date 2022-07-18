@@ -35,7 +35,7 @@ def check_bad_contact(dataframe, col_name: str, storing: str, afdelling: str) ->
     aanmelden_list = dataframe['<aanmelden> wagen'].tolist()
     return storing, afdelling, any([match_list([1, 0, 1], dataframe[col_name].to_list()),
                                     match_list([1, 0, 0, 1, 0], dataframe[col_name].to_list()),
-                                    len(dataframe[dataframe[col_name] == 1]) / len(dataframe) > 0.7])
+                                    len(dataframe[dataframe[col_name] == 1]) > len(set(aanmelden_list))* 5])
 
 
 def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> Tuple[
