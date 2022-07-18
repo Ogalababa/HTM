@@ -17,7 +17,7 @@ def storing_rapport(select_data: list, mode='week'):
     col4, space4, col4_1 = st.columns((10, 1, 10))
     col5, space5, col5_1 = st.columns((10, 1, 10))
     col6, space6, col6_1 = st.columns((10, 1, 10))
-    col7, space7 = st.columns((20, 1))
+    col7, space7, col7_1 = st.columns((10, 1, 10))
     # 获取数据
     storing_data_raw = st_get_alldata_from_db('storing', path='rapport').get('all data')
     storing_data_raw = storing_data_raw[storing_data_raw['datum'].isin(select_data)]
@@ -70,19 +70,20 @@ def storing_rapport(select_data: list, mode='week'):
         total_storing_pie = px.sunburst(
             storing_data.reset_index(drop=False),
             title='Total storingen percentage',
-            path=['afdelling', 'storing', 'begin tijd'],
+            path=['afdelling', 'storing'],
             color_continuous_scale=px.colors.sequential.RdBu,
             height=layout_height,
-            hover_data=[
-                'Wissel Nr',
-                'lijn nr',
-                'categorie',
-                'wagen nr'
-            ],
+            # hover_data=[
+            #     'Wissel Nr',
+            #     'lijn nr',
+            #     'categorie',
+            #     'wagen nr'
+            # ],
             # template='seaborn'
         )
         total_storing_pie.update_traces(textinfo='label+percent entry')
         st.plotly_chart(total_storing_pie, use_container_width=True)
+        figs.append(total_storing_pie)
 
     with col3:
         afdelling_count = storing_data.groupby(level='afdelling').sum()
@@ -107,6 +108,7 @@ def storing_rapport(select_data: list, mode='week'):
         )
         afdelling_pie.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(afdelling_pie, use_container_width=True)
+        figs.append(afdelling_pie)
 
     with col4:
         storing_afdelling = storing_data.groupby(level=['afdelling', 'storing']).sum()
@@ -132,6 +134,7 @@ def storing_rapport(select_data: list, mode='week'):
         )
         storing_afdelling_pie.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(storing_afdelling_pie, use_container_width=True)
+        figs.append(storing_afdelling_pie)
 
     with col5:
         afdelling_infra = px.bar(storing_afdelling[storing_afdelling['afdelling'] == 'infra'],
@@ -155,6 +158,7 @@ def storing_rapport(select_data: list, mode='week'):
         )
         afdelling_infra_pie.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(afdelling_infra_pie, use_container_width=True)
+        figs.append(afdelling_infra_pie)
 
     with col6:
         afdelling_wagen = px.bar(storing_afdelling[storing_afdelling['afdelling'] == 'wagen'],
@@ -178,4 +182,33 @@ def storing_rapport(select_data: list, mode='week'):
                                   hover_data=['Wissel Nr', 'datum'], mapbox_style="carto-positron")
         st.plotly_chart(fig_7, use_container_width=True)
         # figs.append(fig_7)
+
+    # with col7:
+    #     storing_wissel_pie = px.sunburst(
+    #         storing_data.reset_index(drop=False),
+    #         title='Storingen per wissel',
+    #         path=['Wissel Nr', 'storing'],
+    #         color_continuous_scale=px.colors.sequential.RdBu,
+    #         height=layout_height,
+    #         # hover_data=[
+    #         #     'wagen nr',
+    #         #     'lijn nr',
+    #         #     'categorie',
+    #         # ],
+    #     )
+    #     storing_wissel_pie.update_traces(textinfo='label+percent entry')
+    #     st.plotly_chart(storing_wissel_pie)
+    #     figs.append(storing_wissel_pie)
+    #
+    # with col7_1:
+    #     storing_wagen_pie = px.sunburst(
+    #         storing_data.reset_index(drop=False),
+    #         title='Storing per wagen',
+    #         path=['wagen nr', 'storing'],
+    #         color_continuous_scale=px.colors.sequential.RdBu,
+    #         height=layout_height,
+    #     )
+    #     storing_wagen_pie.update_traces(textinfo='label+percent entry')
+    #     st.plotly_chart(storing_wagen_pie)
+    #     figs.append(storing_wagen_pie)
     return figs
