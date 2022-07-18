@@ -43,7 +43,7 @@ def waarschuwing(df_all_data,speed_record_size, layout_height):
                           delta_color="normal")
 
     with col2:
-        fig_wagen_2 = px.bar(speed_counts.sort_values(by='snelheid km/h'),
+        fig_voertuig_2 = px.bar(speed_counts.sort_values(by='snelheid km/h'),
                              title='Wissel/snelheid overzicht',
                              x='snelheid km/h', y='hoeveelheid',
                              color='code',
@@ -55,10 +55,10 @@ def waarschuwing(df_all_data,speed_record_size, layout_height):
                                          'Tijd',
                                          'Richting'],
                              color_continuous_scale=px.colors.sequential.Sunsetdark)
-        st.plotly_chart(fig_wagen_2, use_container_width=True)
+        st.plotly_chart(fig_voertuig_2, use_container_width=True)
 
     with col3:
-        fig_wagen = px.scatter(speed_counts,
+        fig_voertuig = px.scatter(speed_counts,
                                x='Tijd', y='snelheid km/h',
                                title='Wissel snelheid/tijd grafiek',
                                hover_data=['Lijn',
@@ -74,7 +74,7 @@ def waarschuwing(df_all_data,speed_record_size, layout_height):
                                symbol='Richting',
                                height=layout_height,
                                )
-        st.plotly_chart(fig_wagen, use_container_width=True)
+        st.plotly_chart(fig_voertuig, use_container_width=True)
 
     with col4:
         speed_counts['Tijd'] = speed_counts['Tijd'].astype(str)
@@ -118,9 +118,9 @@ def waarschuwing(df_all_data,speed_record_size, layout_height):
 
     with col7:
         loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-        wagen_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
-        # st.map(wagen_loc, zoom=10)
-        fig_7 = px.scatter_mapbox(wagen_loc,
+        voertuig_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
+        # st.map(voertuig_loc, zoom=10)
+        fig_7 = px.scatter_mapbox(voertuig_loc,
                                   lat="latitude", lon="longitude",
                                   color_discrete_sequence=px.colors.sequential.RdBu,
                                   height=layout_height, size_max=15, zoom=10, color='Wissel Nr',

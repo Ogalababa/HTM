@@ -50,7 +50,7 @@ def fig_rit(layout_height):
                     rit_end = single_rit[single_rit['volgnummer'] == single_rit['volgnummer'].max()]['time'].tolist()[0]
 
                     speed_data.loc[
-                        (speed_data['<afmelden> wagen'] == voertuig_nummer) & (speed_data['hfk_in'] >= rit_start) & (
+                        (speed_data['<afmelden> voertuig'] == voertuig_nummer) & (speed_data['hfk_in'] >= rit_start) & (
                                     speed_data['hfk_in'] <= rit_end), 'ritnummer'] = rit_nummer
                 speed_data = speed_data.dropna()
                 speed_data['hoeveelheid'] = 1
@@ -79,7 +79,7 @@ def fig_rit(layout_height):
                                    height=layout_height, 
                                    hover_data=['Wissel Nr',
                                                'Tijd',
-                                               '<afmelden> wagen', 
+                                               '<afmelden> voertuig',
                                                'Richting'],
                                    color_continuous_scale=px.colors.sequential.Sunsetdark)
                 st.plotly_chart(fig_rit_2, use_container_width=True)
@@ -90,7 +90,7 @@ def fig_rit(layout_height):
                                        title='Wissel snelheid/tijd grafiek',
                                        hover_data=[
                                                    'Wissel Nr',
-                                                   '<afmelden> wagen', 
+                                                   '<afmelden> voertuig',
                                                    'Richting'],
                                        color='Richting',
                                        color_continuous_scale=px.colors.sequential.Sunsetdark,
@@ -114,9 +114,9 @@ def fig_rit(layout_height):
 
             with col5:
                 loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-                wagen_loc = pd.merge(loc_df, selected_rit, on=['Wissel Nr'], how='inner')
-                # st.map(wagen_loc, zoom=10)
-                fig_7 = px.scatter_mapbox(wagen_loc,
+                voertuig_loc = pd.merge(loc_df, selected_rit, on=['Wissel Nr'], how='inner')
+                # st.map(voertuig_loc, zoom=10)
+                fig_7 = px.scatter_mapbox(voertuig_loc,
                                           lat="latitude", lon="longitude",
                                           color_discrete_sequence=px.colors.sequential.RdBu,
                                           height=layout_height, size_max=15, zoom=10, color='Wissel Nr',

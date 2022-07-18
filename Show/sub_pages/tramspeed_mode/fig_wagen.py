@@ -11,23 +11,23 @@ import plotly.express as px
 import streamlit as st
 
 
-def fig_wagens(df_all_data, layout_height):
+def fig_voertuigs(df_all_data, layout_height):
     col2, space2, col3 = st.columns((10, 1, 10))
     col4, space4, col5 = st.columns((10, 1, 10))
     col6, space6, col7 = st.columns((10, 1, 10))
-    wagen_list = list(set(df_all_data['Wagen Nr']))
+    voertuig_list = list(set(df_all_data['voertuig Nr']))
     ex_list = list(map(str, range(1000)))
-    # wagen_list = [i for i in wagen_list if i != '0']
-    wagen_list = [i for i in wagen_list if i not in ex_list]
-    wagen_list.sort()
-    selected_wagen = st.sidebar.selectbox('Kies een wagen', wagen_list)
-    df_all_data = df_all_data.set_index('Wagen Nr', drop=False)
-    speed_counts = df_all_data.loc[selected_wagen].copy()
+    # voertuig_list = [i for i in voertuig_list if i != '0']
+    voertuig_list = [i for i in voertuig_list if i not in ex_list]
+    voertuig_list.sort()
+    selected_voertuig = st.sidebar.selectbox('Kies een voertuig', voertuig_list)
+    df_all_data = df_all_data.set_index('voertuig Nr', drop=False)
+    speed_counts = df_all_data.loc[selected_voertuig].copy()
     speed_counts['hoeveelheid'] = 1
 
     with col2:
         try:
-            fig_wagen_2 = px.bar(speed_counts.sort_values(by='snelheid km/h'),
+            fig_voertuig_2 = px.bar(speed_counts.sort_values(by='snelheid km/h'),
                                  title='Wissel/snelheid overzicht',
                                  x='snelheid km/h', y='hoeveelheid',
                                  color='code',
@@ -39,12 +39,12 @@ def fig_wagens(df_all_data, layout_height):
                                              'Tijd',
                                              'Richting'],
                                  color_continuous_scale=px.colors.sequential.Sunsetdark)
-            st.plotly_chart(fig_wagen_2, use_container_width=True)
+            st.plotly_chart(fig_voertuig_2, use_container_width=True)
         except:
             st.title('Geen Data')
 
     with col3:
-        fig_wagen = px.scatter(df_all_data.loc[selected_wagen],
+        fig_voertuig = px.scatter(df_all_data.loc[selected_voertuig],
                                x='Tijd', y='snelheid km/h',
                                title='Wissel snelheid/tijd grafiek',
                                hover_data=['Lijn',
@@ -58,7 +58,7 @@ def fig_wagens(df_all_data, layout_height):
                                symbol='Richting',
                                height=layout_height,
                                )
-        st.plotly_chart(fig_wagen, use_container_width=True)
+        st.plotly_chart(fig_voertuig, use_container_width=True)
 
     with col4:
         speed_counts['Tijd'] = speed_counts['Tijd'].astype(str)
@@ -102,9 +102,9 @@ def fig_wagens(df_all_data, layout_height):
 
     with col7:
         loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-        wagen_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
-        # st.map(wagen_loc, zoom=10)
-        fig_7 = px.scatter_mapbox(wagen_loc,
+        voertuig_loc = pd.merge(loc_df, speed_counts, on=['Wissel Nr'], how='inner')
+        # st.map(voertuig_loc, zoom=10)
+        fig_7 = px.scatter_mapbox(voertuig_loc,
                                   lat="latitude", lon="longitude",
                                   color_discrete_sequence=px.colors.sequential.RdBu,
                                   height=layout_height, size_max=15, zoom=10, color='Wissel Nr',

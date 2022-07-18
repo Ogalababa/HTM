@@ -73,14 +73,14 @@ def get_tram_speed(selected_db, path='snelheid'):
         all_data_list.append(pd.concat(data_list))
     all_data = pd.concat(all_data_list)
     all_data.rename(columns={'<aanmelden> lijn': 'Lijn',
-                             '<afmelden> wagen': 'Wagen Nr',
+                             '<afmelden> voertuig': 'voertuig Nr',
                              '<aanmelden> categorie': 'Categorie',
                              '<aanmelden> service': 'Service',
                              'wissel nr': 'Wissel Nr',
                              'hfk_in': 'Tijd',
                              'hfk_uit': 'Tijd eind'}, inplace=True)
     all_data = all_data.drop(all_data[all_data['snelheid km/h'] > 50].index)
-    all_data['Wagen Nr'] = all_data['Wagen Nr'].astype(str)
+    all_data['voertuig Nr'] = all_data['voertuig Nr'].astype(str)
     all_data.sort_values(by=['Tijd'])
     
     return all_data.reset_index(drop=True)

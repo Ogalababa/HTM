@@ -63,11 +63,11 @@ def wissel_schakel(df):
                 wissel_omloop = 0
             if not all([position_before, position_request, position_after]):
                 wissel_omloop = -1
-            if wagen_nr == 0:
+            if voertuig_nr == 0:
                 wissel_omloop = -1
         beweging['Tijd'] = [tijd]
         beweging['Wissel Nr'] = [wissel_nr]
-        beweging['Wagen Nr'] = [wagen_nr]
+        beweging['voertuig Nr'] = [voertuig_nr]
         beweging['Voor'] = [position_before]
         beweging['aanvragen'] = [position_request]
         beweging['Na'] = [position_after]

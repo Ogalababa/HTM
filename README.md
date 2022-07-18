@@ -181,7 +181,7 @@ Show --streamlit-->brouwser[Show in brouwser]
 
 #### tram_speed.py
 
-- wagen_lent: 电车长度数据
+- voertuig_lent: 电车长度数据
 - tram_speed_to_sql: 计算电车速度并保存到数据库
 
 ### Run

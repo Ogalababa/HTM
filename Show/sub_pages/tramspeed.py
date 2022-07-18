@@ -16,7 +16,7 @@ from Show.core.GetData import get_tram_speed, create_download_link, get_data_nam
 # website index
 from Show.sub_pages.tramspeed_mode.max_waarde import max_waarde
 from Show.sub_pages.tramspeed_mode.fig_wissel import fig_wissel
-from Show.sub_pages.tramspeed_mode.fig_wagen import fig_wagens
+from Show.sub_pages.tramspeed_mode.fig_voertuig import fig_voertuigs
 from Show.sub_pages.tramspeed_mode.fig_lijn import fig_lijn
 from Show.sub_pages.tramspeed_mode.waarschuwing import waarschuwing
 from Show.sub_pages.tramspeed_mode.fig_rit import fig_rit
@@ -47,7 +47,7 @@ def tram_speed():
         mode = st.sidebar.radio(
             'Grafiek mode：',
             (
-            'Snelheidswaarschuwing', 'Max waarde', 'Grafiek per wissel', 'Grafiek per wagen', 'Grafiek per lijn', 'Grafiek per rit(Beta)')
+            'Snelheidswaarschuwing', 'Max waarde', 'Grafiek per wissel', 'Grafiek per voertuig', 'Grafiek per lijn', 'Grafiek per rit(Beta)')
         )
         if mode == 'Max waarde':
             fig_max = max_waarde(df_all_data)
@@ -56,8 +56,8 @@ def tram_speed():
         elif mode == 'Grafiek per wissel':
             fig_wissel(df_all_data, layout_height)
 
-        elif mode == 'Grafiek per wagen':
-            fig_wagens(df_all_data, layout_height)
+        elif mode == 'Grafiek per voertuig':
+            fig_voertuigs(df_all_data, layout_height)
 
         elif mode == 'Snelheidswaarschuwing':
             waarschuwing(df_all_data, speed_record_size, layout_height)
@@ -90,7 +90,7 @@ def tram_speed():
                 
             else:
                 csv = df_all_data[[
-                    'Wagen Nr', 'Lijn', 'Service',
+                    'voertuig Nr', 'Lijn', 'Service',
                     'Categorie', 'Wissel Nr', 'Tijd',
                     'snelheid km/h', 'Richting']].sort_values(by=['snelheid km/h']).to_csv(index=False).encode()
                 if len(select_data) >= 2:

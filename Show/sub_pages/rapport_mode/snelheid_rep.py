@@ -91,9 +91,9 @@ def snelheid_rapport(select_data: list, mode='week'):
         
     with col5:
         loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-        wagen_loc = pd.merge(loc_df, wissel_speed_df.head(10), on=['Wissel Nr'], how='inner')
-        # st.map(wagen_loc, zoom=10)
-        fig_7 = px.scatter_mapbox(wagen_loc,
+        voertuig_loc = pd.merge(loc_df, wissel_speed_df.head(10), on=['Wissel Nr'], how='inner')
+        # st.map(voertuig_loc, zoom=10)
+        fig_7 = px.scatter_mapbox(voertuig_loc,
                                   lat="latitude", lon="longitude",
                                   color_discrete_sequence=px.colors.sequential.RdBu,
                                   height=layout_height, size_max=15, zoom=10, color='Wissel Nr',

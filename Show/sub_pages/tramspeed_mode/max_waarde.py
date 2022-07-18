@@ -25,16 +25,16 @@ def max_col2(df_all_data):
 
 
 def max_col3(df_all_data):
-    wagen_base = df_all_data.set_index('Wagen Nr', drop=False, inplace=False).sort_index()
-    fig_max_wagen = px.bar(wagen_base.groupby(
-        pd.Grouper(key='Wagen Nr')).max().rename_axis(
-        'Wagen Nr').reset_index().sort_values(by='snelheid km/h'),
-                           title='Max snelheid per wagen',
-                           x='Wagen Nr', y='snelheid km/h',
+    voertuig_base = df_all_data.set_index('voertuig Nr', drop=False, inplace=False).sort_index()
+    fig_max_voertuig = px.bar(voertuig_base.groupby(
+        pd.Grouper(key='voertuig Nr')).max().rename_axis(
+        'voertuig Nr').reset_index().sort_values(by='snelheid km/h'),
+                           title='Max snelheid per voertuig',
+                           x='voertuig Nr', y='snelheid km/h',
                            color='snelheid km/h',
                            color_continuous_scale=px.colors.sequential.Blues)
-    st.plotly_chart(fig_max_wagen, use_container_width=True)
-    return fig_max_wagen
+    st.plotly_chart(fig_max_voertuig, use_container_width=True)
+    return fig_max_voertuig
     
     
 def max_col4(df_all_data):
@@ -51,16 +51,16 @@ def max_col4(df_all_data):
     
     
 def max_col5(df_all_data):
-    wagen_base = df_all_data.set_index('Wagen Nr', drop=False, inplace=False).sort_index()
-    fig_mean_wagen = px.bar(wagen_base.groupby(
-        pd.Grouper(key='Wagen Nr')).mean().round(0).rename_axis(
-        'Wagen Nr').reset_index().sort_values(by='snelheid km/h'),
-                            title='Gemiddeld snelheid per wagen',
-                            x='Wagen Nr', y='snelheid km/h',
+    voertuig_base = df_all_data.set_index('voertuig Nr', drop=False, inplace=False).sort_index()
+    fig_mean_voertuig = px.bar(voertuig_base.groupby(
+        pd.Grouper(key='voertuig Nr')).mean().round(0).rename_axis(
+        'voertuig Nr').reset_index().sort_values(by='snelheid km/h'),
+                            title='Gemiddeld snelheid per voertuig',
+                            x='voertuig Nr', y='snelheid km/h',
                             color='snelheid km/h',
                             color_continuous_scale=px.colors.sequential.dense)
-    st.plotly_chart(fig_mean_wagen, use_container_width=True)
-    return fig_mean_wagen
+    st.plotly_chart(fig_mean_voertuig, use_container_width=True)
+    return fig_mean_voertuig
     
     
 def max_waarde(df_all_data):
@@ -73,14 +73,14 @@ def max_waarde(df_all_data):
         figs.append(fig_max_wissel)
 
     with col3:
-        fig_max_wagen = max_col3(df_all_data) 
-        figs.append(fig_max_wagen)
+        fig_max_voertuig = max_col3(df_all_data)
+        figs.append(fig_max_voertuig)
 
     with col4:
         fig_mean_wissel = max_col4(df_all_data)
         figs.append(fig_mean_wissel)
 
     with col5:
-        fig_mean_wagen = max_col5(df_all_data)
-        figs.append(fig_mean_wagen)
+        fig_mean_voertuig = max_col5(df_all_data)
+        figs.append(fig_mean_voertuig)
     return figs

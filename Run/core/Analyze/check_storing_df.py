@@ -21,7 +21,7 @@ def check_storing_df(dataset):
         len(set(df["<wissel> ijzer"])) > 1,
         len(set(df["<vecom> storing"])) > 1,
         len(set(df["<vecom> geen output"])) > 1,
-        len(set(df["<aanmelden> wagen"])) > 2,  # !!!!
+        len(set(df["<aanmelden> voertuig"])) > 2,  # !!!!
         len(set(df["<wissel> vergrendeld"])) < 2
     ]
     return any(check_error_list)
@@ -41,7 +41,7 @@ def recheck_storing(dataset):
             if step_list[i + 1] < step_list[i]:
                 step_revert += 1
 
-        return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> wagen']))) * 2,
+        return any([step_revert > 3 + (max(df['<aktuell> niveau fifo']) + len(set(df['<aktuell> voertuig']))) * 2,
                     0 in df['<wissel> ijzer'].to_list(),
                     match_list([1, 0, 1], df['<hfp> spoorstroomkring bezet'].to_list()),
                     match_list([1, 0, 0, 1], df['<hfp> spoorstroomkring bezet'].to_list()),
@@ -61,15 +61,15 @@ def define_storing(dataset):
     """
 
     error_info = None
-    wagen_nr = max(dataset['<aanmelden> wagen'].tolist(), key=dataset['<aanmelden> wagen'].tolist().count)
+    voertuig_nr = max(dataset['<aanmelden> voertuig'].tolist(), key=dataset['<aanmelden> voertuig'].tolist().count)
     storing_type = {
         'begin tijd': [dataset.iloc[1]['date-time']],
         'eind tijd': [dataset.iloc[-1]['date-time']],
         'Wissel Nr': [dataset.iloc[1]['wissel nr']],
-        'lijn nr': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> lijn']],
-        'service': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> service']],
-        'categorie': [dataset[dataset['<aanmelden> wagen'] == wagen_nr].iloc[0]['<aanmelden> categorie']],
-        'wagen nr': [wagen_nr],
+        'lijn nr': [dataset[dataset['<aanmelden> voertuig'] == voertuig_nr].iloc[0]['<aanmelden> lijn']],
+        'service': [dataset[dataset['<aanmelden> voertuig'] == voertuig_nr].iloc[0]['<aanmelden> service']],
+        'categorie': [dataset[dataset['<aanmelden> voertuig'] == voertuig_nr].iloc[0]['<aanmelden> categorie']],
+        'voertuig nr': [voertuig_nr],
         'wissel stop': [(min(dataset['<wissel> ijzer']) - 1) * -1]
     }
     storing = ['ontbekend']
@@ -99,7 +99,7 @@ def define_storing(dataset):
         # 9
         # hfk_defect(dataset, 'HFK defect', 'infra'),
         # 10
-        check_wagen_vecom(dataset, 'vecom in wagen fout', 'wagen'),
+        check_voertuig_vecom(dataset, 'vecom in voertuig fout', 'voertuig'),
         # 11
         miss_out_meld(dataset, 'afmelden fout', 'infra'),
         # 12
@@ -109,7 +109,7 @@ def define_storing(dataset):
         # 14
         check_fout_state(dataset, '<vecom> geen output', 'wissel niet beschikken voor code', 'bestuurder'),
         # 15
-        check_werk_wagen(dataset, 'wissel kan de werk wagen niet afmeden', 'infra'),
+        check_werk_voertuig(dataset, 'wissel kan de werk voertuig niet afmeden', 'infra'),
         # 16
         check_verkeerd_code(dataset, 'richting en code niet overeen', 'bestuurder'),
         # 17
@@ -117,13 +117,13 @@ def define_storing(dataset):
         # 18
         no_aktuell(dataset, 'bestuurder rit te vroeg naar de spoorstroomkring', 'bestuurder'),
         # 4
-        no_wagen_nr(dataset, 'wagen zonder vecom', 'wagen'),
+        no_voertuig_nr(dataset, 'voertuig zonder vecom', 'voertuig'),
         
     ]
     try:
-        storing_type['wagen nr'] = [i for i in dataset['<aktuell> wagen'].tolist() if i != 0][0]
+        storing_type['voertuig nr'] = [i for i in dataset['<aktuell> voertuig'].tolist() if i != 0][0]
     except:
-        storing_type['wagen nr'] = [0]
+        storing_type['voertuig nr'] = [0]
     for error_info in func_list:
         if error_info[-1]:
             #  error_info = i
@@ -133,7 +133,7 @@ def define_storing(dataset):
                 storing_type['lijn nr'] = [error_info[2]]
                 storing_type['service'] = [error_info[3]]
                 storing_type['categorie'] = [error_info[4]]
-                storing_type['wagen nr'] = [error_info[5]]
+                storing_type['voertuig nr'] = [error_info[5]]
             break
         elif recheck_storing(dataset) is not True:
             storing = ['not_error']

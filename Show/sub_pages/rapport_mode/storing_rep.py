@@ -37,7 +37,7 @@ def storing_rapport(select_data: list, mode='week'):
     storing_data['jaar'] = storing_data['datum'].dt.year.astype('str')
     storing_data['datum'] = storing_data['datum'].dt.date
     storing_data = storing_data.set_index(['jaar', 'maand', 'week', 'datum',
-                                           'Wissel Nr', 'wagen nr', 'afdelling',
+                                           'Wissel Nr', 'voertuig nr', 'afdelling',
                                            'storing'])
     storing_data = storing_data.rename(columns={'count': 'hoeveelheid'})
     # 调整时间格式
@@ -77,7 +77,7 @@ def storing_rapport(select_data: list, mode='week'):
             #     'Wissel Nr',
             #     'lijn nr',
             #     'categorie',
-            #     'wagen nr'
+            #     'voertuig nr'
             # ],
             # template='seaborn'
         )
@@ -161,20 +161,20 @@ def storing_rapport(select_data: list, mode='week'):
         figs.append(afdelling_infra_pie)
 
     with col6:
-        afdelling_wagen = px.bar(storing_afdelling[storing_afdelling['afdelling'] == 'wagen'],
-                                 title='Storing door wagen overzicht', text_auto=True,
+        afdelling_voertuig = px.bar(storing_afdelling[storing_afdelling['afdelling'] == 'voertuig'],
+                                 title='Storing door voertuig overzicht', text_auto=True,
                                  x='storing', y='hoeveelheid', color='storing',
                                  height=layout_height, color_continuous_scale=px.colors.sequential.Sunsetdark)
-        afdelling_wagen.update_traces(textfont_size=15, textangle=0, textposition="outside", cliponaxis=False)
-        st.plotly_chart(afdelling_wagen, use_container_width=True)
-        figs.append(afdelling_wagen)
+        afdelling_voertuig.update_traces(textfont_size=15, textangle=0, textposition="outside", cliponaxis=False)
+        st.plotly_chart(afdelling_voertuig, use_container_width=True)
+        figs.append(afdelling_voertuig)
 
     with col6_1:
         loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-        wagen_loc = pd.merge(loc_df, storing_data_raw[storing_data_raw['storing'] == 'wissel buiten dienst'],
+        voertuig_loc = pd.merge(loc_df, storing_data_raw[storing_data_raw['storing'] == 'wissel buiten dienst'],
                              on=['Wissel Nr'], how='inner')
-        # st.map(wagen_loc, zoom=10)
-        fig_7 = px.scatter_mapbox(wagen_loc,
+        # st.map(voertuig_loc, zoom=10)
+        fig_7 = px.scatter_mapbox(voertuig_loc,
                                   title='Wissel buitendienst',
                                   lat="latitude", lon="longitude",
                                   color_discrete_sequence=px.colors.sequential.RdBu,
@@ -191,7 +191,7 @@ def storing_rapport(select_data: list, mode='week'):
     #         color_continuous_scale=px.colors.sequential.RdBu,
     #         height=layout_height,
     #         # hover_data=[
-    #         #     'wagen nr',
+    #         #     'voertuig nr',
     #         #     'lijn nr',
     #         #     'categorie',
     #         # ],
@@ -201,14 +201,14 @@ def storing_rapport(select_data: list, mode='week'):
     #     figs.append(storing_wissel_pie)
     #
     # with col7_1:
-    #     storing_wagen_pie = px.sunburst(
+    #     storing_voertuig_pie = px.sunburst(
     #         storing_data.reset_index(drop=False),
-    #         title='Storing per wagen',
-    #         path=['wagen nr', 'storing'],
+    #         title='Storing per voertuig',
+    #         path=['voertuig nr', 'storing'],
     #         color_continuous_scale=px.colors.sequential.RdBu,
     #         height=layout_height,
     #     )
-    #     storing_wagen_pie.update_traces(textinfo='label+percent entry')
-    #     st.plotly_chart(storing_wagen_pie)
-    #     figs.append(storing_wagen_pie)
+    #     storing_voertuig_pie.update_traces(textinfo='label+percent entry')
+    #     st.plotly_chart(storing_voertuig_pie)
+    #     figs.append(storing_voertuig_pie)
     return figs

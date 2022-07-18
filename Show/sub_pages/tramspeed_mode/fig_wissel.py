@@ -25,12 +25,12 @@ def fig_wissel(df_all_data, layout_height):
     speed_counts_wissel['hoeveelheid'] = 1
     with col2:
         fig_wissel_4 = px.bar(speed_counts_wissel.sort_values(by='snelheid km/h'),
-                              title='Wagen/snelheid overzicht',
+                              title='voertuig/snelheid overzicht',
                               x='snelheid km/h', y='hoeveelheid',
                               color='code',
                               height=layout_height,
                               hover_data=['Lijn',
-                                          'Wagen Nr',
+                                          'voertuig Nr',
                                           'Categorie',
                                           'Service',
                                           'Tijd',
@@ -44,7 +44,7 @@ def fig_wissel(df_all_data, layout_height):
                                   x='Tijd', y='snelheid km/h',
                                   title='Snelheid/tijd overzicht',
                                   hover_data=['Lijn',
-                                              'Wagen Nr',
+                                              'voertuig Nr',
                                               'Categorie',
                                               'Service',
                                               'Richting'],
