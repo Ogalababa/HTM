@@ -32,7 +32,7 @@ def check_bad_contact(dataframe, col_name: str, storing: str, afdelling: str) ->
     """
     # Check hfk, hfp data correctness
     # 检测hfk， hfp数据正确性
-    aanmelden_list = dataframe['<aanmelden> wagen'].tolist()
+    aanmelden_list = dataframe['<aanmelden> voertuig'].tolist()
     return storing, afdelling, any([match_list([1, 0, 1], dataframe[col_name].to_list()),
                                     match_list([1, 0, 0, 1, 0], dataframe[col_name].to_list()),
                                     len(dataframe[dataframe[col_name] == 1]) > len(set(aanmelden_list))* 5])
@@ -53,18 +53,18 @@ def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> 
     lijn_nr = -1
     service = -1
     categorie = -1
-    wagen_nr = -1
+    voertuig_nr = -1
     if 1 in dataframe[col_name].to_list():
         lijn_nr = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> lijn']
         service = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> service']
         categorie = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> categorie']
-        wagen_nr = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> wagen']
-    return storing, afdelling, lijn_nr, service, categorie, wagen_nr, 1 in dataframe[col_name].to_list()
+        voertuig_nr = dataframe[dataframe[col_name] == 1].iloc[0]['<aanmelden> voertuig']
+    return storing, afdelling, lijn_nr, service, categorie, voertuig_nr, 1 in dataframe[col_name].to_list()
 
 
-def check_werk_wagen(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
+def check_werk_voertuig(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
     """
-    check if storing from werk wagen
+    check if storing from werk voertuig
     :param dataframe: pd.DataFrame
     :param afdelling: str
     :param storing: str

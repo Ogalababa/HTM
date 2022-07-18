@@ -20,17 +20,17 @@ def wissel_schakel(df):
     position_after = None
     position_request = None
     # position_action = None
-    wagen_nr = 0
+    voertuig_nr = 0
     wissel_omloop = -2 # default Error
     try:
 
         for i in range(len(df) - 1):
             row = df.iloc[i]
             row_dict = row.to_dict()
-            aktu_wagen = row_dict.get("<aktuell> wagen")
+            aktu_voertuig = row_dict.get("<aktuell> voertuig")
 
-            if aktu_wagen != 0 and wagen_nr == 0:
-                wagen_nr = aktu_wagen
+            if aktu_voertuig != 0 and voertuig_nr == 0:
+                voertuig_nr = aktu_voertuig
 
             if position_before is None:
                 if row_dict.get("<wissel> links") == 1:

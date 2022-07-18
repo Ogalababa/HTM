@@ -48,7 +48,7 @@ def st_storingdata(select_data):
                                            'Wissel Nr',
                                            'lijn nr',
                                            'categorie',
-                                           'wagen nr'
+                                           'voertuig nr'
                                        ])
             fig_storing_2.update_traces(textinfo='label+percent entry')
             st.plotly_chart(fig_storing_2, use_container_width=True)
@@ -82,9 +82,9 @@ def st_storingdata(select_data):
 
         with col5:
             loc_df = pd.read_csv(os.path.join(rootPath, 'DataBase', 'norm', 'gps_info.csv'), sep=';')
-            wagen_loc = pd.merge(loc_df, fig_data, on=['Wissel Nr'], how='inner')
-            # st.map(wagen_loc, zoom=10)
-            fig_7 = px.scatter_mapbox(wagen_loc,
+            voertuig_loc = pd.merge(loc_df, fig_data, on=['Wissel Nr'], how='inner')
+            # st.map(voertuig_loc, zoom=10)
+            fig_7 = px.scatter_mapbox(voertuig_loc,
                                       lat="latitude", lon="longitude",
                                       color_discrete_sequence=px.colors.sequential.RdBu,
                                       height=layout_height, size_max=15, zoom=10, color='Wissel Nr',

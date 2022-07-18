@@ -59,7 +59,7 @@ def st_wissel_schakel():
             fig_schakelen_1 = px.line(schakel_data,
                                       x='Tijd', y='Na',
                                       title=f'Wissel {selected_wissel} omstel beweging overzicht',
-                                      hover_data=['Wagen Nr',
+                                      hover_data=['voertuig Nr',
                                                   'Voor',
                                                   'aanvragen',
                                                   'Na',

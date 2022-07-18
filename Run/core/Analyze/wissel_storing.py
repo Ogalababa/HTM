@@ -14,10 +14,10 @@ def wissel_storing(df):
     status = {'Begin tijd': [df.iloc[1]['date-time']], 'Eind tijd': [df.iloc[-1]['date-time']],
               'Wissel nr': [df.iloc[-1]['wissel nr']], 'lijn': [df.iloc[-1]['<aanmelden> lijn']],
               'service': [df.iloc[-1]['<aanmelden> service']], 'categorie': [df.iloc[-1]['<aanmelden> categorie']],
-              'wagen': [df.iloc[-1]['<aktuell> wagen']], 'fifo': [desc.loc['max']['<aktuell> niveau fifo']]}
+              'voertuig': [df.iloc[-1]['<aktuell> voertuig']], 'fifo': [desc.loc['max']['<aktuell> niveau fifo']]}
 
-    if desc.loc['max']['<aktuell> wagen'] == 0:
-        status['Error type'] = ['Wagen nummer aanmelden fout']
+    if desc.loc['max']['<aktuell> voertuig'] == 0:
+        status['Error type'] = ['voertuig nummer aanmelden fout']
         status['Veroozak'] = ['Tram Vecom system']
         return pd.DataFrame(status)
     else:

@@ -3,17 +3,17 @@
 # sys
 
 
-def wagen_length(wagen_nr):
+def voertuig_length(voertuig_nr):
     """
-    default wagen lent
-    :param wagen_nr: int
+    default voertuig lent
+    :param voertuig_nr: int
     :return: int
     """
-    if 3000 <= wagen_nr < 4000:
+    if 3000 <= voertuig_nr < 4000:
         length = 30
-    elif 4000 <= wagen_nr < 5000:
+    elif 4000 <= voertuig_nr < 5000:
         length = 37
-    elif 5000 <= wagen_nr < 6000:
+    elif 5000 <= voertuig_nr < 6000:
         length = 35
     else:
         length = 0
