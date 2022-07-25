@@ -12,7 +12,7 @@ import functools
 import streamlit as st
 import base64
 
-
+@st.cache(allow_output_mutation=True, ttl=1800) # max_entries=1,
 def st_get_alldata_from_db(db_name, path='db'):
     """Get data info from db file
     :return: dict
@@ -25,7 +25,7 @@ def st_get_alldata_from_db(db_name, path='db'):
 
     return data_dict
 
-@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True, ttl=1800) # max_entries=1,
 def st_get_alldata_from_db_cash(db_name, path='db'):
     """Get data info from db file
     :return: dict
@@ -48,11 +48,11 @@ def get_data_name(path='db'):
 
     return all_db_name
 
-
+# @st.cache(allow_output_mutation=True, ttl=300)
 def sub_tram_speed(i,lijn):
     return pd.read_sql_table(lijn, conn_engine(i, path='snelheid'))
 
-
+@st.cache(allow_output_mutation=True, ttl=300) # max_entries=1,
 def get_tram_speed(selected_db, path='snelheid'):
     """
 
@@ -86,7 +86,7 @@ def get_tram_speed(selected_db, path='snelheid'):
     return all_data.reset_index(drop=True)
 
 
-@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True, ttl=300) # max_entries=1,
 def get_tram_speed_cache(selected_db, path='snelheid'):
     """
 
@@ -102,7 +102,7 @@ def create_download_link(val, filename, pdf='pdf'):
     return f'<a href="data:application/octet-stream;base64,' \
            f'{b64.decode()}" download="{filename}.{pdf}">Download {pdf.upper()}</a>'
 
-
+@st.cache(allow_output_mutation=True, ttl=1800) # max_entries=1,
 def get_all_data(selected_db, path='db'):
     """
     Read all data from log db
@@ -120,7 +120,7 @@ def get_all_data(selected_db, path='db'):
     return data_list, list(set(wissel_list))
 
 
-@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True, ttl=1800) # max_entries=1,
 def get_all_data_cache(selected_db, path='db'):
     """
     Read all data from log db

@@ -101,7 +101,7 @@ def waarschuwing(df_all_data,speed_record_size, layout_height):
                               height=layout_height,
                               hole=.25,
                               )
-        fig_wissel_3.update_traces(textinfo='percent+label')
+        fig_wissel_3.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig_wissel_3, use_container_width=True)
 
     with col6:
@@ -113,7 +113,7 @@ def waarschuwing(df_all_data,speed_record_size, layout_height):
                               height=layout_height,
                               hole=.25,
                               )
-        # fig_wissel_5.update_traces(textinfo='percent+label')
+        fig_wissel_5.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig_wissel_5, use_container_width=True)
 
     with col7:

@@ -3,7 +3,7 @@
 # sys
 
 from __init__ import *
-from multiprocessing import Pool
+
 from Run.core.Integration.ProcessDataBase import process_db
 from Run.core.LogFilter.MountDir import mount_log
 
@@ -11,45 +11,16 @@ from Run.core.LogFilter.MountDir import mount_log
 # 重新分析所有log文件
 def recover_db():
     """Recover all database from wissel log files"""
-    while True:
-        # 检测log文件
-        log_file_list = os.listdir(os.path.join(rootPath, 'log'))
-        if len(log_file_list) == 0:
-            # extern dir not mount
-            # mount extern dir
-            # os comment, dont edit
-            mount_log()
-            log_file_list = os.listdir(os.path.join(rootPath, 'log'))
-        # log file queue analysis
-        # log文件排队分析
-        if len(log_file_list) >= 1:
-            log_file_list = [x for x in log_file_list if 'log' in x]
-            log_file_list.sort()
-            log_file_list = log_file_list[:-1]
-            db_file_list = os.listdir(os.path.join(rootPath, 'DataBase', 'db'))
-            db_file_date = [f'{i[:4]}{i[5:7]}{i[8:10]}.log' for i in db_file_list]
-            conver_list = [x for x in log_file_list if x not in db_file_date]
-            if len(conver_list) <= 0:
-                print('All data up to date')
-                os._exit(0)
-
-            conver_list.sort()
-            try:
-                p = Pool(30)
-                p.imap(process_db, conver_list[:30])
-                # process_log_sql(conver_list[0])
-                p.close()
-                p.join()
-            except (
-                    PermissionError,
-                    IndexError,
-                    AttributeError,
-                    UnicodeDecodeError
-            ) as err:
-                pass
-            except KeyboardInterrupt:
-                exit()
-        continue
+    # log_file_list = [i for i in os.listdir(os.path.join(rootPath, 'log')) if '.log' in i]
+    log_file_list = ['20220111.log']
+    log_file_list.sort()
+    
+    if len(log_file_list) == 0:
+        mount_log()  # mount extern dir
+        log_file_list = [i for i in os.listdir(os.path.join(rootPath, 'log')) if '.log' in i]
+        log_file_list.sort()
+    for i in log_file_list:
+        process_db(i)
 
 
 if __name__ == '__main__':

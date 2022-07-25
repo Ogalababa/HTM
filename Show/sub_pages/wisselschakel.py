@@ -33,17 +33,17 @@ def st_wissel_schakel():
     # website content
     layout_height = 600
     figs = []
-    cache = st.sidebar.checkbox('Cache')
+    # cache = st.sidebar.checkbox('Cache')
     if len(select_data) > 0:
         # set page layout
         col2, col3, = st.columns((17, 3))
         col4, space4, col5 = st.columns((10, 1, 10))
         col6, space6, col7 = st.columns((10, 1, 10))
         # reset DataFrame
-        if cache:
-            data_dict_list, wissel_name_list = get_all_data_cache(select_data, path='schakelen')
-        else:
-            data_dict_list, wissel_name_list = get_all_data(select_data, path='schakelen')
+        # if cache:
+        data_dict_list, wissel_name_list = get_all_data_cache(select_data, path='schakelen')
+        # else:
+            # data_dict_list, wissel_name_list = get_all_data(select_data, path='schakelen')
         dataframe_list = []
         for i in data_dict_list:
             dataframe_list.append(pd.concat(i.values()))

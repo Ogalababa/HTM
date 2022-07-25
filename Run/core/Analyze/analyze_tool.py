@@ -163,6 +163,31 @@ def miss_out_meld(dataframe, storing: str, afdelling: str) -> Tuple[str, str, in
     return storing, afdelling, lijn_nr, service, categorie, voertuig_nr, False
 
 
+def fifo_fout(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, int, int, int, bool]:
+    """
+    
+    :param dataframe: pd.DataFrame
+    :param storing: str
+    :param afdelling: str
+    :return: Tuple[str, str, int, int, int, int, bool]
+    """
+    aanmeld_nr_set = set(dataframe['<aanmelden> voertuig'].tolist())
+    uitmeld_nr_set = set(dataframe['<afmelden> voertuig'].tolist())
+    max_fifo = max(dataframe['<aktuell> niveau fifo'].tolist())
+    lijn_nr = -1
+    service = -1
+    categorie = -1
+    voertuig_nr = -1
+    if max_fifo < 2:
+        return storing, afdelling, lijn_nr, service, categorie, voertuig_nr, False
+    else:
+        voertuig_nr = list(aanmeld_nr_set.difference(uitmeld_nr_set))[0]
+        # lijn_nr = dataframe[dataframe['<aanmelden> voertuige'] == voertuig_nr]['<aanmelden> lijn'][0]
+        # service = dataframe[dataframe['<aanmelden> voertuige'] == voertuig_nr]['<aanmelden> service'][0]
+        # categorie = dataframe[dataframe['<aanmelden> voertuige'] == voertuig_nr]['<aanmelden> categorie'][0]
+        return storing, afdelling, lijn_nr, service, categorie, voertuig_nr, True
+    
+
 def check_voertuig_vecom(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
     """
     check the condition of the vecom in tram
@@ -342,7 +367,7 @@ def no_aktuell(dataframe, storing: str, afdelling: str) -> Tuple[str, str, int, 
     for i in aanmelden_set:
         sub_df = dataframe[dataframe['<aanmelden> voertuig'] == i]
         if i not in sub_df['<aktuell> voertuig'].to_list() and 1 in sub_df['<aktuell> niveau fifo'].to_list() \
-                and sub_df['<aktuell> niveau fifo'].to_list()[-1] is not 1:
+                and sub_df['<aktuell> niveau fifo'].to_list()[-1] != 1:
             lijn_nr = sub_df['<aanmelden> lijn'].to_list()[0]
             service = sub_df['<aanmelden> service'].to_list()[0]
             categorie = sub_df['<aanmelden> categorie'].to_list()[0]

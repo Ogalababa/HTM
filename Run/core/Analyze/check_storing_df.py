@@ -90,6 +90,7 @@ def define_storing(dataset):
         
         # 5
         wissel_eind_stand(dataset, 'wissel heeft geen eind stand', 'infra'),
+        fifo_fout(dataset, 'afmelden fout', 'infra'),
         # 6
         check_fout_state(dataset, '<vecom> aanvraag onbekend', 'categorie/handbedien code fout', 'bestuurder'),
         # 7
@@ -102,12 +103,14 @@ def define_storing(dataset):
         check_voertuig_vecom(dataset, 'vecom in voertuig fout', 'voertuig'),
         # 11
         miss_out_meld(dataset, 'afmelden fout', 'infra'),
+        
         # 12
         wacht_op_sein(dataset, 'bestuurder wacht niet op sein', 'bestuurder'),
         # 13
         check_fout_state(dataset, '<vecom> storing', 'VECOM hardware fout', 'infra'),
         # 14
         check_fout_state(dataset, '<vecom> geen output', 'wissel niet beschikken voor code', 'bestuurder'),
+        check_fout_state(dataset, '<vecom> aanvraag onbekend', 'wissel niet beschikken voor code', 'bestuurder'),
         # 15
         check_werk_voertuig(dataset, 'wissel kan de werk voertuig niet afmeden', 'infra'),
         # 16
