@@ -1,6 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+
 from __init__ import *
 import sqlalchemy
 import functools
@@ -8,9 +9,11 @@ from random import uniform
 from time import sleep
 import re
 from multiprocessing import Pool
+import joblib
 # analysis
 
 import pandas as pd
+import numpy as np
 from sqlalchemy.types import VARCHAR
 from sqlalchemy.types import SMALLINT
 
@@ -20,6 +23,7 @@ from Run.core.ConvertData.ImportConf import bit_config, byte_config, drop_config
 from Run.core.ConvertData.Config import WisselData
 from Run.core.ConvertData.VerSelect import get_version, get_wissel_type_nr
 from Run.core.ConvertData.ConnectDB import conn_engine
+from Run.core.Integration.DataInitialization import get_alldata_from_db, save_to_sql
 
 
 def read_log(log_file):
@@ -153,4 +157,37 @@ def set_steps_denbdb3c(db_file):
         #     wissel_status.to_sql(k, conn_engine(db_file), if_exists='replace')
     except KeyboardInterrupt:
         exit()
+
+
+def predict_steps(db_file):
+
+    # 有效数据列表
+    ini_list = ["<wissel> naar links", "<wissel> naar rechts", "<wissel> links", "<wissel> rechts",
+                "<vlsa> links", "<vlsa> rechts", "<wls> seinbeld links geactiveerd",
+                "<wls> seinbeld rechts geactiveerd", "<hfp> spoorstroomkring bezet", "<hfk> aanwezigheidslus bezet",
+                "<vecom> naar links", "<vecom> naar midden", "<vecom> naar rechts",
+                "<vecom> lock","<vecom> uit melding", "<wissel> vergrendeld", "<wissel> ijzer", "<loop 1> bezet",
+                "<loop 2> bezet", "<loop 3> bezet", "<loop 4> bezet","<loop 5> bezet", "<loop 6> bezet",
+                "<loop 7> bezet", "<loop 8> bezet", "<input> naar links", "<input> naar rechts", "<input> naar midden"]
+    # 加载model
+    model_list = [i[:-4] for i in os.listdir(os.path.join(rootPath, 'Run', 'conf', 'pipfiles')) if '.pkl' in i]
+    model_dict = {i: joblib.load(os.path.join(rootPath, 'Run', 'conf', 'pipfiles', f'{i}.pkl')) for i in model_list}
+
+    # 读取工作数据
+    test_data_dict = get_alldata_from_db(db_file, 'db')
+    for key, value in model_dict.items():
+        try:
+            test_data = test_data_dict.get(key)
+            wissel_data_ini = test_data[ini_list]
+            # 数据转换为numpy
+            X = np.array(wissel_data_ini)
+            # 模型预测
+            y = value.predict(X)
+            # test_data['predict step'] = y
+            # 代替set_steps_denbdb3c
+            test_data['predict step'] = y
+            test_data_dict[key] = test_data
+        except (TypeError, ValueError) as err:
+            pass
+    save_to_sql(db_file, test_data_dict, path='db')
 

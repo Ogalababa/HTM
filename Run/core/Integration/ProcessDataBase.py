@@ -3,7 +3,7 @@
 # sys
 from __init__ import *
 from datetime import datetime
-from Run.core.ConvertData.ReadLogs import read_log, log_to_sql, set_steps_denbdb3c
+from Run.core.ConvertData.ReadLogs import read_log, log_to_sql, set_steps_denbdb3c, predict_steps
 from Run.core.Integration.DataCalculator import Calculator
 
 
@@ -24,6 +24,8 @@ def process_db(log_file):
         print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Read log done')
         set_steps_denbdb3c(date)
         print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Set steps done')
+        predict_steps(date)
+        print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Predict steps done')
         data_exp = Calculator(date)
         print(f'{datetime.now().strftime("%d/%m/%Y %H:%M:%S")} Calculation done')
         data_exp.C_tram_speed()
