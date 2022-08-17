@@ -80,6 +80,7 @@ class Calculator:
                 else:
                     schakel_status = wissel_schakel(cycle_df)
                     status_list.append(schakel_status[0])
+                    # self.error_list.append(cycle_df)
                     if len(schakel_status) > 1:
                         self.error_list.append(schakel_status[1])
             data_dict[wissel_nr] = pd.concat(status_list)

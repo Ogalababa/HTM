@@ -185,7 +185,7 @@ def predict_steps(db_file):
             y = value.predict(X)
             # test_data['predict step'] = y
             # 代替set_steps_denbdb3c
-            test_data['predict step'] = y
+            test_data['step'] = y
             test_data_dict[key] = test_data
         except (TypeError, ValueError) as err:
             pass

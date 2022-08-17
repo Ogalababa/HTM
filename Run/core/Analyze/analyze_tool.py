@@ -38,6 +38,14 @@ def check_bad_contact(dataframe, col_name: str, storing: str, afdelling: str) ->
                                     len(dataframe[dataframe[col_name] == 1]) > len(set(aanmelden_list))* 5])
 
 
+# def hfp_defect(dataframe, storing: str, afdelling: str) -> Tuple[str, str, bool]:
+#     hfp_list = dataframe['<hfp> spoorstroomkring bezet'].tolist()
+#     hfk_list = dataframe['<hfk> aanwezigheidslus bezet'].tolist()
+#     zip_list = list(zip(hfp_list, hfk_list))
+
+#     return storing, afdelling, (1, 0) in zip_list
+
+
 def check_fout_state(dataframe, col_name: str, storing: str, afdelling: str) -> Tuple[
         str, str, int, int, int, int, bool]:
     """

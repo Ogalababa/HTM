@@ -121,6 +121,8 @@ def define_storing(dataset):
         no_aktuell(dataset, 'bestuurder rit te vroeg naar de spoorstroomkring', 'bestuurder'),
         # 4
         no_voertuig_nr(dataset, 'voertuig zonder vecom', 'voertuig'),
+        # 19
+        
         
     ]
     try:

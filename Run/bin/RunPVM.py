@@ -12,7 +12,7 @@ from Run.core.LogFilter.MountDir import mount_log
 def recover_db():
     """Recover all database from wissel log files"""
     # log_file_list = [i for i in os.listdir(os.path.join(rootPath, 'log')) if '.log' in i]
-    log_file_list = ['20220111.log']
+    log_file_list = ['20220725.log']
     log_file_list.sort()
     
     if len(log_file_list) == 0:
