@@ -6,7 +6,7 @@ import os.path
 from __init__ import *
 import pandas as pd
 from multiprocessing import Pool, Manager
-from Run.core.Analyze.check_storing_df import check_storing_df, define_storing
+from Run.core.Analyze.check_storing_df import check_storing_df, define_storing, define_storing_int
 from Run.core.Analyze.tram_speed import calculation_tram_speed
 from Run.core.Analyze.wissel_schakel import wissel_schakel
 from Run.core.Analyze.wissel_vrij_list import wissel_cycle_list
@@ -105,7 +105,7 @@ class Calculator:
 
         for i in self.error_list:
             try:
-                unknow_state, storing = define_storing(i)
+                unknow_state, storing = define_storing_int(i)
                 if unknow_state == 'ontbekend':
                     unknow_storing_list.append(i)
                 elif unknow_state == 'not_error':
@@ -116,6 +116,50 @@ class Calculator:
                     storing_list.append(storing)
             except:
                 pass
+        if len(storing_list) > 0:
+            storingen_dict['all storingen'] = pd.concat(storing_list)
+            # x = 0
+            # for i in storing_list:
+            #     storingen_dict[str(x).zfill(4)] = i
+            #     x += 1
+            if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'storing')):
+                os.remove(os.path.join(rootPath, 'DataBase', 'storing', f'{self.db_name}.db'))
+            save_to_sql(self.db_name, storingen_dict, 'storing')
+        if len(unknow_storing_list) > 0:
+            x = 0
+            for i in unknow_storing_list:
+                unknow_storing_dict[str(x).zfill(3)] = i
+                x += 1
+            if f'{self.db_name}.db' in os.listdir(os.path.join(rootPath, 'DataBase', 'unknow_storing')):
+                os.remove(os.path.join(rootPath, 'DataBase', 'unknow_storing', f'{self.db_name}.db'))
+            save_to_sql(self.db_name, unknow_storing_dict, 'unknow_storing')
+
+    def get_wissel_cycles(self, df):
+        cycle_index = wissel_cycle_list(df)
+        cycle_list = []
+        for i in range(len(cycle_index) - 1):
+            cycle_list.append(df[cycle_index[i]:cycle_index[i + 1]])
+        return cycle_list
+    
+    def C_storingen_2(self):
+        storing_list = []
+        storingen_dict = {}
+        unknow_storing_list = []
+        unknow_storing_dict = {}
+        for key, values in self.db_dict.items():
+            if 'step' in values.columns.values.tolist():
+                cycle_list = self.get_wissel_cycles(values)
+                for i in cycle_list:
+                    if check_storing_df(i):
+                        unknow_state, storing = define_storing_int(i)
+                        if unknow_state == 'ontbekend':
+                            unknow_storing_list.append(i)
+                        elif unknow_state == 'not_error':
+                            pass
+                        elif unknow_state == 'invalid data':
+                            pass
+                        else:
+                            storing_list.append(storing)
         if len(storing_list) > 0:
             storingen_dict['all storingen'] = pd.concat(storing_list)
             # x = 0

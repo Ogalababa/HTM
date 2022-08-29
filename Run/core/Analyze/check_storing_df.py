@@ -1,9 +1,11 @@
 #!/usr/bin/ python3
 # coding: utf-8
+
 from __init__ import *
 
 from Run.core.Analyze.analyze_tool import *
 import pandas as pd
+import joblib
 
 
 # Check if the data is normal
@@ -147,3 +149,89 @@ def define_storing(dataset):
     storing_type['count'] = [1]
 
     return storing[0], pd.DataFrame(storing_type)
+
+
+def define_storing_int(dataset):
+    """
+    define storing type.
+    :param dataset: pd.DataFrame
+    :return: str, pd.DataFrame
+    """
+    stay_list = ['<aanmelden> handbediening', '<aanmelden> voertuig', '<afmelden> voertuig', '<aktuell> voertuig',
+                 '<aktuell> niveau fifo', '<wissel> naar links', '<wissel> naar rechts', '<wissel> links',
+                 '<wissel> rechts',
+                 '<vlsa> links', '<vlsa> rechts', '<wls> seinbeld links geactiveerd',
+                 '<wls> seinbeld rechts geactiveerd',
+                 '<hfp> spoorstroomkring bezet', '<hfk> aanwezigheidslus bezet', '<vecom> naar links',
+                 '<vecom> naar midden',
+                 '<vecom> naar rechts', '<vecom> lock', '<vecom> aanvraag onbekend', '<vecom> uit melding',
+                 '<wissel> vergrendeld',
+                 '<wissel> ijzer', '<bis> wissel buiten dienst', '<vecom> storing', '<vecom> geen output',
+                 '<input> naar links',
+                 '<input> naar rechts', '<input> naar midden', 'step']
+    
+    dtc_model = joblib.load(os.path.join(rootPath, 'Run', 'conf', 'pipfiles', 'DTC_model.pkl'))
+    storing_int_dict = {
+        'not_error': 0, 'wissel buiten dienst': 1, 'invalid data': 2, 'aanwezigheidslus defect':3, 
+        'wissel loop niet om':4, 'wissel heeft geen eind stand':5, '<vecom> aanvraag onbekend':6, 
+        '<vecom> aanvraag onbekend':7, '<hfk> aanwezigheidslus bezet':8, 'vecom in voertuig fout':9,
+        'afmelden fout':10, 'afmelden fout':11, 'bestuurder wacht niet op sein':12, '<vecom> storing':13, 
+        '<vecom> geen output':14, '<vecom> aanvraag onbekend':15, 'richting en code niet overeen':16, 
+        'richting veranderen na de aanvragen':17, 'bestuurder rit te vroeg naar de spoorstroomkring':18, 
+        'voertuig zonder vecom':19,'ontbekend':20,
+    }
+    int_storing_dict = {v:k for k,v in storing_int_dict.items()}
+    storing_afdelint_dict = {
+        'invalid data': 'system','aanwezigheidslus defect': 'infra','wissel buiten dienst': 'infra',
+        'wissel loop niet om': 'infra','not_error':'double wissels','wissel heeft geen eind stand': 'infra',
+        'afmelden fout': 'infra','categorie/handbedien code fout': 'bestuurder',
+        'spoorstroomkring detector fout': 'infra','aanwezigheidslus detector fout': 'infra',
+        'vecom in voertuig fout': 'voertuig','bestuurder wacht niet op sein':'bestuurder',
+        'VECOM hardware fout':'infra','wissel niet beschikken voor code': 'bestuurder',
+        'wissel kan de werk voertuig niet afmeden':'infra', 'richting en code niet overeen':'bestuurder',
+        'richting veranderen na de aanvragen':'bestuurder',
+        'bestuurder rit te vroeg naar de spoorstroomkring': 'bestuurder','voertuig zonder vecom':'voertuig'
+    }
+    error_info = -1
+    voertuig_nr = max(dataset['<aanmelden> voertuig'].tolist(), key=dataset['<aanmelden> voertuig'].tolist().count)
+    storing_type = {
+        'begin tijd': [dataset.iloc[1]['date-time']],
+        'eind tijd': [dataset.iloc[-1]['date-time']],
+        'Wissel Nr': [dataset.iloc[1]['wissel nr']],
+        'lijn nr': [dataset[dataset['<aanmelden> voertuig'] == voertuig_nr].iloc[0]['<aanmelden> lijn']],
+        'service': [dataset[dataset['<aanmelden> voertuig'] == voertuig_nr].iloc[0]['<aanmelden> service']],
+        'categorie': [dataset[dataset['<aanmelden> voertuig'] == voertuig_nr].iloc[0]['<aanmelden> categorie']],
+        'voertuig nr': [voertuig_nr],
+        'wissel stop': [(min(dataset['<wissel> ijzer']) - 1) * -1]
+    }
+    storing = ['ontbekend']
+    afdelling = ['ontbekend']
+    
+    dataset = dataset[stay_list]
+    voertuig_nr = {0: 0}
+    flow_nr = 0
+    voertuig = dataset[['<aanmelden> voertuig', '<afmelden> voertuig', '<aktuell> voertuig']]
+    np_voertuig = voertuig.to_numpy()
+    np_voertuig = np_voertuig.reshape((np_voertuig.shape[0] * np_voertuig.shape[1],))
+    for j in np_voertuig:
+        if j != 0 and j not in  voertuig_nr.keys():
+            flow_nr += 1
+            voertuig_nr[j] = flow_nr
+    dataset = dataset.replace(voertuig_nr)
+    np_1 = dataset.to_numpy()
+    np_1 = np_1.reshape((np_1.shape[0] * np_1.shape[1]))
+    np_2 = np_1.copy()
+    np_2.resize((30, 31))
+    np_2 = np_2.reshape((1, np_2.shape[0] * np_2.shape[1]))
+    dtc_predict = dtc_model.predict(np_2)
+    # print(dtc_predict)
+    storing = int_storing_dict.get(dtc_predict[0])
+    afdelling = storing_afdelint_dict.get(storing)
+    # print(afdelling)
+    # print(storing)
+    storing_type['storing'] = storing
+    storing_type['afdelling'] = [afdelling]
+    storing_type['count'] = [1]
+    return storing, pd.DataFrame(storing_type)
+    
+    
