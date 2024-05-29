@@ -48,7 +48,7 @@ PAGES = OrderedDict(
                     """,
             ),
         ),
-(
+        (
             "Rapportage (Beta)",
             (
                 pages.rapportage,
@@ -61,6 +61,15 @@ PAGES = OrderedDict(
             "All data",
             (
                 pages.all_data,
+                """
+                    Deze pagina toont alle data van wissel status
+                    """,
+            ),
+        ),
+        (
+            "Tram snelheid boxplot",
+            (
+                pages.speed_boxplot,
                 """
                     Deze pagina toont alle data van wissel status
                     """,
@@ -98,10 +107,9 @@ def run():
         # desc = PAGES[page_name][1]
         # if desc:
         #     st.write(desc)
-        
+
         page()
 
 
 if __name__ == "__main__":
     run()
-    
