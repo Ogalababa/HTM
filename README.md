@@ -1,24 +1,26 @@
-<!-- START doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-**Inhoudsopgave**  *gegenereerd met [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [🔧 Omgevingsconfiguratie](#-omgevingsconfiguratie)
-  - [Serverconfiguratie](#serverconfiguratie)
-    - [Software installeren](#software-installeren)
-    - [Jupyter automatisch starten instellen](#jupyter-automatisch-starten-instellen)
-  - [Benodigde pakketten](#benodigde-pakketten)
-- [📊 Structuuroverzicht](#-structuuroverzicht)
-- [📁 Bestandsoverzicht](#-bestandsoverzicht)
-  - [HkConfig](#hkconfig)
-  - [ReadAndSave](#readandsave)
-  - [DataBase](#database)
-  - [Analyze](#analyze)
-  - [Run](#run)
-  - [Show](#show)
-  - [Documentatie](#documentatie)
+- [🚈 HTM Logparser-systeem](#-htm-logparser-systeem)
+  - [🔧 Omgevingsconfiguratie](#-omgevingsconfiguratie)
+    - [Serverconfiguratie](#serverconfiguratie)
+      - [Software installeren](#software-installeren)
+    - [Benodigde pakketten](#benodigde-pakketten)
+      - [Run (verwerking)](#run-verwerking)
+      - [Show (visualisatie)](#show-visualisatie)
+  - [📊 Structuuroverzicht](#-structuuroverzicht)
+  - [📁 Bestandsoverzicht](#-bestandsoverzicht)
+    - [HkConfig](#hkconfig)
+    - [ReadAndSave](#readandsave)
+    - [DataBase](#database)
+    - [Analyze](#analyze)
+    - [Run](#run)
+    - [Show](#show)
+  - [📂 Projectstructuur](#-projectstructuur)
+    - [Doc](#doc)
 
-<!-- END doctoc -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # 🚈 HTM Logparser-systeem
 
