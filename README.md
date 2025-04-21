@@ -1,210 +1,287 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
+<!-- START doctoc -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+**Inhoudsopgave**  *gegenereerd met [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [环境配置](#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE)
-    - [服务器配置](#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE)
-        - [install software](#install-software)
-        - [set jupyter auto start](#set-jupyter-auto-start)
-    - [依赖库](#%E4%BE%9D%E8%B5%96%E5%BA%93)
-        - [Run](#run)
-        - [Show](#show)
-- [结构图](#%E7%BB%93%E6%9E%84%E5%9B%BE)
-- [文件简介](#%E6%96%87%E4%BB%B6%E7%AE%80%E4%BB%8B)
-    - [HkConfig](#hkconfig)
-        - [Config.py](#configpy)
-        - [ImportIni.py](#importinipy)
-    - [ReadAndSave](#readandsave)
-        - [ImportLog.py](#importlogpy)
-        - [VerSelect.py](#verselectpy)
-    - [DataBase](#database)
-        - [ConnectDB.py](#connectdbpy)
-    - [Analyze](#analyze)
-        - [tram_speed.py](#tram_speedpy)
-    - [Run](#run-1)
-    - [Show](#show-1)
-        - [Get_data.py](#get_datapy)
-        - [index.py](#indexpy)
-        - [pages.py](#pagespy)
+- [🔧 Omgevingsconfiguratie](#-omgevingsconfiguratie)
+  - [Serverconfiguratie](#serverconfiguratie)
+    - [Software installeren](#software-installeren)
+    - [Jupyter automatisch starten instellen](#jupyter-automatisch-starten-instellen)
+  - [Benodigde pakketten](#benodigde-pakketten)
+- [📊 Structuuroverzicht](#-structuuroverzicht)
+- [📁 Bestandsoverzicht](#-bestandsoverzicht)
+  - [HkConfig](#hkconfig)
+  - [ReadAndSave](#readandsave)
+  - [DataBase](#database)
+  - [Analyze](#analyze)
+  - [Run](#run)
+  - [Show](#show)
+  - [Documentatie](#documentatie)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- END doctoc -->
 
-# 程序简介
+# 🚈 HTM Logparser-systeem
 
-HTM 内部程序，主要通过转轨器日志分析转轨器状态的程序
+Intern Python-programma voor het automatisch analyseren van wissellogs binnen HTM Techniek. Het systeem decodeert hex-logs, converteert deze naar interpreteerbare statusinformatie en visualiseert alles via een webgebaseerde dashboard.
 
-## 环境配置
+---
 
-### 服务器配置
+## 🔧 Omgevingsconfiguratie
 
-#### install software
+### Serverconfiguratie
+
+#### Software installeren
 
 ```bash
 sudo apt update
-
-# install pip
-sudo apt install python3-pip
-
-# install vim
-sudo apt install vim
-
-# install jupyter
+sudo apt install python3-pip vim
 pip install jupyterlab
 
-#config jupyterlab
+# Jupyter configureren
 jupyter-lab --generate-config
-sudo vim /home/suj/.jupyter_lab_config.py
-```
-
-```python3
+vim ~/.jupyter/jupyter_lab_config.py
 c.ServerApp.allow_origin = '*'
 c.ServerApp.ip = '*'
-```
-
-```bash
-# install anaconda3
+# Anaconda installeren
 wget https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh
-sha256sum Anaconda3-2021.11-Linux-x86_64.sh
 bash Anaconda3-2021.11-Linux-x86_64.sh
 source ~/.bashrc
 
-# install streamlit
+# Streamlit installeren
 conda install -c conda-forge streamlit
-```
-
-#### set jupyter auto start
-
-```bash
-cd /
-vim /etc/systemd/system/jupyter-lab.service 
-```
-
-```bash
-#Add to jupyter-lab.service
+sudo vim /etc/systemd/system/jupyter-lab.service
 [Unit]
 Description=jupyter-lab
 After=network.target
+
 [Service]
 Type=simple
-# 这里填用户名，下同
 User=sky
-EnvironmentFile=/home/suj/.local/bin/jupyter-lab
-ExecStart=/home/suj/.local/bin/jupyter-lab
-ExecStop=/usr/bin/pkill /home/suj/.local/bin/jupyter-lab
-KillMode=process
+ExecStart=/home/sky/.local/bin/jupyter-lab
+ExecStop=/usr/bin/pkill /home/sky/.local/bin/jupyter-lab
 Restart=on-failure
 RestartSec=30s
+
 [Install]
 WantedBy=multi-user.target
-```
-
-```bash
 sudo systemctl daemon-reload
-sudo systemctl enable jupyter.service
-sudo systemctl start jupyter.service
-systemctl status jupyter
+sudo systemctl enable jupyter-lab
+sudo systemctl start jupyter-lab
 ```
+### Benodigde pakketten
 
-### 依赖库
+#### Run (verwerking)
 
-#### Run
+- `sqlalchemy` – ORM-verbinding voor databaseopslag  
+- `pandas` – voor dataframe-verwerking  
+- `multiprocessing` – om parallelle verwerking te ondersteunen  
+- `cryptocode` – voor versleuteling en decoding  
+- `configparser` – voor .ini-bestandsinvoer  
+- `re` – reguliere expressies voor loganalyse  
 
-- sqlalchemy
-- pandas
-- multiprocessing
-- cryptocode
-- configparser
-- re
+#### Show (visualisatie)
 
-#### Show
+- `streamlit` – webgebaseerde dashboards en gebruikersinterface  
+- `plotly` – interactieve grafieken  
+- `fpdf` – genereren van PDF-rapporten  
+- `tempfile` – tijdelijke bestandsopslag tijdens exports  
 
-- streamlit
-- plotly
-- fpdf
-- tempfile
+---
 
-## 结构图
+## 📊 Structuuroverzicht
 
 ```mermaid
 graph LR
-
-log[log file] --> rl[read_log]
-rl --> conver_data
-HkConfig --> conver_data
-conver_data --Save to sql--> DataBase
-DataBase --GetData.py--> Show
-Show --streamlit-->brouwser[Show in brouwser]
+  log[Logbestand] --> rl[read_log]
+  rl --> conver_data
+  HkConfig --> conver_data
+  conver_data -->|Opslaan in SQL| DataBase
+  DataBase -->|GetData.py| Show
+  Show -->|streamlit| browser[Toon in browser]
 ```
-
-## 文件简介
+## 📁 Bestandsoverzicht
 
 ### HkConfig
 
-#### Config.py
+- `Config.py`  
+  - `line_to_hex`: leest logbestand en splitst hex-codes in een lijst  
+  - `list_to_str`: voegt lijst van hex-codes samen tot string  
+  - `hex_to_bin`: zet hexadecimale codes om naar binaire vorm  
+  - `convert_data`: vertaalt binaire status naar wisselstatus op basis van configbestand  
+  - `wissel_version`: laadt correct configuratiebestand op basis van wisselnummer  
 
-- line_to_hex: 读取log文件,分割hex代码到列表
-- list_to_str: 拼接列表中hex代码
-- hex_to_bin： hex代码转二进制代码
-- convert_data: 根据转轨器配置文件将二进制代码转换为转轨器状态
-- wissel_version: 根据转轨器编号导入配置文件
+- `ImportIni.py`  
+  - `bit_config`: zet statusbits om volgens .ini-bestand, gebruikt door `convert_data`  
+  - `byte_config`: zet bytegegevens van voertuigen om via .ini-logica  
 
-#### ImportIni.py
-
-- bit_config: 根据配置文件转换转轨器状态， 被convert_data引用
-- byte_config：根据配置文件转换电车数据
+---
 
 ### ReadAndSave
 
-#### ImportLog.py
+- `ImportLog.py`  
+  - `read_log`: leest ruwe loggegevens uit bestand  
+  - `conver_data`: converteert logregels via HkConfig  
+  - `mapping_df_types`: zet kolomtypes correct in pandas DataFrame  
+  - `log_to_sql`: slaat verwerkte data op in een SQLite3 database  
+  - `set_steps_denbdb3c`: herkent `denbdb3c` type wissels en hun status  
+  - `process_log_sql`: volledige verwerking van één of meerdere logs  
 
-- read_log: 从log文件中读取数据
-- conver_data: 引用HkConfig类转换数据
-- mapping_df_types: 转换Dataframe数据类型
-- log_to_sql: 将转换后的数据保存到sqlit3数据库
-- set_steps_denbdb3c: 从数据库中读取denbdb3c类型转轨器,匹配状态
-- process_log_sql: 封装转换步骤
+- `VerSelect.py`  
+  - `get_version`: geeft versienaam van een wissel-ID terug  
+  - `get_wissel_type_nr`: haalt alle wissels op die tot een bepaald type behoren  
 
-#### VerSelect.py
-
-- get_version: 输入转轨器编号，返回转轨器类型
-- get_wissel_type_nr: 输入转轨器类型，返回所有该类型转轨器编号
+---
 
 ### DataBase
 
-#### ConnectDB.py
+- `ConnectDB.py`  
+  - `conn_engine`: maakt SQLAlchemy engine voor SQLite3 aan  
+  - Verantwoordelijk voor lezen en schrijven van gegevens naar de database  
 
-- conn_engine: 连接sqlite3数据库，读取或保存数据库
+---
 
 ### Analyze
 
-#### tram_speed.py
+- `tram_speed.py`  
+  - `voertuig_lent`: invoer voor tramlengtes per type  
+  - `tram_speed_to_sql`: berekent snelheid van trams en schrijft naar database  
 
-- voertuig_lent: 电车长度数据
-- tram_speed_to_sql: 计算电车速度并保存到数据库
+---
 
 ### Run
 
-- RunText.py: Run程序，针对测试环境封装
-- RunVM.py: Run程序， 针对生成环境封装
+- `RunText.py`: hoofduitvoerscript voor testomgeving  
+- `RunVM.py`: productie-uitvoering met logging en foutafhandeling  
+
+---
 
 ### Show
 
-#### Get_data.py
+- `Get_data.py`  
+  - `get_tram_speed`: leest tramsnelheid uit database  
+  - `create_download_link`: maakt downloadlink aan voor streamlit  
 
-- get_tram_speed: 从数据库读取电车速度
-- create_download_link: 针对stramlit创建下载链接
+- `index.py`: startpunt voor het Streamlit-dashboard  
+- `pages.py`: paginaconfiguratie voor een meerbladige UI in Streamlit  
 
-#### index.py
+---
 
-- streamlit启动文件，展示stramlit网页
-
-#### pages.py
-
-- stramlit网页配置
+## 📂 Projectstructuur
+```text
++---DataBase
+|   +---db
+|   |       2022-06-16.db
+|   |       
+|   +---norm
+|   |       gps_info.csv
+|   |       steps.db
+|   |       
+|   +---snelheid
+|   |       2022-07-05.db
+|   |       
+|   \---status
+|           wissel_status.db
+|           
++---log
+|       20220616.log
+|       
++---Run
+|   +---bin
+|   |       Rebuilt_dataBase.py
+|   |       RunPupdate.py
+|   |       RunPVM.py
+|   |       RunP_concatDB.py
+|   |       RunP_mergDB.py
+|   |       RunP_mix_speed.py
+|   |       RunP_mix_storing.py
+|   |       RunRmDB.py
+|   |       __init__.py
+|   |       
+|   +---conf
+|   |   |   conf.py
+|   |   |   denAHA4C.ini
+|   |   
+|   |   
+|   |   |   
+|   |   \---pipfiles
+|   |           AI_storing_check.pkl
+|   |           DTC_model.pkl
+|   |           W003.pkl
+|   |     
+|   |           
+|   \---core
+|       +---Analyze
+|       |       analyze_tool.py
+|       |       check_storing_df.py
+|       |       tram_speed.py
+|       |       wissel_schakel.py
+|       |       wissel_storing.py
+|       |       wissel_vrij_list.py
+|       |       __init__.py
+|       |       
+|       +---ConvertData
+|       |       Config.py
+|       |       ConnectDB.py
+|       |       ImportConf.py
+|       |       ReadLogs.py
+|       |       VerSelect.py
+|       |       
+|       +---Integration
+|       |       DataCalculator.py
+|       |       DataInitialization.py
+|       |       ProcessDataBase.py
+|       |       __init__.py
+|       |       
+|       +---LogFilter
+|       |       MountDir.py
+|       |       __init__.py
+|       |       
+|       \---Tools
+|               VaribleTool.py
+|               __init__.py
+|               
+\---Show
+    |   index.py
+    |   pages.py
+    |   __init__.py
+    |   
+    +---core
+    |       GetData.py
+    |       __init__.py
+    |       
+    \---sub_pages
+        |   alldata.py
+        |   intro.py
+        |   rapportage.py
+        |   storing.py
+        |   tramspeed.py
+        |   tramspeed_boxplot.py
+        |   Utils.py
+        |   wisselschakel.py
+        |   __init__.py
+        |   
+        +---rapport_mode
+        |       snelheid_rep.py
+        |       storing_rep.py
+        |       
+        +---storing_mode
+        |       allstoring.py
+        |       storingdata.py
+        |       unknowstoring.py
+        |       
+        \---tramspeed_mode
+                fig_lijn.py
+                fig_rit.py
+                fig_voertuig.py
+                fig_wagen.py
+                fig_wissel.py
+                max_waarde.py
+                waarschuwing.py
+```
 
 ### Doc
 
-- https://hands1ml.apachecn.org/#
-- https://github.com/ageron/handson-ml.git
+- Externe referentie:  
+  - [Hands-on Machine Learning handleiding (NL)](https://hands1ml.apachecn.org/#)  
+  - [Originele GitHub repo van het boek](https://github.com/ageron/handson-ml.git)
+
