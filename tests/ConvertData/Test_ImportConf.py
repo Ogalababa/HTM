@@ -23,7 +23,7 @@ class TestImportConf(unittest.TestCase):
     def test_drop_config(self):
         result = ImportConf.drop_config()
         self.assertEqual(result, conf.drop_configs)
-        self.assertIsInstance(result, dict)  # ✅ 修复这里
+        self.assertIsInstance(result, dict)   
 
 
 if __name__ == '__main__':

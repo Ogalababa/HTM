@@ -1,4 +1,4 @@
-# tests/ConvertData/Test_VerSelect.py
+ 
 
 import unittest
 from Run.core.ConvertData.VerSelect import get_version, get_wissel_type_nr

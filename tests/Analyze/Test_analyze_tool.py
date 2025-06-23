@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from Run.core.Analyze import analyze_tool as at  # 确保模块名为 analyze_tool.py，并已正确设置 __init__.py
+from Run.core.Analyze import analyze_tool as at   
 
 
 class TestAnalyzeTool(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestAnalyzeTool(unittest.TestCase):
     def test_fifo_fout_detected(self):
         df = pd.DataFrame({
             '<aanmelden> voertuig': [2001, 2002, 2003],
-            '<afmelden> voertuig': [2002, 2003, 2004],  # 2001未被 afmelden
+            '<afmelden> voertuig': [2002, 2003, 2004],   
             '<aktuell> niveau fifo': [1, 2, 3]
         })
         storing = "storing2"
@@ -40,7 +40,7 @@ class TestAnalyzeTool(unittest.TestCase):
         result = at.fifo_fout(df, storing, afdelling)
         self.assertEqual(result[0], storing)
         self.assertEqual(result[1], afdelling)
-        self.assertTrue(result[-1])  # 错误状态应为 True
+        self.assertTrue(result[-1])   
 
     def test_fifo_fout_not_detected(self):
         df = pd.DataFrame({
@@ -51,7 +51,7 @@ class TestAnalyzeTool(unittest.TestCase):
         storing = "storing4"
         afdelling = "afd4"
         result = at.fifo_fout(df, storing, afdelling)
-        self.assertFalse(result[-1])  # 错误状态应为 False
+        self.assertFalse(result[-1])   
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ from Run.core.Analyze import check_storing_df as cs
 
 class TestCheckStoringDf(unittest.TestCase):
     def setUp(self):
-        # ✅ 有效数据，应检测出 storing
+         
         self.valid_df = pd.DataFrame({
             '<wissel> vergrendeld': [1, 1, 1],
             '<wissel> ijzer': [1, 1, 1],
@@ -16,7 +16,7 @@ class TestCheckStoringDf(unittest.TestCase):
             'date-time': pd.date_range('2024-01-01', periods=3, freq='min')
         })
 
-        # ✅ 无效数据，全部为0，不应触发 storing
+         
         self.invalid_df = pd.DataFrame({
             '<wissel> vergrendeld': [0, 0, 0],
             '<wissel> ijzer': [0, 0, 0],
@@ -27,7 +27,7 @@ class TestCheckStoringDf(unittest.TestCase):
             'date-time': pd.date_range('2024-01-01', periods=3, freq='min')
         })
 
-        # ✅ 用于 define_storing，包含 'wissel nr'、'date-time' 等所有字段
+         
         self.recheck_df = pd.DataFrame({
             '<wissel> vergrendeld': [1, 1, 0, 1],
             '<wissel> ijzer': [1, 0, 0, 1],

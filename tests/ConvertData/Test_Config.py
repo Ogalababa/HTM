@@ -6,7 +6,7 @@ from sqlalchemy.testing.config import Config
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 
-from Run.core.ConvertData.Config import WisselData  # 修改为Config.py中实际类名
+from Run.core.ConvertData.Config import WisselData   
 
 
 class TestWisselData(unittest.TestCase):

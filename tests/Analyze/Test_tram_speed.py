@@ -6,7 +6,7 @@ from Run.core.Analyze.tram_speed import calculation_tram_speed
 class TestCalculationTramSpeed(unittest.TestCase):
 
     def setUp(self):
-        # 创建一个合理结构的测试 DataFrame
+         
         base_time = datetime(2024, 1, 1, 12, 0, 0)
         self.dataset = pd.DataFrame({
             'date-time': [base_time, base_time + timedelta(seconds=1), base_time + timedelta(seconds=2),
@@ -30,29 +30,29 @@ class TestCalculationTramSpeed(unittest.TestCase):
         self.assertTrue(0 < result[0]['snelheid km/h'][0] < 50)
 
     def test_speed_calculation_invalid_voertuig(self):
-        # 使用无效车辆编号测试（超出条件）
+         
         df_invalid = self.dataset.copy()
         df_invalid['<afmelden> voertuig'] = [9999] * 5
         result = calculation_tram_speed(df_invalid)
         self.assertEqual(result, [])
 
     def test_speed_too_high_should_be_filtered(self):
-        # hfk_in 和 hfk_out 间隔极短导致速度超标
+         
         df = self.dataset.copy()
         df['date-time'] = [datetime(2024, 1, 1, 12, 0, 0) + timedelta(milliseconds=i) for i in range(5)]
         result = calculation_tram_speed(df)
-        self.assertEqual(result, [])  # 应该被过滤掉
+        self.assertEqual(result, [])   
 
     def test_not_enough_data_points(self):
         df = self.dataset.iloc[:2].copy()
         result = calculation_tram_speed(df)
-        self.assertEqual(result, [])  # 少于3个点
+        self.assertEqual(result, [])   
 
     def test_bad_contact_should_filter_out(self):
         df = self.dataset.copy()
-        df.loc[1, '<hfk> aanwezigheidslus bezet'] = 0  # 模拟数据断裂
+        df.loc[1, '<hfk> aanwezigheidslus bezet'] = 0   
         result = calculation_tram_speed(df)
-        self.assertEqual(result, [])  # 应被排除
+        self.assertEqual(result, [])   
 
 if __name__ == '__main__':
     unittest.main()
