@@ -7,52 +7,18 @@ from __init__ import *
 
 
 def bit_config():
-    # """Get bit config from wissel type config file"""
-    # ini_list = os.listdir(os.path.join(runPath, 'conf'))
-    # remove_list = ['.ipynb_checkpoints']
-    # ini_list = [i for i in ini_list if i not in remove_list]
-    # bit_configs = {}
-    # for ini_name in ini_list:
-    #     config = configparser.ConfigParser()
-    #     config.read(os.path.join(os.path.join(runPath, 'conf'), ini_name), 'unicode-escape')
-    #     single_bit = {}
-    #     option_list = config.options('bit')
-    #     for name in option_list:
-    #         single_bit[name] = config.getint('bit', name)
-    #     bit_configs[ini_name[:-4]] = single_bit
+
     from Run.conf.conf import bit_configs
     return bit_configs
 
 
 def byte_config():
-    # """Get byte config from wissel type config file"""
-    # start = 'byte start'
-    # end = 'byte end'
-    # ini_list = os.listdir(os.path.join(runPath, 'conf'))
-    # remove_list = ['.ipynb_checkpoints']
-    # ini_list = [i for i in ini_list if i not in remove_list]
-    # byte_configs = {}
-    # for ini_name in ini_list:
-    #     config = configparser.ConfigParser()
-    #     multi_bits = {}
-    #     config.read(os.path.join(os.path.join(runPath, 'conf'), ini_name), 'unicode-escape')
-    #     bytes_start = config.options(start)
-    #     for name in bytes_start:
-    #         multi_bits[name] = [config.getint(start, name), config.getint(end, name)]
-    #     byte_configs[ini_name[:-4]] = multi_bits
+
     from Run.conf.conf import byte_configs
     return byte_configs
 
 
 def drop_config():
-    # ini_list = os.listdir(os.path.join(runPath, 'conf'))
-    # remove_list = ['.ipynb_checkpoints']
-    # ini_list = [i for i in ini_list if i not in remove_list]
-    # drop = {}
-    # for ini_name in ini_list:
-    #     config = configparser.ConfigParser()
-    #     config.read(os.path.join(os.path.join(runPath, 'conf'), ini_name), 'unicode-escape')
-    #     drop_list = config.options('drop')
-    #     drop[ini_name[:-4]] = drop_list
+
     from Run.conf.conf import drop_configs 
     return drop_configs

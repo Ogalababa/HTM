@@ -13,6 +13,7 @@ from Run.core.Analyze.wissel_vrij_list import wissel_cycle_list
 from Run.core.Integration.DataInitialization import get_alldata_from_db
 from Run.core.Integration.DataInitialization import save_to_sql
 
+rootPath = os.path.abspath(os.path.dirname(__file__))
 
 class Calculator:
     """

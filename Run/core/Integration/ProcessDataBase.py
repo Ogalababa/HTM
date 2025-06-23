@@ -2,6 +2,8 @@
 # coding:utf-8
 # sys
 from __init__ import *
+import os
+rootPath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
 from datetime import datetime
 from Run.core.ConvertData.ReadLogs import read_log, log_to_sql, set_steps_denbdb3c, predict_steps
 from Run.core.Integration.DataCalculator import Calculator

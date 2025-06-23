@@ -1,6 +1,7 @@
 # ！/usr/bin/python3
 # coding:utf-8
 # sys
+# /Run/core/ConvertData/Config.py
 from __init__ import *
 import configparser
 import os.path
@@ -57,15 +58,8 @@ class WisselData:
 
                 elif re.search(r'W\d\d\d', self.hex_data) is not None:
                     self.wissel_info['wissel nr'] = [re.search(r'W\d\d\d', self.hex_data).group()]
-                #  if any(i in include_dict.keys() for i in self.hex_data):
-                # if any(i for i in include_dict.keys() if i in self.hex_data):
-                #     for i in include_dict.keys():
-                #         if i in self.hex_data:
-                #             self.wissel_info['wissel nr'] = [include_dict.get(i)]
                 else:
                     pass
-                # wissel_nr_start = self.hex_data.index('HTM_') + 4
-                # wissel_nr = self.hex_data[wissel_nr_start:wissel_nr_start + 4]
 
                 self.wissel_info['server time'] = [server_date_time]
         except ValueError:
@@ -87,7 +81,6 @@ class WisselData:
 
                 elif hex_start is False and hex_end is False:
                     char_to_hex = check_char.encode('utf-8').hex()
-                    # print(i)
                     self.hex_str_list.append(char_to_hex)
                 else:  # 单个char
                     single_hex += check_char
@@ -99,7 +92,6 @@ class WisselData:
 
             except ValueError:
                 pass
-
         return self.hex_str_list
 
     def list_to_str(self):
@@ -139,9 +131,7 @@ class WisselData:
                 f'{str(int(record_time[11:17], 2)).zfill(2)}.'
                 f'{str(int(record_time[17:], 2)).zfill(2)}'
             ]
-            # if self.wissel_info['date-time'][:10] != self.wissel_info['server time'][:10]:
-            #     self.wissel_info['date-time'] = self.wissel_info['server time']
-                
+
             for key, value in self.multi_bits.items():
                 bit_data = self.bin_data[-(self.DATA_HEADER + int(value[1])): -(self.DATA_HEADER + int(value[0]) - 1)]
 

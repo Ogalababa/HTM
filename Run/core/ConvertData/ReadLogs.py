@@ -10,6 +10,7 @@ from time import sleep
 import re
 from multiprocessing import Pool
 import joblib
+import os
 # analysis
 
 import pandas as pd
