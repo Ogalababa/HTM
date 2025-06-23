@@ -20,6 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -31,8 +39,11 @@ jobs:
           pip install pytest coverage
 
       - name: Run tests with coverage
+        continue-on-error: false
         run: |
-          coverage run -m pytest tests/
+          coverage run -m pytest tests/ -v
+
+      - name: Generate coverage report
+        run: |
           coverage report
           coverage xml
-
