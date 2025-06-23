@@ -1,0 +1,6 @@
+pytest
+coverage
+pandas
+sqlalchemy
+numpy
+pytest-mock
